@@ -1,0 +1,81 @@
+/* ==========================================================
+   Lumbar Spine AI — dashboard theme
+   No sidebar HTML is required; the Streamlit-native sidebar
+   is intentionally used to prevent raw HTML from appearing.
+   ========================================================== */
+
+.block-container {
+    max-width: 1450px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+.hero {
+    border: 1px solid rgba(120, 140, 220, 0.35);
+    border-radius: 24px;
+    padding: 38px 42px;
+    margin: 10px 0 26px 0;
+    background: linear-gradient(135deg, rgba(55, 65, 150, .35), rgba(20, 30, 55, .45));
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    margin: 8px 0 12px 0;
+    font-weight: 800;
+}
+
+.hero p {
+    font-size: 1.05rem;
+    opacity: .78;
+    max-width: 900px;
+}
+
+.eyebrow {
+    font-size: .78rem;
+    letter-spacing: .14em;
+    font-weight: 800;
+    opacity: .75;
+}
+
+.result-hero {
+    border: 1px solid rgba(128, 128, 128, .28);
+    border-radius: 18px;
+    padding: 26px;
+    background: rgba(128, 128, 128, .055);
+}
+
+.result-title {
+    font-size: 2.35rem;
+    font-weight: 800;
+    margin-top: 8px;
+}
+
+.muted {
+    opacity: .72;
+    margin-top: 8px;
+}
+
+section[data-testid="stSidebar"] {
+    border-right: 1px solid rgba(128, 128, 128, .15);
+}
+
+section[data-testid="stSidebar"] .stRadio label {
+    font-weight: 600;
+}
+
+.stButton > button {
+    min-height: 44px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+[data-testid="stMetric"] {
+    border: 1px solid rgba(128, 128, 128, .18);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+@media (max-width: 900px) {
+    .hero h1 { font-size: 2.2rem; }
+    .result-title { font-size: 1.8rem; }
+}

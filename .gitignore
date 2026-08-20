@@ -1,0 +1,203 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ============================================================
+# Jupyter Notebook
+# ============================================================
+.ipynb_checkpoints/
+
+# Jupyter temporary files
+*.ipynb_checkpoints
+
+# ============================================================
+# VS Code
+# ============================================================
+.vscode/
+*.code-workspace
+
+# ============================================================
+# Python / IDE caches
+# ============================================================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# Large Dataset Files
+# ============================================================
+
+# RSNA Lumbar Spine dataset
+dataset/
+datasets/
+data/
+raw_data/
+processed_data/
+
+# Medical imaging files
+*.dcm
+*.dicom
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+*.nrrd
+
+# Large archives
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# ============================================================
+# Machine Learning Model Files
+# ============================================================
+
+# PyTorch
+*.pt
+*.pth
+*.ckpt
+
+# TensorFlow / Keras
+*.h5
+*.hdf5
+*.keras
+
+# ONNX
+*.onnx
+
+# ============================================================
+# Training Outputs
+# ============================================================
+
+checkpoints/
+weights/
+models/
+saved_models/
+
+runs/
+wandb/
+mlruns/
+
+# ============================================================
+# Generated Results
+# ============================================================
+
+results/
+outputs/
+predictions/
+logs/
+
+# TensorBoard
+tensorboard/
+*.tfevents.*
+
+# ============================================================
+# Generated Images / Visualizations
+# ============================================================
+
+generated_images/
+visualizations/
+figures/
+plots/
+
+# MRI visualization outputs
+slice_outputs/
+mri_outputs/
+xai_outputs/
+
+# Explainability outputs
+gradcam/
+attention_maps/
+saliency_maps/
+
+# ============================================================
+# Temporary Files
+# ============================================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# ============================================================
+# OS Files
+# ============================================================
+
+.DS_Store
+
+# ============================================================
+# Logs
+# ============================================================
+
+*.log
+
+# ============================================================
+# Project-specific temporary files
+# ============================================================
+
+tmp/
+temp/
+cache/
+
+# ============================================================
+# Large CSV / generated data
+# ============================================================
+
+# Uncomment if these are generated locally and are large:
+# *.csv
+# *.parquet
+# *.feather
+
+# ============================================================
+# Secrets / Credentials
+# ============================================================
+
+*.pem
+*.key
+credentials.json
+service-account.json
+
+# ============================================================
+# Backup files
+# ============================================================
+
+*.old
+*.orig
