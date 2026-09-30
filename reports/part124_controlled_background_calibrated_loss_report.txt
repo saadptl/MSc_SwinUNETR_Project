@@ -1,0 +1,38 @@
+PART 124 — FOREGROUND-DICE-ONLY LOSS CONTROLLED RETRAINING
+
+Part104 SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+Canonical SHA match: True
+Part104 validation Dice baseline: 0.2172496851095929
+Part114 foreground ratio baseline: 67.462x
+
+ONLY EXPERIMENTAL CHANGE:
+weighted cross-entropy term: REMOVED
+foreground-only soft Dice: RETAINED EXACTLY
+
+Best epoch: 7
+Best validation Dice: 0.024828854
+Best validation foreground ratio: 206.834030x
+Mean foreground probability: 0.502595
+Mean background probability: 0.497383
+Mean FG-BG margin: 0.005215
+Mean entropy: nan
+
+Classwise Dice:
+class 1: 0.026935748
+class 2: 0.027028105
+class 3: 0.060061350
+class 4: 0.000554955
+class 5: 0.009564111
+
+Diagnosis: FOREGROUND_DICE_ONLY_ABLATION_COMPLETED
+Part104 overwritten: NO
+Clinical claim: NO — targets are development/pseudo-mask labels.
+
+Outputs:
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part124_controlled_background_calibrated_loss_retraining\checkpoints\best_part124_model.pth
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part124_controlled_background_calibrated_loss_retraining\checkpoints\final_part124_model.pth
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part124_controlled_background_calibrated_loss_retraining\part124_training_history.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part124_controlled_background_calibrated_loss_retraining\part124_test_metrics.json
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part124_controlled_background_calibrated_loss_retraining\part124_baseline_vs_experiment.json
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part124_controlled_background_calibrated_loss_report.txt
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part124_controlled_background_calibrated_loss_summary.json

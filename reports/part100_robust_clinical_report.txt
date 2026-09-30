@@ -1,0 +1,37 @@
+PART 100 — ROBUST CLINICAL-ORIENTED SWIN-UNETR FINE-TUNING
+
+This experiment continued fine-tuning from the Part98 best Swin-UNETR checkpoint.
+
+The previous implementation incorrectly required 600 unique discoverable cases.
+The corrected implementation uses the maximum available leakage-free cohort.
+
+Cohort source: PART98_EXISTING_COHORT
+Training cases: 500
+Validation cases: 100
+Study overlap: 0
+
+STARTING PART98 CHECKPOINT
+SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+RESULTS
+Best epoch: 10
+Best global foreground Dice: 0.129674
+Independent verification global Dice: 0.129674
+Mean-case Dice: 0.040397
+Median-case Dice: 0.000000
+Macro foreground Dice: 0.034103
+
+CLASS-WISE DICE
+1 — Spinal Canal Stenosis: 0.170513
+2 — Left Neural Foraminal Narrowing: 0.000000
+3 — Right Neural Foraminal Narrowing: 0.000000
+4 — Left Subarticular Stenosis: 0.000000
+5 — Right Subarticular Stenosis: 0.000000
+
+CHECKPOINT VERIFICATION
+Missing keys: 0
+Unexpected keys: 0
+Strict checkpoint load: PASS
+
+IMPORTANT CLINICAL LIMITATION
+This model remains a research/development system. Successful training does not establish clinical validity, regulatory approval, generalization to external institutions, or deployment readiness.

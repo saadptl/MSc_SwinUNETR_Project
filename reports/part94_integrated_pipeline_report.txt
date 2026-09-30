@@ -1,0 +1,56 @@
+================================================================================
+PART 94 — INTEGRATED SWIN-UNETR + CLASSIFICATION PIPELINE
+================================================================================
+
+OBJECTIVE
+--------------------------------------------------------------------------------
+Validate sequential inference using the frozen Part84 Swin-UNETR segmentation checkpoint and the frozen Part92 classification checkpoint.
+
+SEGMENTATION COMPONENT
+--------------------------------------------------------------------------------
+Architecture : SwinUNETR
+Source       : Part84
+Parameters   : 4,078,116
+Checkpoint   : C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part84_final_reproducible_training\checkpoints\part84_best_model.pth
+
+CLASSIFICATION COMPONENT
+--------------------------------------------------------------------------------
+Architecture : Part90CNN
+Source       : Part92
+Parameters   : 20,083
+Checkpoint   : C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\classification\rsna_part92_class_imbalance_aware_training\checkpoints\part92_best_model.pth
+
+VALIDATION
+--------------------------------------------------------------------------------
+Total studies      : 395
+Successful studies : 395
+Failed studies     : 0
+Success rate       : 1.000000
+
+SEGMENTATION INFERENCE SUMMARY
+--------------------------------------------------------------------------------
+Mean foreground fraction : 0.071236
+Median foreground fraction : 0.072391
+Mean foreground voxels : 42016.76
+
+CLASSIFICATION INFERENCE SUMMARY
+--------------------------------------------------------------------------------
+Mean prediction confidence : 0.480336
+Mean Severe probability : 0.240634
+Predicted distribution:
+  Normal/Mild: 7708
+  Moderate: 1895
+  Severe: 272
+
+METHODOLOGICAL LIMITATION
+--------------------------------------------------------------------------------
+The segmentation and classification components were trained separately.
+Part94 therefore validates a sequential integrated inference pipeline rather than joint end-to-end optimization of Swin-UNETR and the classifier.
+The Part92 classifier does not consume learned Swin-UNETR feature maps.
+This distinction should be stated clearly in the final dissertation.
+
+FINAL STATUS
+--------------------------------------------------------------------------------
+PASS — INTEGRATED INFERENCE PIPELINE VALIDATED
+
+================================================================================

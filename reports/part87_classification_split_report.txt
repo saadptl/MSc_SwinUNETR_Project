@@ -1,0 +1,201 @@
+==============================================================================
+PART 87 — LEAKAGE-FREE RSNA CLASSIFICATION SPLIT
+==============================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+RSNA root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\dataset\rsna-2024-lumbar-spine-degenerative-classification
+
+DATASET
+------------------------------------------------------------------------------
+Total studies: 1975
+Unique studies: 1975
+Classification targets: 25
+
+STUDY-LEVEL SPLIT
+------------------------------------------------------------------------------
+Random seed: 42
+Training fraction: 0.80
+Training studies: 1580
+Validation studies: 395
+Training percentage: 80.00%
+Validation percentage: 20.00%
+
+LEAKAGE AUDIT
+------------------------------------------------------------------------------
+Overlapping studies: 0
+PASS — No study appears in both training and validation.
+
+MRI SERIES SELECTION
+------------------------------------------------------------------------------
+Primary series: Sagittal T2/STIR
+Fallback 1: Sagittal T1
+Fallback 2: Axial T2
+Studies with selected MRI series: 1975
+Studies without usable selected series: 0
+Series coverage: 100.00%
+
+SELECTED SERIES DISTRIBUTION
+------------------------------------------------------------------------------
+Sagittal T2/STIR          :  1974 ( 99.95%)
+Sagittal T1               :     1 (  0.05%)
+
+CLASSIFICATION SPLIT SUMMARY
+------------------------------------------------------------------------------
+
+spinal_canal_stenosis_l1_l2
+  Moderate     | train=   55 | val=   12
+  Normal/Mild  | train= 1507 | val=  379
+  Severe       | train=   17 | val=    4
+  nan          | train=    1 | val=    0
+
+spinal_canal_stenosis_l2_l3
+  Moderate     | train=  123 | val=   28
+  Normal/Mild  | train= 1413 | val=  357
+  Severe       | train=   43 | val=   10
+  nan          | train=    1 | val=    0
+
+spinal_canal_stenosis_l3_l4
+  Moderate     | train=  186 | val=   44
+  Normal/Mild  | train= 1296 | val=  326
+  Severe       | train=   97 | val=   25
+  nan          | train=    1 | val=    0
+
+spinal_canal_stenosis_l4_l5
+  Moderate     | train=  198 | val=   39
+  Normal/Mild  | train= 1193 | val=  289
+  Severe       | train=  188 | val=   67
+  nan          | train=    1 | val=    0
+
+spinal_canal_stenosis_l5_s1
+  Moderate     | train=   41 | val=   10
+  Normal/Mild  | train= 1521 | val=  383
+  Severe       | train=   17 | val=    2
+  nan          | train=    1 | val=    0
+
+left_neural_foraminal_narrowing_l1_l2
+  Moderate     | train=   55 | val=    8
+  Normal/Mild  | train= 1521 | val=  387
+  Severe       | train=    2 | val=    0
+  nan          | train=    2 | val=    0
+
+left_neural_foraminal_narrowing_l2_l3
+  Moderate     | train=  144 | val=   27
+  Normal/Mild  | train= 1425 | val=  366
+  Severe       | train=    9 | val=    2
+  nan          | train=    2 | val=    0
+
+left_neural_foraminal_narrowing_l3_l4
+  Moderate     | train=  334 | val=   77
+  Normal/Mild  | train= 1212 | val=  310
+  Severe       | train=   32 | val=    8
+  nan          | train=    2 | val=    0
+
+left_neural_foraminal_narrowing_l4_l5
+  Moderate     | train=  503 | val=  126
+  Normal/Mild  | train=  961 | val=  243
+  Severe       | train=  114 | val=   26
+  nan          | train=    2 | val=    0
+
+left_neural_foraminal_narrowing_l5_s1
+  Moderate     | train=  402 | val=  118
+  Normal/Mild  | train= 1011 | val=  236
+  Severe       | train=  165 | val=   41
+  nan          | train=    2 | val=    0
+
+right_neural_foraminal_narrowing_l1_l2
+  Moderate     | train=   53 | val=   10
+  Normal/Mild  | train= 1510 | val=  381
+  Severe       | train=   11 | val=    2
+  nan          | train=    6 | val=    2
+
+right_neural_foraminal_narrowing_l2_l3
+  Moderate     | train=  136 | val=   32
+  Normal/Mild  | train= 1433 | val=  360
+  Severe       | train=    5 | val=    1
+  nan          | train=    6 | val=    2
+
+right_neural_foraminal_narrowing_l3_l4
+  Moderate     | train=  327 | val=   87
+  Normal/Mild  | train= 1217 | val=  295
+  Severe       | train=   30 | val=   11
+  nan          | train=    6 | val=    2
+
+right_neural_foraminal_narrowing_l4_l5
+  Moderate     | train=  488 | val=  141
+  Normal/Mild  | train=  976 | val=  232
+  Severe       | train=  110 | val=   20
+  nan          | train=    6 | val=    2
+
+right_neural_foraminal_narrowing_l5_s1
+  Moderate     | train=  386 | val=  110
+  Normal/Mild  | train= 1035 | val=  246
+  Severe       | train=  153 | val=   37
+  nan          | train=    6 | val=    2
+
+left_subarticular_stenosis_l1_l2
+  Moderate     | train=   81 | val=   12
+  Normal/Mild  | train= 1340 | val=  350
+  Severe       | train=   25 | val=    3
+  nan          | train=  134 | val=   30
+
+left_subarticular_stenosis_l2_l3
+  Moderate     | train=  205 | val=   50
+  Normal/Mild  | train= 1238 | val=  317
+  Severe       | train=   70 | val=   13
+  nan          | train=   67 | val=   15
+
+left_subarticular_stenosis_l3_l4
+  Moderate     | train=  363 | val=   91
+  Normal/Mild  | train= 1056 | val=  268
+  Severe       | train=  158 | val=   36
+  nan          | train=    3 | val=    0
+
+left_subarticular_stenosis_l4_l5
+  Moderate     | train=  495 | val=  129
+  Normal/Mild  | train=  713 | val=  174
+  Severe       | train=  370 | val=   91
+  nan          | train=    2 | val=    1
+
+left_subarticular_stenosis_l5_s1
+  Moderate     | train=  315 | val=   94
+  Normal/Mild  | train= 1134 | val=  274
+  Severe       | train=  123 | val=   24
+  nan          | train=    8 | val=    3
+
+right_subarticular_stenosis_l1_l2
+  Moderate     | train=   90 | val=   20
+  Normal/Mild  | train= 1338 | val=  342
+  Severe       | train=   21 | val=    3
+  nan          | train=  131 | val=   30
+
+right_subarticular_stenosis_l2_l3
+  Moderate     | train=  202 | val=   41
+  Normal/Mild  | train= 1254 | val=  323
+  Severe       | train=   57 | val=   16
+  nan          | train=   67 | val=   15
+
+right_subarticular_stenosis_l3_l4
+  Moderate     | train=  365 | val=   89
+  Normal/Mild  | train= 1055 | val=  267
+  Severe       | train=  158 | val=   39
+  nan          | train=    2 | val=    0
+
+right_subarticular_stenosis_l4_l5
+  Moderate     | train=  495 | val=  127
+  Normal/Mild  | train=  711 | val=  180
+  Severe       | train=  373 | val=   87
+  nan          | train=    1 | val=    1
+
+right_subarticular_stenosis_l5_s1
+  Moderate     | train=  328 | val=   68
+  Normal/Mild  | train= 1110 | val=  289
+  Severe       | train=  137 | val=   36
+  nan          | train=    5 | val=    2
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS — Study-level leakage-free split.
+PASS — Every study has a usable selected MRI series.
+
+Part 87 does not train a neural network.
+Part 84/85 segmentation files are unchanged.

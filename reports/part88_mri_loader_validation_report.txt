@@ -1,0 +1,55 @@
+==============================================================================
+PART 88 — RSNA MRI LOADER & PREPROCESSING VALIDATION
+==============================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+RSNA root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\dataset\rsna-2024-lumbar-spine-degenerative-classification
+
+PART 87 SPLIT
+------------------------------------------------------------------------------
+Training studies: 1580
+Validation studies: 395
+Study overlap: 0
+
+SAMPLE VALIDATION
+------------------------------------------------------------------------------
+Total tested studies: 40
+Passed: 40
+Failed: 0
+
+PREPROCESSING TARGET
+------------------------------------------------------------------------------
+Input: DICOM series
+Normalization: percentile clipping 1st–99th percentile
+Output tensor: (1, 32, 224, 224)
+Tensor range: [0, 1]
+
+SERIES DISTRIBUTION IN SAMPLE
+------------------------------------------------------------------------------
+Sagittal T2/STIR          :  40
+
+SLICE STATISTICS
+------------------------------------------------------------------------------
+Readable slices — mean: 17.93
+Readable slices — min: 12
+Readable slices — max: 23
+Original depth — mean: 17.93
+Original depth — min: 12
+Original depth — max: 23
+
+GLOBAL CHECKS
+------------------------------------------------------------------------------
+study_leakage                 : PASS
+sample_loading                : PASS
+tensor_shape                  : PASS
+numeric_tensor_values         : PASS
+normalization_range           : PASS
+known_labels                  : PASS
+expected_series_types         : PASS
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS — MRI loading and preprocessing validation completed successfully.
+
+No neural-network training was performed.
+Part 84/85 segmentation files were not modified.

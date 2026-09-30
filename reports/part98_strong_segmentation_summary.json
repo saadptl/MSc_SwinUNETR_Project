@@ -1,0 +1,47 @@
+{
+  "part": 98,
+  "title": "Strong Full-Cohort Swin-UNETR Segmentation Training",
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 2050",
+  "pytorch": "2.11.0+cu128",
+  "seed": 42,
+  "epochs_requested": 12,
+  "epochs_completed": 12,
+  "train_samples": 500,
+  "validation_samples": 100,
+  "feature_size": 12,
+  "num_classes": 6,
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "crop_shape": [
+    32,
+    64,
+    64
+  ],
+  "learning_rate": 5e-05,
+  "weight_decay": 1e-05,
+  "best_epoch": 10,
+  "best_validation_dice": 0.2172496851095929,
+  "verification_dice": 0.24105196110159155,
+  "verification_loss": 1.8286082196235656,
+  "verification_cases": 50,
+  "classwise_verification_dice": {
+    "1": 0.02137771178036928,
+    "2": 0.1728843354433775,
+    "3": 0.68,
+    "4": 0.017889922969043254,
+    "5": 0.3131078353151679
+  },
+  "part15_initialization_sha256": "0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6",
+  "best_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_best_model.pth",
+  "best_checkpoint_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "limitations": [
+    "Segmentation masks are derived from RSNA localizer/point annotations.",
+    "The dataset does not provide dense expert voxel-wise segmentation masks.",
+    "This experiment does not establish clinical validity.",
+    "External prospective validation is required before clinical deployment."
+  ]
+}

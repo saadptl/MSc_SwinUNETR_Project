@@ -1,0 +1,53 @@
+{
+  "part": "Part94",
+  "status": "PASS \u2014 INTEGRATED INFERENCE PIPELINE VALIDATED",
+  "device": "cuda:0",
+  "segmentation_model": {
+    "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part84_final_reproducible_training\\checkpoints\\part84_best_model.pth",
+    "parameters": 4078116,
+    "architecture": "SwinUNETR",
+    "source": "Part84"
+  },
+  "classification_model": {
+    "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part92_class_imbalance_aware_training\\checkpoints\\part92_best_model.pth",
+    "parameters": 20083,
+    "architecture": "Part90CNN",
+    "source": "Part92"
+  },
+  "validation": {
+    "manifest": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_validation_manifest.csv",
+    "total_studies": 395,
+    "successful_studies": 395,
+    "failed_studies": 0,
+    "success_rate": 1.0
+  },
+  "segmentation_summary": {
+    "mean_foreground_fraction": 0.0712361052737122,
+    "median_foreground_fraction": 0.0723910861545139,
+    "mean_foreground_voxels": 42016.76455696202
+  },
+  "classification_summary": {
+    "predicted_distribution": {
+      "Normal/Mild": 7708,
+      "Moderate": 1895,
+      "Severe": 272
+    },
+    "mean_confidence": 0.48033611374263524,
+    "mean_severe_probability": 0.2406342511735385
+  },
+  "integration_checks": {
+    "segmentation_checkpoint_exists": true,
+    "classification_checkpoint_exists": true,
+    "validation_manifest_exists": true,
+    "segmentation_model_loaded_strictly": true,
+    "classification_model_loaded_strictly": true,
+    "validation_studies_processed": 395,
+    "successful_studies": 395,
+    "failed_studies": 0,
+    "success_rate": 1.0,
+    "segmentation_output_generated": true,
+    "classification_output_generated": true,
+    "end_to_end_inference_available": true
+  },
+  "methodological_note": "Part94 performs sequential inference using the frozen Part84 Swin-UNETR segmentation model and the frozen Part92 classification model. The classification model was not jointly trained with Swin-UNETR features; therefore this pipeline should be described as an integrated sequential inference framework rather than end-to-end joint training."
+}

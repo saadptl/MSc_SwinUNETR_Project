@@ -1,0 +1,4362 @@
+PART 117 — TRAINING STRATEGY / LOSS-MECHANISM AUDIT
+================================================================================================
+
+READ-ONLY. No training, backward pass, optimizer step, or checkpoint modification.
+
+{
+  "part": 117,
+  "evaluation_only": true,
+  "training_performed": false,
+  "backward_performed": false,
+  "optimizer_step_performed": false,
+  "checkpoint_modified": false,
+  "part98_source": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part98_strong_full_cohort_training.py",
+    "exists": true,
+    "sha256": "4c5f6a64a9694790ef2ca386259441281dfbda691dc71d80f06c283de2ef6309",
+    "line_count": 1607,
+    "functions": [
+      {
+        "name": "seed_everything",
+        "line": 126,
+        "args": [
+          "seed"
+        ]
+      },
+      {
+        "name": "sha256_file",
+        "line": 219,
+        "args": [
+          "path"
+        ]
+      },
+      {
+        "name": "count_parameters",
+        "line": 236,
+        "args": [
+          "model"
+        ]
+      },
+      {
+        "name": "load_checkpoint_state",
+        "line": 240,
+        "args": [
+          "path"
+        ]
+      },
+      {
+        "name": "normalize_image_tensor",
+        "line": 257,
+        "args": [
+          "image"
+        ]
+      },
+      {
+        "name": "normalize_mask_tensor",
+        "line": 280,
+        "args": [
+          "mask"
+        ]
+      },
+      {
+        "name": "compute_foreground_center",
+        "line": 307,
+        "args": [
+          "mask"
+        ]
+      },
+      {
+        "name": "crop_3d",
+        "line": 328,
+        "args": [
+          "image",
+          "mask",
+          "crop_shape",
+          "center"
+        ]
+      },
+      {
+        "name": "resize_3d",
+        "line": 392,
+        "args": [
+          "image",
+          "target_shape"
+        ]
+      },
+      {
+        "name": "resize_mask_3d",
+        "line": 411,
+        "args": [
+          "mask",
+          "target_shape"
+        ]
+      },
+      {
+        "name": "normalize_mri",
+        "line": 431,
+        "args": [
+          "image"
+        ]
+      },
+      {
+        "name": "augment_pair",
+        "line": 462,
+        "args": [
+          "image",
+          "mask"
+        ]
+      },
+      {
+        "name": "create_model",
+        "line": 597,
+        "args": []
+      },
+      {
+        "name": "calculate_dice",
+        "line": 691,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "run_epoch",
+        "line": 739,
+        "args": [
+          "model",
+          "loader",
+          "optimizer",
+          "scaler",
+          "criterion",
+          "training"
+        ]
+      },
+      {
+        "name": "save_checkpoint",
+        "line": 864,
+        "args": [
+          "path",
+          "model",
+          "optimizer",
+          "scaler",
+          "epoch",
+          "metrics"
+        ]
+      },
+      {
+        "name": "main",
+        "line": 899,
+        "args": []
+      },
+      {
+        "name": "__init__",
+        "line": 510,
+        "args": [
+          "self",
+          "cohort_path",
+          "training"
+        ]
+      },
+      {
+        "name": "__len__",
+        "line": 525,
+        "args": [
+          "self"
+        ]
+      },
+      {
+        "name": "_load_case",
+        "line": 528,
+        "args": [
+          "self",
+          "row"
+        ]
+      },
+      {
+        "name": "__getitem__",
+        "line": 553,
+        "args": [
+          "self",
+          "index"
+        ]
+      },
+      {
+        "name": "__init__",
+        "line": 625,
+        "args": [
+          "self"
+        ]
+      },
+      {
+        "name": "forward",
+        "line": 630,
+        "args": [
+          "self",
+          "logits",
+          "target"
+        ]
+      }
+    ],
+    "classes": [
+      {
+        "name": "StrongSegmentationDataset",
+        "line": 508
+      },
+      {
+        "name": "CombinedSegmentationLoss",
+        "line": 623
+      }
+    ],
+    "literal_assignments": {
+      "SEED": 42,
+      "EPOCHS": 12,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 5e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "NUM_CLASSES": 6,
+      "FULL_SHAPE": [
+        64,
+        96,
+        96
+      ],
+      "CROP_SHAPE": [
+        32,
+        64,
+        64
+      ],
+      "FEATURE_SIZE": 12,
+      "NUM_WORKERS": 0,
+      "USE_AMP": true,
+      "AUGMENT_PROB": 0.75,
+      "EARLY_STOPPING_PATIENCE": 5,
+      "MIN_FOREGROUND_VOXELS": 20,
+      "VERIFY_CASES": 50,
+      "scores": [],
+      "total_loss": 0.0,
+      "total_dice": 0.0,
+      "class_scores": [],
+      "history": [],
+      "best_epoch": -1,
+      "patience_counter": 0,
+      "verify_losses": [],
+      "verify_dices": [],
+      "verify_classwise": [],
+      "score": 1.0
+    },
+    "loss_lines": [
+      {
+        "line": 15,
+        "text": "- The final model is selected using validation foreground Dice."
+      },
+      {
+        "line": 24,
+        "text": "5. Use class-balanced Dice + weighted cross entropy."
+      },
+      {
+        "line": 607,
+        "text": "# CLASS-BALANCED LOSS"
+      },
+      {
+        "line": 623,
+        "text": "class CombinedSegmentationLoss(nn.Module):"
+      },
+      {
+        "line": 672,
+        "text": "        dice = ("
+      },
+      {
+        "line": 676,
+        "text": "        # Ignore background when calculating the primary Dice loss."
+      },
+      {
+        "line": 677,
+        "text": "        foreground_dice = dice[1:]"
+      },
+      {
+        "line": 679,
+        "text": "        dice_loss = 1.0 - foreground_dice.mean()"
+      },
+      {
+        "line": 681,
+        "text": "        total = dice_loss + ce"
+      },
+      {
+        "line": 691,
+        "text": "def calculate_dice("
+      },
+      {
+        "line": 728,
+        "text": "    foreground_dice = float("
+      },
+      {
+        "line": 732,
+        "text": "    return foreground_dice, scores"
+      },
+      {
+        "line": 744,
+        "text": "    criterion,"
+      },
+      {
+        "line": 753,
+        "text": "    total_loss = 0.0"
+      },
+      {
+        "line": 754,
+        "text": "    total_dice = 0.0"
+      },
+      {
+        "line": 782,
+        "text": "            loss = criterion("
+      },
+      {
+        "line": 787,
+        "text": "            loss_for_backward = ("
+      },
+      {
+        "line": 788,
+        "text": "                loss / GRADIENT_ACCUMULATION"
+      },
+      {
+        "line": 790,
+        "text": "                else loss"
+      },
+      {
+        "line": 796,
+        "text": "                loss_for_backward"
+      },
+      {
+        "line": 825,
+        "text": "        dice, class_dice = calculate_dice("
+      },
+      {
+        "line": 830,
+        "text": "        total_loss += float(loss.item())"
+      },
+      {
+        "line": 831,
+        "text": "        total_dice += dice"
+      },
+      {
+        "line": 834,
+        "text": "            class_dice"
+      },
+      {
+        "line": 839,
+        "text": "    mean_loss = total_loss / n"
+      },
+      {
+        "line": 840,
+        "text": "    mean_dice = total_dice / n"
+      },
+      {
+        "line": 854,
+        "text": "        mean_loss,"
+      },
+      {
+        "line": 855,
+        "text": "        mean_dice,"
+      },
+      {
+        "line": 1058,
+        "text": "    # LOSS / OPTIMIZER"
+      },
+      {
+        "line": 1061,
+        "text": "    criterion = CombinedSegmentationLoss()"
+      },
+      {
+        "line": 1081,
+        "text": "    best_dice = -math.inf"
+      },
+      {
+        "line": 1092,
+        "text": "        train_loss, train_dice, train_classwise = run_epoch("
+      },
+      {
+        "line": 1097,
+        "text": "            criterion,"
+      },
+      {
+        "line": 1101,
+        "text": "        val_loss, val_dice, val_classwise = run_epoch("
+      },
+      {
+        "line": 1106,
+        "text": "            criterion,"
+      },
+      {
+        "line": 1116,
+        "text": "            \"train_loss\": train_loss,"
+      },
+      {
+        "line": 1117,
+        "text": "            \"train_fg_dice\": train_dice,"
+      },
+      {
+        "line": 1118,
+        "text": "            \"val_loss\": val_loss,"
+      },
+      {
+        "line": 1119,
+        "text": "            \"val_fg_dice\": val_dice,"
+      },
+      {
+        "line": 1129,
+        "text": "                f\"train_class_{i}_dice\""
+      },
+      {
+        "line": 1137,
+        "text": "                f\"val_class_{i}_dice\""
+      },
+      {
+        "line": 1144,
+        "text": "            f\"TrainLoss {train_loss:.6f} | \""
+      },
+      {
+        "line": 1145,
+        "text": "            f\"TrainDice {train_dice:.6f} | \""
+      },
+      {
+        "line": 1146,
+        "text": "            f\"ValLoss {val_loss:.6f} | \""
+      },
+      {
+        "line": 1147,
+        "text": "            f\"ValDice {val_dice:.6f} | \""
+      },
+      {
+        "line": 1165,
+        "text": "        if val_dice > best_dice:"
+      },
+      {
+        "line": 1167,
+        "text": "            best_dice = val_dice"
+      },
+      {
+        "line": 1182,
+        "text": "                f\"  -> NEW BEST MODEL: Dice={best_dice:.6f}\""
+      },
+      {
+        "line": 1260,
+        "text": "    verify_losses = []"
+      },
+      {
+        "line": 1261,
+        "text": "    verify_dices = []"
+      },
+      {
+        "line": 1292,
+        "text": "                loss = criterion("
+      },
+      {
+        "line": 1297,
+        "text": "            dice, classwise = calculate_dice("
+      },
+      {
+        "line": 1302,
+        "text": "            verify_losses.append("
+      },
+      {
+        "line": 1303,
+        "text": "                float(loss.item())"
+      },
+      {
+        "line": 1306,
+        "text": "            verify_dices.append("
+      },
+      {
+        "line": 1307,
+        "text": "                dice"
+      },
+      {
+        "line": 1314,
+        "text": "    verification_dice = float("
+      },
+      {
+        "line": 1315,
+        "text": "        np.mean(verify_dices)"
+      },
+      {
+        "line": 1318,
+        "text": "    verification_loss = float("
+      },
+      {
+        "line": 1319,
+        "text": "        np.mean(verify_losses)"
+      },
+      {
+        "line": 1333,
+        "text": "        \"verification_cases\": len(verify_dices),"
+      },
+      {
+        "line": 1334,
+        "text": "        \"verification_loss\": verification_loss,"
+      },
+      {
+        "line": 1335,
+        "text": "        \"verification_foreground_dice\": verification_dice,"
+      },
+      {
+        "line": 1336,
+        "text": "        \"classwise_dice\": {"
+      },
+      {
+        "line": 1343,
+        "text": "        \"training_best_dice\": best_dice,"
+      },
+      {
+        "line": 1401,
+        "text": "        \"best_validation_dice\": best_dice,"
+      },
+      {
+        "line": 1402,
+        "text": "        \"verification_dice\": verification_dice,"
+      },
+      {
+        "line": 1403,
+        "text": "        \"verification_loss\": verification_loss,"
+      },
+      {
+        "line": 1404,
+        "text": "        \"verification_cases\": len(verify_dices),"
+      },
+      {
+        "line": 1405,
+        "text": "        \"classwise_verification_dice\": {"
+      },
+      {
+        "line": 1480,
+        "text": "            f\"Best validation Dice   : {best_dice:.6f}\\n\""
+      },
+      {
+        "line": 1484,
+        "text": "            f\"Verification Dice      : {verification_dice:.6f}\\n\""
+      },
+      {
+        "line": 1488,
+        "text": "            f\"Verification loss      : {verification_loss:.6f}\\n\""
+      },
+      {
+        "line": 1492,
+        "text": "            \"\\nClasswise verification Dice:\\n\""
+      },
+      {
+        "line": 1520,
+        "text": "            \"Therefore Dice performance should be interpreted as \""
+      },
+      {
+        "line": 1560,
+        "text": "        f\"Best validation Dice   : {best_dice:.6f}\""
+      },
+      {
+        "line": 1564,
+        "text": "        f\"Verification Dice      : {verification_dice:.6f}\""
+      },
+      {
+        "line": 1568,
+        "text": "        f\"Verification cases     : {len(verify_dices)}\""
+      }
+    ],
+    "sampling_lines": [
+      {
+        "line": 15,
+        "text": "- The final model is selected using validation foreground Dice."
+      },
+      {
+        "line": 23,
+        "text": "4. Use centered foreground-aware crops."
+      },
+      {
+        "line": 101,
+        "text": "CROP_SHAPE = (32, 64, 64)"
+      },
+      {
+        "line": 115,
+        "text": "# Minimum foreground needed for centered crop selection."
+      },
+      {
+        "line": 116,
+        "text": "MIN_FOREGROUND_VOXELS = 20"
+      },
+      {
+        "line": 304,
+        "text": "# CENTERED FOREGROUND CROP"
+      },
+      {
+        "line": 307,
+        "text": "def compute_foreground_center(mask: torch.Tensor) -> Tuple[int, int, int]:"
+      },
+      {
+        "line": 328,
+        "text": "def crop_3d("
+      },
+      {
+        "line": 331,
+        "text": "    crop_shape: Tuple[int, int, int],"
+      },
+      {
+        "line": 334,
+        "text": "    cd, ch, cw = crop_shape"
+      },
+      {
+        "line": 348,
+        "text": "    image_crop = image[z0:z1, y0:y1, x0:x1]"
+      },
+      {
+        "line": 349,
+        "text": "    mask_crop = mask[z0:z1, y0:y1, x0:x1]"
+      },
+      {
+        "line": 352,
+        "text": "    pd = cd - image_crop.shape[0]"
+      },
+      {
+        "line": 353,
+        "text": "    ph = ch - image_crop.shape[1]"
+      },
+      {
+        "line": 354,
+        "text": "    pw = cw - image_crop.shape[2]"
+      },
+      {
+        "line": 357,
+        "text": "        image_crop = F.pad("
+      },
+      {
+        "line": 358,
+        "text": "            image_crop,"
+      },
+      {
+        "line": 371,
+        "text": "        mask_crop = F.pad("
+      },
+      {
+        "line": 372,
+        "text": "            mask_crop,"
+      },
+      {
+        "line": 385,
+        "text": "    return image_crop, mask_crop"
+      },
+      {
+        "line": 571,
+        "text": "        center = compute_foreground_center(mask)"
+      },
+      {
+        "line": 573,
+        "text": "        image, mask = crop_3d("
+      },
+      {
+        "line": 576,
+        "text": "            CROP_SHAPE,"
+      },
+      {
+        "line": 677,
+        "text": "        foreground_dice = dice[1:]"
+      },
+      {
+        "line": 679,
+        "text": "        dice_loss = 1.0 - foreground_dice.mean()"
+      },
+      {
+        "line": 728,
+        "text": "    foreground_dice = float("
+      },
+      {
+        "line": 732,
+        "text": "    return foreground_dice, scores"
+      },
+      {
+        "line": 883,
+        "text": "        \"crop_shape\": CROP_SHAPE,"
+      },
+      {
+        "line": 910,
+        "text": "    print(f\"Training crop          : {CROP_SHAPE}\")"
+      },
+      {
+        "line": 996,
+        "text": "        f\"Train samples : {len(train_dataset)}\""
+      },
+      {
+        "line": 1000,
+        "text": "        f\"Val samples   : {len(val_dataset)}\""
+      },
+      {
+        "line": 1335,
+        "text": "        \"verification_foreground_dice\": verification_dice,"
+      },
+      {
+        "line": 1392,
+        "text": "        \"train_samples\": len(train_dataset),"
+      },
+      {
+        "line": 1393,
+        "text": "        \"validation_samples\": len(val_dataset),"
+      },
+      {
+        "line": 1397,
+        "text": "        \"crop_shape\": CROP_SHAPE,"
+      },
+      {
+        "line": 1464,
+        "text": "            f\"Training samples       : {len(train_dataset)}\\n\""
+      },
+      {
+        "line": 1468,
+        "text": "            f\"Validation samples     : {len(val_dataset)}\\n\""
+      },
+      {
+        "line": 1544,
+        "text": "        f\"Training samples       : {len(train_dataset)}\""
+      },
+      {
+        "line": 1548,
+        "text": "        f\"Validation samples     : {len(val_dataset)}\""
+      }
+    ],
+    "optimizer_lines": [
+      {
+        "line": 19,
+        "text": "1. Use the RSNA training/validation cohort already established by Part 15"
+      },
+      {
+        "line": 95,
+        "text": "LEARNING_RATE = 5e-5"
+      },
+      {
+        "line": 96,
+        "text": "WEIGHT_DECAY = 1e-5"
+      },
+      {
+        "line": 742,
+        "text": "    optimizer,"
+      },
+      {
+        "line": 758,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 807,
+        "text": "                    optimizer"
+      },
+      {
+        "line": 816,
+        "text": "                    optimizer"
+      },
+      {
+        "line": 821,
+        "text": "                optimizer.zero_grad("
+      },
+      {
+        "line": 867,
+        "text": "    optimizer,"
+      },
+      {
+        "line": 876,
+        "text": "        \"optimizer_state_dict\": optimizer.state_dict(),"
+      },
+      {
+        "line": 884,
+        "text": "        \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 885,
+        "text": "        \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 907,
+        "text": "    print(f\"Learning rate          : {LEARNING_RATE}\")"
+      },
+      {
+        "line": 908,
+        "text": "    print(f\"Weight decay           : {WEIGHT_DECAY}\")"
+      },
+      {
+        "line": 1058,
+        "text": "    # LOSS / OPTIMIZER"
+      },
+      {
+        "line": 1063,
+        "text": "    optimizer = torch.optim.AdamW("
+      },
+      {
+        "line": 1065,
+        "text": "        lr=LEARNING_RATE,"
+      },
+      {
+        "line": 1066,
+        "text": "        weight_decay=WEIGHT_DECAY,"
+      },
+      {
+        "line": 1069,
+        "text": "    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR("
+      },
+      {
+        "line": 1070,
+        "text": "        optimizer,"
+      },
+      {
+        "line": 1072,
+        "text": "        eta_min=LEARNING_RATE * 0.10,"
+      },
+      {
+        "line": 1095,
+        "text": "            optimizer,"
+      },
+      {
+        "line": 1104,
+        "text": "            optimizer,"
+      },
+      {
+        "line": 1120,
+        "text": "            \"learning_rate\": optimizer.param_groups[0][\"lr\"],"
+      },
+      {
+        "line": 1159,
+        "text": "            optimizer,"
+      },
+      {
+        "line": 1398,
+        "text": "        \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 1399,
+        "text": "        \"weight_decay\": WEIGHT_DECAY,"
+      }
+    ],
+    "scheduler_lines": [
+      {
+        "line": 1069,
+        "text": "    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR("
+      },
+      {
+        "line": 1110,
+        "text": "        scheduler.step()"
+      }
+    ],
+    "weights_lines": [
+      {
+        "line": 244,
+        "text": "        weights_only=False,"
+      },
+      {
+        "line": 610,
+        "text": "CLASS_WEIGHTS = torch.tensor("
+      },
+      {
+        "line": 628,
+        "text": "        self.ce_weights = CLASS_WEIGHTS / CLASS_WEIGHTS.mean()"
+      },
+      {
+        "line": 641,
+        "text": "            weight=self.ce_weights.to(logits.device),"
+      },
+      {
+        "line": 886,
+        "text": "        \"class_weights\": CLASS_WEIGHTS.tolist(),"
+      }
+    ],
+    "training_lines": [
+      {
+        "line": 53,
+        "text": "from torch.cuda.amp import autocast, GradScaler"
+      },
+      {
+        "line": 758,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 774,
+        "text": "        with autocast("
+      },
+      {
+        "line": 787,
+        "text": "            loss_for_backward = ("
+      },
+      {
+        "line": 796,
+        "text": "                loss_for_backward"
+      },
+      {
+        "line": 797,
+        "text": "            ).backward()"
+      },
+      {
+        "line": 815,
+        "text": "                scaler.step("
+      },
+      {
+        "line": 821,
+        "text": "                optimizer.zero_grad("
+      },
+      {
+        "line": 1075,
+        "text": "    scaler = GradScaler("
+      },
+      {
+        "line": 1281,
+        "text": "            with autocast("
+      }
+    ]
+  },
+  "part99_source": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part99_clinical_oriented_finetuning.py",
+    "exists": true,
+    "sha256": "94dc1680fb661888c64700aedf79a0da7b1731315511e9e5d6c9c7c5c72173e5",
+    "line_count": 2328,
+    "functions": [
+      {
+        "name": "seed_everything",
+        "line": 145,
+        "args": [
+          "seed"
+        ]
+      },
+      {
+        "name": "sha256_file",
+        "line": 162,
+        "args": [
+          "path"
+        ]
+      },
+      {
+        "name": "ensure_part99_cohorts",
+        "line": 176,
+        "args": []
+      },
+      {
+        "name": "centered_crop",
+        "line": 300,
+        "args": [
+          "image",
+          "mask",
+          "crop_size"
+        ]
+      },
+      {
+        "name": "random_crop_with_foreground_bias",
+        "line": 371,
+        "args": [
+          "image",
+          "mask",
+          "crop_size",
+          "foreground_probability"
+        ]
+      },
+      {
+        "name": "augment_training_volume",
+        "line": 462,
+        "args": [
+          "image",
+          "mask"
+        ]
+      },
+      {
+        "name": "multiclass_dice_loss",
+        "line": 663,
+        "args": [
+          "logits",
+          "target",
+          "smooth"
+        ]
+      },
+      {
+        "name": "multiclass_focal_loss",
+        "line": 704,
+        "args": [
+          "logits",
+          "target",
+          "gamma"
+        ]
+      },
+      {
+        "name": "multiclass_tversky_loss",
+        "line": 749,
+        "args": [
+          "logits",
+          "target",
+          "alpha",
+          "beta",
+          "smooth"
+        ]
+      },
+      {
+        "name": "clinical_composite_loss",
+        "line": 790,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "compute_global_metrics",
+        "line": 826,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "compute_class_metrics",
+        "line": 881,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "create_model",
+        "line": 931,
+        "args": []
+      },
+      {
+        "name": "load_checkpoint_state",
+        "line": 944,
+        "args": [
+          "model",
+          "checkpoint_path",
+          "strict"
+        ]
+      },
+      {
+        "name": "validate",
+        "line": 982,
+        "args": [
+          "model",
+          "loader"
+        ]
+      },
+      {
+        "name": "train_one_epoch",
+        "line": 1141,
+        "args": [
+          "model",
+          "loader",
+          "optimizer",
+          "scaler"
+        ]
+      },
+      {
+        "name": "save_json",
+        "line": 1250,
+        "args": [
+          "path",
+          "data"
+        ]
+      },
+      {
+        "name": "main",
+        "line": 1272,
+        "args": []
+      },
+      {
+        "name": "find_id_column",
+        "line": 211,
+        "args": [
+          "df"
+        ]
+      },
+      {
+        "name": "__init__",
+        "line": 509,
+        "args": [
+          "self",
+          "dataframe",
+          "training"
+        ]
+      },
+      {
+        "name": "__len__",
+        "line": 517,
+        "args": [
+          "self"
+        ]
+      },
+      {
+        "name": "__getitem__",
+        "line": 520,
+        "args": [
+          "self",
+          "idx"
+        ]
+      }
+    ],
+    "classes": [
+      {
+        "name": "ClinicalSegmentationDataset",
+        "line": 507
+      }
+    ],
+    "literal_assignments": {
+      "SEED": 42,
+      "EPOCHS": 8,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 2.5e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "FULL_DEPTH": 64,
+      "FULL_HEIGHT": 96,
+      "FULL_WIDTH": 96,
+      "CROP_DEPTH": 32,
+      "CROP_HEIGHT": 64,
+      "CROP_WIDTH": 64,
+      "FEATURE_SIZE": 12,
+      "NUM_CLASSES": 6,
+      "USE_AMP": true,
+      "DICE_WEIGHT": 0.45,
+      "FOCAL_WEIGHT": 0.3,
+      "TVERSKY_WEIGHT": 0.25,
+      "FOCAL_GAMMA": 2.0,
+      "TVERSKY_ALPHA": 0.3,
+      "TVERSKY_BETA": 0.7,
+      "losses": [],
+      "results": {},
+      "total_loss": 0.0,
+      "global_tp": 0,
+      "global_fp": 0,
+      "global_fn": 0,
+      "case_dice": [],
+      "class_metrics": {},
+      "running_loss": 0.0,
+      "running_dice": 0.0,
+      "running_focal": 0.0,
+      "running_tversky": 0.0,
+      "steps": 0,
+      "id_candidates": [
+        "study_id",
+        "case_id",
+        "series_id",
+        "id"
+      ],
+      "history": [],
+      "best_epoch": 0,
+      "case_rows": [],
+      "preferred": [
+        "study_id",
+        "case_id",
+        "series_id",
+        "id"
+      ],
+      "initialization_source": "Part15 exact initialization",
+      "weight": 1.0
+    },
+    "loss_lines": [
+      {
+        "line": 63,
+        "text": "# Clinical-oriented composite loss."
+      },
+      {
+        "line": 64,
+        "text": "DICE_WEIGHT = 0.45"
+      },
+      {
+        "line": 65,
+        "text": "FOCAL_WEIGHT = 0.30"
+      },
+      {
+        "line": 66,
+        "text": "TVERSKY_WEIGHT = 0.25"
+      },
+      {
+        "line": 68,
+        "text": "FOCAL_GAMMA = 2.0"
+      },
+      {
+        "line": 69,
+        "text": "TVERSKY_ALPHA = 0.30"
+      },
+      {
+        "line": 70,
+        "text": "TVERSKY_BETA = 0.70"
+      },
+      {
+        "line": 660,
+        "text": "# LOSS FUNCTIONS"
+      },
+      {
+        "line": 663,
+        "text": "def multiclass_dice_loss("
+      },
+      {
+        "line": 669,
+        "text": "    Mean Dice loss across foreground classes."
+      },
+      {
+        "line": 671,
+        "text": "    Background is excluded to avoid overwhelming the loss because the"
+      },
+      {
+        "line": 677,
+        "text": "    losses = []"
+      },
+      {
+        "line": 687,
+        "text": "        dice = ("
+      },
+      {
+        "line": 693,
+        "text": "        losses.append(1.0 - dice)"
+      },
+      {
+        "line": 695,
+        "text": "    if not losses:"
+      },
+      {
+        "line": 701,
+        "text": "    return torch.stack(losses).mean()"
+      },
+      {
+        "line": 704,
+        "text": "def multiclass_focal_loss("
+      },
+      {
+        "line": 710,
+        "text": "    Foreground-focused focal loss."
+      },
+      {
+        "line": 736,
+        "text": "        focal = ((1.0 - p) ** gamma) * ce"
+      },
+      {
+        "line": 743,
+        "text": "        total = total + weight * (focal * t).sum()"
+      },
+      {
+        "line": 749,
+        "text": "def multiclass_tversky_loss("
+      },
+      {
+        "line": 757,
+        "text": "    Foreground Tversky loss."
+      },
+      {
+        "line": 765,
+        "text": "    losses = []"
+      },
+      {
+        "line": 776,
+        "text": "        tversky = ("
+      },
+      {
+        "line": 785,
+        "text": "        losses.append(1.0 - tversky)"
+      },
+      {
+        "line": 787,
+        "text": "    return torch.stack(losses).mean()"
+      },
+      {
+        "line": 790,
+        "text": "def clinical_composite_loss("
+      },
+      {
+        "line": 795,
+        "text": "    dice = multiclass_dice_loss("
+      },
+      {
+        "line": 800,
+        "text": "    focal = multiclass_focal_loss("
+      },
+      {
+        "line": 803,
+        "text": "        gamma=FOCAL_GAMMA,"
+      },
+      {
+        "line": 806,
+        "text": "    tversky = multiclass_tversky_loss("
+      },
+      {
+        "line": 809,
+        "text": "        alpha=TVERSKY_ALPHA,"
+      },
+      {
+        "line": 810,
+        "text": "        beta=TVERSKY_BETA,"
+      },
+      {
+        "line": 814,
+        "text": "        DICE_WEIGHT * dice"
+      },
+      {
+        "line": 815,
+        "text": "        + FOCAL_WEIGHT * focal"
+      },
+      {
+        "line": 816,
+        "text": "        + TVERSKY_WEIGHT * tversky"
+      },
+      {
+        "line": 819,
+        "text": "    return total, dice, focal, tversky"
+      },
+      {
+        "line": 849,
+        "text": "    dice = ("
+      },
+      {
+        "line": 873,
+        "text": "        \"dice\": float(dice),"
+      },
+      {
+        "line": 902,
+        "text": "        dice = ("
+      },
+      {
+        "line": 916,
+        "text": "            \"dice\": float(dice),"
+      },
+      {
+        "line": 989,
+        "text": "    total_loss = 0.0"
+      },
+      {
+        "line": 995,
+        "text": "    case_dice = []"
+      },
+      {
+        "line": 1020,
+        "text": "            loss, _, _, _ = clinical_composite_loss("
+      },
+      {
+        "line": 1025,
+        "text": "        total_loss += float(loss.item())"
+      },
+      {
+        "line": 1043,
+        "text": "        case_dice_value = ("
+      },
+      {
+        "line": 1053,
+        "text": "        case_dice.append("
+      },
+      {
+        "line": 1054,
+        "text": "            float(case_dice_value)"
+      },
+      {
+        "line": 1074,
+        "text": "    global_dice = ("
+      },
+      {
+        "line": 1084,
+        "text": "    mean_case_dice = ("
+      },
+      {
+        "line": 1085,
+        "text": "        float(np.mean(case_dice))"
+      },
+      {
+        "line": 1086,
+        "text": "        if case_dice"
+      },
+      {
+        "line": 1090,
+        "text": "    median_case_dice = ("
+      },
+      {
+        "line": 1091,
+        "text": "        float(np.median(case_dice))"
+      },
+      {
+        "line": 1092,
+        "text": "        if case_dice"
+      },
+      {
+        "line": 1104,
+        "text": "        dice = ("
+      },
+      {
+        "line": 1123,
+        "text": "            \"dice\": float(dice),"
+      },
+      {
+        "line": 1129,
+        "text": "        \"loss\": total_loss / max(len(loader), 1),"
+      },
+      {
+        "line": 1130,
+        "text": "        \"global_dice\": float(global_dice),"
+      },
+      {
+        "line": 1131,
+        "text": "        \"mean_case_dice\": mean_case_dice,"
+      },
+      {
+        "line": 1132,
+        "text": "        \"median_case_dice\": median_case_dice,"
+      },
+      {
+        "line": 1154,
+        "text": "    running_loss = 0.0"
+      },
+      {
+        "line": 1155,
+        "text": "    running_dice = 0.0"
+      },
+      {
+        "line": 1156,
+        "text": "    running_focal = 0.0"
+      },
+      {
+        "line": 1157,
+        "text": "    running_tversky = 0.0"
+      },
+      {
+        "line": 1180,
+        "text": "            loss, dice_loss, focal_loss, tversky_loss = ("
+      },
+      {
+        "line": 1181,
+        "text": "                clinical_composite_loss("
+      },
+      {
+        "line": 1187,
+        "text": "            scaled_loss = ("
+      },
+      {
+        "line": 1188,
+        "text": "                loss"
+      },
+      {
+        "line": 1193,
+        "text": "            scaled_loss"
+      },
+      {
+        "line": 1220,
+        "text": "        running_loss += float("
+      },
+      {
+        "line": 1221,
+        "text": "            loss.item()"
+      },
+      {
+        "line": 1224,
+        "text": "        running_dice += float("
+      },
+      {
+        "line": 1225,
+        "text": "            dice_loss.item()"
+      },
+      {
+        "line": 1228,
+        "text": "        running_focal += float("
+      },
+      {
+        "line": 1229,
+        "text": "            focal_loss.item()"
+      },
+      {
+        "line": 1232,
+        "text": "        running_tversky += float("
+      },
+      {
+        "line": 1233,
+        "text": "            tversky_loss.item()"
+      },
+      {
+        "line": 1239,
+        "text": "        \"loss\": running_loss / max(steps, 1),"
+      },
+      {
+        "line": 1240,
+        "text": "        \"dice_loss\": running_dice / max(steps, 1),"
+      },
+      {
+        "line": 1241,
+        "text": "        \"focal_loss\": running_focal / max(steps, 1),"
+      },
+      {
+        "line": 1242,
+        "text": "        \"tversky_loss\": running_tversky / max(steps, 1),"
+      },
+      {
+        "line": 1316,
+        "text": "    print(\"LOSS\")"
+      },
+      {
+        "line": 1318,
+        "text": "    print(f\"Dice weight             : {DICE_WEIGHT}\")"
+      },
+      {
+        "line": 1319,
+        "text": "    print(f\"Focal weight            : {FOCAL_WEIGHT}\")"
+      },
+      {
+        "line": 1320,
+        "text": "    print(f\"Tversky weight          : {TVERSKY_WEIGHT}\")"
+      },
+      {
+        "line": 1321,
+        "text": "    print(f\"Focal gamma             : {FOCAL_GAMMA}\")"
+      },
+      {
+        "line": 1323,
+        "text": "        f\"Tversky alpha/beta      : \""
+      },
+      {
+        "line": 1324,
+        "text": "        f\"{TVERSKY_ALPHA}/{TVERSKY_BETA}\""
+      },
+      {
+        "line": 1613,
+        "text": "        f\"Initial global FG Dice : \""
+      },
+      {
+        "line": 1614,
+        "text": "        f\"{initial_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 1618,
+        "text": "        f\"Initial mean-case Dice : \""
+      },
+      {
+        "line": 1619,
+        "text": "        f\"{initial_metrics['mean_case_dice']:.6f}\""
+      },
+      {
+        "line": 1636,
+        "text": "        initial_metrics[\"global_dice\"]"
+      },
+      {
+        "line": 1647,
+        "text": "            \"global_dice\": initial_metrics[\"global_dice\"],"
+      },
+      {
+        "line": 1648,
+        "text": "            \"mean_case_dice\": initial_metrics[\"mean_case_dice\"],"
+      },
+      {
+        "line": 1658,
+        "text": "                \"dice_weight\": DICE_WEIGHT,"
+      },
+      {
+        "line": 1659,
+        "text": "                \"focal_weight\": FOCAL_WEIGHT,"
+      },
+      {
+        "line": 1660,
+        "text": "                \"tversky_weight\": TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 1661,
+        "text": "                \"focal_gamma\": FOCAL_GAMMA,"
+      },
+      {
+        "line": 1662,
+        "text": "                \"tversky_alpha\": TVERSKY_ALPHA,"
+      },
+      {
+        "line": 1663,
+        "text": "                \"tversky_beta\": TVERSKY_BETA,"
+      },
+      {
+        "line": 1695,
+        "text": "            \"train_loss\": train_metrics[\"loss\"],"
+      },
+      {
+        "line": 1696,
+        "text": "            \"train_dice_loss\": train_metrics[\"dice_loss\"],"
+      },
+      {
+        "line": 1697,
+        "text": "            \"train_focal_loss\": train_metrics[\"focal_loss\"],"
+      },
+      {
+        "line": 1698,
+        "text": "            \"train_tversky_loss\": train_metrics[\"tversky_loss\"],"
+      },
+      {
+        "line": 1699,
+        "text": "            \"val_loss\": val_metrics[\"loss\"],"
+      },
+      {
+        "line": 1700,
+        "text": "            \"global_dice\": val_metrics[\"global_dice\"],"
+      },
+      {
+        "line": 1701,
+        "text": "            \"mean_case_dice\": val_metrics[\"mean_case_dice\"],"
+      },
+      {
+        "line": 1702,
+        "text": "            \"median_case_dice\": val_metrics[\"median_case_dice\"],"
+      },
+      {
+        "line": 1711,
+        "text": "            row[f\"class_{c}_dice\"] = cm[\"dice\"]"
+      },
+      {
+        "line": 1723,
+        "text": "            f\"Train loss       : \""
+      },
+      {
+        "line": 1724,
+        "text": "            f\"{train_metrics['loss']:.6f}\""
+      },
+      {
+        "line": 1728,
+        "text": "            f\"Val loss         : \""
+      },
+      {
+        "line": 1729,
+        "text": "            f\"{val_metrics['loss']:.6f}\""
+      },
+      {
+        "line": 1733,
+        "text": "            f\"Global FG Dice   : \""
+      },
+      {
+        "line": 1734,
+        "text": "            f\"{val_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 1738,
+        "text": "            f\"Mean-case Dice   : \""
+      },
+      {
+        "line": 1739,
+        "text": "            f\"{val_metrics['mean_case_dice']:.6f}\""
+      },
+      {
+        "line": 1743,
+        "text": "            f\"Median-case Dice : \""
+      },
+      {
+        "line": 1744,
+        "text": "            f\"{val_metrics['median_case_dice']:.6f}\""
+      },
+      {
+        "line": 1756,
+        "text": "        #   global foreground Dice"
+      },
+      {
+        "line": 1759,
+        "text": "        #   mean-case Dice"
+      },
+      {
+        "line": 1761,
+        "text": "        # We intentionally do not select by loss alone."
+      },
+      {
+        "line": 1765,
+        "text": "            val_metrics[\"global_dice\"]"
+      },
+      {
+        "line": 1770,
+        "text": "                val_metrics[\"global_dice\"]"
+      },
+      {
+        "line": 1781,
+        "text": "                    \"global_dice\": val_metrics[\"global_dice\"],"
+      },
+      {
+        "line": 1782,
+        "text": "                    \"mean_case_dice\": val_metrics[\"mean_case_dice\"],"
+      },
+      {
+        "line": 1783,
+        "text": "                    \"median_case_dice\": val_metrics[\"median_case_dice\"],"
+      },
+      {
+        "line": 1793,
+        "text": "                        \"dice_weight\": DICE_WEIGHT,"
+      },
+      {
+        "line": 1794,
+        "text": "                        \"focal_weight\": FOCAL_WEIGHT,"
+      },
+      {
+        "line": 1795,
+        "text": "                        \"tversky_weight\": TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 1796,
+        "text": "                        \"focal_gamma\": FOCAL_GAMMA,"
+      },
+      {
+        "line": 1797,
+        "text": "                        \"tversky_alpha\": TVERSKY_ALPHA,"
+      },
+      {
+        "line": 1798,
+        "text": "                        \"tversky_beta\": TVERSKY_BETA,"
+      },
+      {
+        "line": 1828,
+        "text": "                \"dice_weight\": DICE_WEIGHT,"
+      },
+      {
+        "line": 1829,
+        "text": "                \"focal_weight\": FOCAL_WEIGHT,"
+      },
+      {
+        "line": 1830,
+        "text": "                \"tversky_weight\": TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 1831,
+        "text": "                \"focal_gamma\": FOCAL_GAMMA,"
+      },
+      {
+        "line": 1832,
+        "text": "                \"tversky_alpha\": TVERSKY_ALPHA,"
+      },
+      {
+        "line": 1833,
+        "text": "                \"tversky_beta\": TVERSKY_BETA,"
+      },
+      {
+        "line": 1883,
+        "text": "            f\"Dice={cm['dice']:.6f} \""
+      },
+      {
+        "line": 1944,
+        "text": "                \"global_dice\": metrics[\"dice\"],"
+      },
+      {
+        "line": 1970,
+        "text": "        final_metrics[\"global_dice\"]"
+      },
+      {
+        "line": 1971,
+        "text": "        - initial_metrics[\"global_dice\"]"
+      },
+      {
+        "line": 2018,
+        "text": "        \"loss\": {"
+      },
+      {
+        "line": 2019,
+        "text": "            \"dice_weight\": DICE_WEIGHT,"
+      },
+      {
+        "line": 2020,
+        "text": "            \"focal_weight\": FOCAL_WEIGHT,"
+      },
+      {
+        "line": 2021,
+        "text": "            \"tversky_weight\": TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 2022,
+        "text": "            \"focal_gamma\": FOCAL_GAMMA,"
+      },
+      {
+        "line": 2023,
+        "text": "            \"tversky_alpha\": TVERSKY_ALPHA,"
+      },
+      {
+        "line": 2024,
+        "text": "            \"tversky_beta\": TVERSKY_BETA,"
+      },
+      {
+        "line": 2039,
+        "text": "            \"global_dice\": initial_metrics[\"global_dice\"],"
+      },
+      {
+        "line": 2040,
+        "text": "            \"mean_case_dice\": initial_metrics[\"mean_case_dice\"],"
+      },
+      {
+        "line": 2041,
+        "text": "            \"median_case_dice\": initial_metrics[\"median_case_dice\"],"
+      },
+      {
+        "line": 2045,
+        "text": "            \"global_dice\": final_metrics[\"global_dice\"],"
+      },
+      {
+        "line": 2046,
+        "text": "            \"mean_case_dice\": final_metrics[\"mean_case_dice\"],"
+      },
+      {
+        "line": 2047,
+        "text": "            \"median_case_dice\": final_metrics[\"median_case_dice\"],"
+      },
+      {
+        "line": 2048,
+        "text": "            \"loss\": final_metrics[\"loss\"],"
+      },
+      {
+        "line": 2056,
+        "text": "            \"global_dice_delta\": improvement,"
+      },
+      {
+        "line": 2126,
+        "text": "        \"LOSS\","
+      },
+      {
+        "line": 2128,
+        "text": "        f\"Dice weight: {DICE_WEIGHT}\","
+      },
+      {
+        "line": 2129,
+        "text": "        f\"Focal weight: {FOCAL_WEIGHT}\","
+      },
+      {
+        "line": 2130,
+        "text": "        f\"Tversky weight: {TVERSKY_WEIGHT}\","
+      },
+      {
+        "line": 2131,
+        "text": "        f\"Focal gamma: {FOCAL_GAMMA}\","
+      },
+      {
+        "line": 2132,
+        "text": "        f\"Tversky alpha: {TVERSKY_ALPHA}\","
+      },
+      {
+        "line": 2133,
+        "text": "        f\"Tversky beta: {TVERSKY_BETA}\","
+      },
+      {
+        "line": 2152,
+        "text": "            \"Initial global foreground Dice: \""
+      },
+      {
+        "line": 2153,
+        "text": "            f\"{initial_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 2156,
+        "text": "            \"Final global foreground Dice: \""
+      },
+      {
+        "line": 2157,
+        "text": "            f\"{final_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 2160,
+        "text": "            \"Final mean-case foreground Dice: \""
+      },
+      {
+        "line": 2161,
+        "text": "            f\"{final_metrics['mean_case_dice']:.6f}\""
+      },
+      {
+        "line": 2164,
+        "text": "            \"Final median-case foreground Dice: \""
+      },
+      {
+        "line": 2165,
+        "text": "            f\"{final_metrics['median_case_dice']:.6f}\""
+      },
+      {
+        "line": 2168,
+        "text": "            \"Global Dice improvement: \""
+      },
+      {
+        "line": 2185,
+        "text": "                f\"Dice={cm['dice']:.6f}, \""
+      },
+      {
+        "line": 2205,
+        "text": "                \"foreground overlap and sensitivity through Dice, \""
+      },
+      {
+        "line": 2206,
+        "text": "                \"Focal, and Tversky components.\""
+      },
+      {
+        "line": 2257,
+        "text": "        f\"Initial global FG Dice : \""
+      },
+      {
+        "line": 2258,
+        "text": "        f\"{initial_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 2262,
+        "text": "        f\"Final global FG Dice   : \""
+      },
+      {
+        "line": 2263,
+        "text": "        f\"{final_metrics['global_dice']:.6f}\""
+      },
+      {
+        "line": 2267,
+        "text": "        f\"Mean-case Dice         : \""
+      },
+      {
+        "line": 2268,
+        "text": "        f\"{final_metrics['mean_case_dice']:.6f}\""
+      },
+      {
+        "line": 2272,
+        "text": "        f\"Median-case Dice       : \""
+      },
+      {
+        "line": 2273,
+        "text": "        f\"{final_metrics['median_case_dice']:.6f}\""
+      }
+    ],
+    "sampling_lines": [
+      {
+        "line": 54,
+        "text": "CROP_DEPTH = 32"
+      },
+      {
+        "line": 55,
+        "text": "CROP_HEIGHT = 64"
+      },
+      {
+        "line": 56,
+        "text": "CROP_WIDTH = 64"
+      },
+      {
+        "line": 185,
+        "text": "         only if enough unique rows can be sampled without overlap."
+      },
+      {
+        "line": 250,
+        "text": "        selected_train = available_train.sample("
+      },
+      {
+        "line": 257,
+        "text": "        selected_train = available_train.sample("
+      },
+      {
+        "line": 300,
+        "text": "def centered_crop("
+      },
+      {
+        "line": 303,
+        "text": "    crop_size: Tuple[int, int, int],"
+      },
+      {
+        "line": 306,
+        "text": "    Center crop with padding if required."
+      },
+      {
+        "line": 315,
+        "text": "    cd, ch, cw = crop_size"
+      },
+      {
+        "line": 371,
+        "text": "def random_crop_with_foreground_bias("
+      },
+      {
+        "line": 374,
+        "text": "    crop_size: Tuple[int, int, int],"
+      },
+      {
+        "line": 375,
+        "text": "    foreground_probability: float = 0.70,"
+      },
+      {
+        "line": 378,
+        "text": "    Foreground-aware crop."
+      },
+      {
+        "line": 380,
+        "text": "    The crop center is sampled around a foreground voxel most of the time,"
+      },
+      {
+        "line": 384,
+        "text": "    cd, ch, cw = crop_size"
+      },
+      {
+        "line": 389,
+        "text": "        torch.rand(1).item() < foreground_probability"
+      },
+      {
+        "line": 428,
+        "text": "    cropped_image = image["
+      },
+      {
+        "line": 434,
+        "text": "    cropped_mask = mask["
+      },
+      {
+        "line": 440,
+        "text": "    pd = max(cd - cropped_image.shape[0], 0)"
+      },
+      {
+        "line": 441,
+        "text": "    ph = max(ch - cropped_image.shape[1], 0)"
+      },
+      {
+        "line": 442,
+        "text": "    pw = max(cw - cropped_image.shape[2], 0)"
+      },
+      {
+        "line": 445,
+        "text": "        cropped_image = F.pad("
+      },
+      {
+        "line": 446,
+        "text": "            cropped_image,"
+      },
+      {
+        "line": 450,
+        "text": "        cropped_mask = F.pad("
+      },
+      {
+        "line": 451,
+        "text": "            cropped_mask,"
+      },
+      {
+        "line": 455,
+        "text": "    return cropped_image, cropped_mask"
+      },
+      {
+        "line": 587,
+        "text": "        # Crop."
+      },
+      {
+        "line": 592,
+        "text": "            image, mask = random_crop_with_foreground_bias("
+      },
+      {
+        "line": 596,
+        "text": "                    CROP_DEPTH,"
+      },
+      {
+        "line": 597,
+        "text": "                    CROP_HEIGHT,"
+      },
+      {
+        "line": 598,
+        "text": "                    CROP_WIDTH,"
+      },
+      {
+        "line": 600,
+        "text": "                foreground_probability=0.70,"
+      },
+      {
+        "line": 610,
+        "text": "            image, mask = centered_crop("
+      },
+      {
+        "line": 614,
+        "text": "                    CROP_DEPTH,"
+      },
+      {
+        "line": 615,
+        "text": "                    CROP_HEIGHT,"
+      },
+      {
+        "line": 616,
+        "text": "                    CROP_WIDTH,"
+      },
+      {
+        "line": 669,
+        "text": "    Mean Dice loss across foreground classes."
+      },
+      {
+        "line": 672,
+        "text": "    pseudo-mask foreground is extremely sparse."
+      },
+      {
+        "line": 710,
+        "text": "    Foreground-focused focal loss."
+      },
+      {
+        "line": 713,
+        "text": "    contribution than the foreground classes."
+      },
+      {
+        "line": 757,
+        "text": "    Foreground Tversky loss."
+      },
+      {
+        "line": 759,
+        "text": "    beta > alpha penalizes false negatives more strongly, which is desirable"
+      },
+      {
+        "line": 838,
+        "text": "    foreground_target = target > 0"
+      },
+      {
+        "line": 839,
+        "text": "    foreground_pred = pred > 0"
+      },
+      {
+        "line": 842,
+        "text": "        foreground_target"
+      },
+      {
+        "line": 843,
+        "text": "        & foreground_pred"
+      },
+      {
+        "line": 846,
+        "text": "    pred_sum = foreground_pred.sum().item()"
+      },
+      {
+        "line": 847,
+        "text": "    target_sum = foreground_target.sum().item()"
+      },
+      {
+        "line": 860,
+        "text": "        foreground_pred"
+      },
+      {
+        "line": 861,
+        "text": "        & (~foreground_target)"
+      },
+      {
+        "line": 865,
+        "text": "        (~foreground_pred)"
+      },
+      {
+        "line": 866,
+        "text": "        & foreground_target"
+      },
+      {
+        "line": 1309,
+        "text": "        f\"Training crop          : \""
+      },
+      {
+        "line": 1310,
+        "text": "        f\"({CROP_DEPTH}, {CROP_HEIGHT}, {CROP_WIDTH})\""
+      },
+      {
+        "line": 1479,
+        "text": "        f\"Train samples : {len(train_dataset)}\""
+      },
+      {
+        "line": 1483,
+        "text": "        f\"Val samples   : {len(val_dataset)}\""
+      },
+      {
+        "line": 1653,
+        "text": "                \"crop\": ["
+      },
+      {
+        "line": 1654,
+        "text": "                    CROP_DEPTH,"
+      },
+      {
+        "line": 1655,
+        "text": "                    CROP_HEIGHT,"
+      },
+      {
+        "line": 1656,
+        "text": "                    CROP_WIDTH,"
+      },
+      {
+        "line": 1756,
+        "text": "        #   global foreground Dice"
+      },
+      {
+        "line": 1788,
+        "text": "                        \"crop\": ["
+      },
+      {
+        "line": 1789,
+        "text": "                            CROP_DEPTH,"
+      },
+      {
+        "line": 1790,
+        "text": "                            CROP_HEIGHT,"
+      },
+      {
+        "line": 1791,
+        "text": "                            CROP_WIDTH,"
+      },
+      {
+        "line": 1823,
+        "text": "                \"crop\": ["
+      },
+      {
+        "line": 1824,
+        "text": "                    CROP_DEPTH,"
+      },
+      {
+        "line": 1825,
+        "text": "                    CROP_HEIGHT,"
+      },
+      {
+        "line": 1826,
+        "text": "                    CROP_WIDTH,"
+      },
+      {
+        "line": 2007,
+        "text": "            \"training_crop\": ["
+      },
+      {
+        "line": 2008,
+        "text": "                CROP_DEPTH,"
+      },
+      {
+        "line": 2009,
+        "text": "                CROP_HEIGHT,"
+      },
+      {
+        "line": 2010,
+        "text": "                CROP_WIDTH,"
+      },
+      {
+        "line": 2122,
+        "text": "        f\"Training crop: {(CROP_DEPTH, CROP_HEIGHT, CROP_WIDTH)}\","
+      },
+      {
+        "line": 2152,
+        "text": "            \"Initial global foreground Dice: \""
+      },
+      {
+        "line": 2156,
+        "text": "            \"Final global foreground Dice: \""
+      },
+      {
+        "line": 2160,
+        "text": "            \"Final mean-case foreground Dice: \""
+      },
+      {
+        "line": 2164,
+        "text": "            \"Final median-case foreground Dice: \""
+      },
+      {
+        "line": 2205,
+        "text": "                \"foreground overlap and sensitivity through Dice, \""
+      }
+    ],
+    "optimizer_lines": [
+      {
+        "line": 47,
+        "text": "LEARNING_RATE = 2.5e-5"
+      },
+      {
+        "line": 48,
+        "text": "WEIGHT_DECAY = 1e-5"
+      },
+      {
+        "line": 1144,
+        "text": "    optimizer,"
+      },
+      {
+        "line": 1150,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 1202,
+        "text": "                optimizer"
+      },
+      {
+        "line": 1211,
+        "text": "                optimizer"
+      },
+      {
+        "line": 1216,
+        "text": "            optimizer.zero_grad("
+      },
+      {
+        "line": 1302,
+        "text": "    print(f\"Learning rate          : {LEARNING_RATE}\")"
+      },
+      {
+        "line": 1303,
+        "text": "    print(f\"Weight decay           : {WEIGHT_DECAY}\")"
+      },
+      {
+        "line": 1580,
+        "text": "    # OPTIMIZER"
+      },
+      {
+        "line": 1583,
+        "text": "    optimizer = torch.optim.AdamW("
+      },
+      {
+        "line": 1585,
+        "text": "        lr=LEARNING_RATE,"
+      },
+      {
+        "line": 1586,
+        "text": "        weight_decay=WEIGHT_DECAY,"
+      },
+      {
+        "line": 1589,
+        "text": "    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR("
+      },
+      {
+        "line": 1590,
+        "text": "        optimizer,"
+      },
+      {
+        "line": 1592,
+        "text": "        eta_min=LEARNING_RATE * 0.10,"
+      },
+      {
+        "line": 1646,
+        "text": "            \"optimizer_state_dict\": optimizer.state_dict(),"
+      },
+      {
+        "line": 1651,
+        "text": "                \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 1652,
+        "text": "                \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 1677,
+        "text": "            optimizer,"
+      },
+      {
+        "line": 1703,
+        "text": "            \"learning_rate\": optimizer.param_groups[0][\"lr\"],"
+      },
+      {
+        "line": 1779,
+        "text": "                    \"optimizer_state_dict\": optimizer.state_dict(),"
+      },
+      {
+        "line": 1786,
+        "text": "                        \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 1787,
+        "text": "                        \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 1817,
+        "text": "            \"optimizer_state_dict\": optimizer.state_dict(),"
+      },
+      {
+        "line": 1821,
+        "text": "                \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 1822,
+        "text": "                \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 2000,
+        "text": "            \"learning_rate\": LEARNING_RATE,"
+      },
+      {
+        "line": 2001,
+        "text": "            \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 2120,
+        "text": "        f\"Learning rate: {LEARNING_RATE}\","
+      },
+      {
+        "line": 2121,
+        "text": "        f\"Weight decay: {WEIGHT_DECAY}\","
+      }
+    ],
+    "scheduler_lines": [
+      {
+        "line": 1589,
+        "text": "    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR("
+      },
+      {
+        "line": 1686,
+        "text": "        scheduler.step()"
+      },
+      {
+        "line": 1780,
+        "text": "                    \"scheduler_state_dict\": scheduler.state_dict(),"
+      },
+      {
+        "line": 1818,
+        "text": "            \"scheduler_state_dict\": scheduler.state_dict(),"
+      }
+    ],
+    "weights_lines": [],
+    "training_lines": [
+      {
+        "line": 18,
+        "text": "from torch.cuda.amp import GradScaler, autocast"
+      },
+      {
+        "line": 1013,
+        "text": "        with autocast("
+      },
+      {
+        "line": 1150,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 1173,
+        "text": "        with autocast("
+      },
+      {
+        "line": 1194,
+        "text": "        ).backward()"
+      },
+      {
+        "line": 1210,
+        "text": "            scaler.step("
+      },
+      {
+        "line": 1216,
+        "text": "            optimizer.zero_grad("
+      },
+      {
+        "line": 1595,
+        "text": "    scaler = GradScaler("
+      },
+      {
+        "line": 1926,
+        "text": "            with autocast("
+      }
+    ]
+  },
+  "part100_source": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part100_robust_clinical_finetuning.py",
+    "exists": true,
+    "sha256": "35e18fd5ce93a91a2494f0112d44fd267d5a8807354e51e3edcbcb9825999b8a",
+    "line_count": 3151,
+    "functions": [
+      {
+        "name": "banner",
+        "line": 240,
+        "args": [
+          "title"
+        ]
+      },
+      {
+        "name": "section",
+        "line": 246,
+        "args": [
+          "title"
+        ]
+      },
+      {
+        "name": "set_seed",
+        "line": 256,
+        "args": [
+          "seed"
+        ]
+      },
+      {
+        "name": "sha256_file",
+        "line": 274,
+        "args": [
+          "path"
+        ]
+      },
+      {
+        "name": "import_module_from_path",
+        "line": 291,
+        "args": [
+          "name",
+          "path"
+        ]
+      },
+      {
+        "name": "import_project_modules",
+        "line": 315,
+        "args": []
+      },
+      {
+        "name": "load_checkpoint",
+        "line": 346,
+        "args": [
+          "path",
+          "device"
+        ]
+      },
+      {
+        "name": "extract_state_dict",
+        "line": 363,
+        "args": [
+          "checkpoint"
+        ]
+      },
+      {
+        "name": "load_model_checkpoint",
+        "line": 387,
+        "args": [
+          "model",
+          "path",
+          "device"
+        ]
+      },
+      {
+        "name": "load_csv",
+        "line": 422,
+        "args": [
+          "path"
+        ]
+      },
+      {
+        "name": "find_identifier_column",
+        "line": 437,
+        "args": [
+          "df"
+        ]
+      },
+      {
+        "name": "normalize_id",
+        "line": 456,
+        "args": [
+          "value"
+        ]
+      },
+      {
+        "name": "study_ids",
+        "line": 467,
+        "args": [
+          "df"
+        ]
+      },
+      {
+        "name": "audit_leakage",
+        "line": 485,
+        "args": [
+          "train_df",
+          "val_df"
+        ]
+      },
+      {
+        "name": "resolve_cohorts",
+        "line": 513,
+        "args": []
+      },
+      {
+        "name": "ensure_3d",
+        "line": 809,
+        "args": [
+          "tensor",
+          "name"
+        ]
+      },
+      {
+        "name": "resize_image",
+        "line": 845,
+        "args": [
+          "image"
+        ]
+      },
+      {
+        "name": "resize_mask",
+        "line": 864,
+        "args": [
+          "mask"
+        ]
+      },
+      {
+        "name": "load_case",
+        "line": 892,
+        "args": [
+          "row",
+          "part9",
+          "part11"
+        ]
+      },
+      {
+        "name": "mask_centroid",
+        "line": 972,
+        "args": [
+          "mask"
+        ]
+      },
+      {
+        "name": "random_center",
+        "line": 1003,
+        "args": []
+      },
+      {
+        "name": "crop_bounds",
+        "line": 1021,
+        "args": [
+          "center"
+        ]
+      },
+      {
+        "name": "crop_case",
+        "line": 1054,
+        "args": [
+          "image",
+          "mask",
+          "training"
+        ]
+      },
+      {
+        "name": "multiclass_dice_loss",
+        "line": 1148,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "focal_loss",
+        "line": 1218,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "tversky_loss",
+        "line": 1278,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "clinical_loss",
+        "line": 1351,
+        "args": [
+          "logits",
+          "target"
+        ]
+      },
+      {
+        "name": "dice_for_class",
+        "line": 1391,
+        "args": [
+          "pred",
+          "target",
+          "class_id"
+        ]
+      },
+      {
+        "name": "foreground_dice",
+        "line": 1427,
+        "args": [
+          "pred",
+          "target"
+        ]
+      },
+      {
+        "name": "case_metrics",
+        "line": 1462,
+        "args": [
+          "pred",
+          "target"
+        ]
+      },
+      {
+        "name": "create_model",
+        "line": 1507,
+        "args": [
+          "part11"
+        ]
+      },
+      {
+        "name": "train_one_epoch",
+        "line": 1534,
+        "args": [
+          "model",
+          "train_df",
+          "part9",
+          "part11",
+          "optimizer",
+          "scaler"
+        ]
+      },
+      {
+        "name": "validate",
+        "line": 1737,
+        "args": [
+          "model",
+          "val_df",
+          "part9",
+          "part11",
+          "save_cases"
+        ]
+      },
+      {
+        "name": "main",
+        "line": 2081,
+        "args": []
+      }
+    ],
+    "classes": [],
+    "literal_assignments": {
+      "SEED": 42,
+      "EPOCHS": 10,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 2e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "FULL_SHAPE": [
+        64,
+        96,
+        96
+      ],
+      "CROP_SHAPE": [
+        32,
+        64,
+        64
+      ],
+      "FEATURE_SIZE": 12,
+      "NUM_CLASSES": 6,
+      "USE_AMP": true,
+      "DICE_WEIGHT": 0.45,
+      "FOCAL_WEIGHT": 0.3,
+      "TVERSKY_WEIGHT": 0.25,
+      "FOCAL_GAMMA": 2.0,
+      "TVERSKY_ALPHA": 0.3,
+      "TVERSKY_BETA": 0.7,
+      "SMOOTH": 1e-06,
+      "FOREGROUND_CROP_PROBABILITY": 0.8,
+      "REQUESTED_TRAIN": 500,
+      "REQUESTED_VAL": 100,
+      "CLASS_NAMES": {
+        "0": "Background",
+        "1": "Spinal Canal Stenosis",
+        "2": "Left Neural Foraminal Narrowing",
+        "3": "Right Neural Foraminal Narrowing",
+        "4": "Left Subarticular Stenosis",
+        "5": "Right Subarticular Stenosis"
+      },
+      "cleaned": {},
+      "candidates": [
+        "study_id",
+        "study",
+        "studyid",
+        "id"
+      ],
+      "bounds": [],
+      "total_loss": 0.0,
+      "total_dice": 0.0,
+      "total_focal": 0.0,
+      "total_tversky": 0.0,
+      "successful": 0,
+      "case_rows": [],
+      "global_intersection": 0,
+      "global_pred_fg": 0,
+      "global_target_fg": 0,
+      "losses": [],
+      "class_dices": {},
+      "history": [],
+      "best_epoch": 0,
+      "report": [],
+      "perturbed": []
+    },
+    "loss_lines": [
+      {
+        "line": 28,
+        "text": "7. Uses Dice + Focal + Tversky loss."
+      },
+      {
+        "line": 111,
+        "text": "DICE_WEIGHT = 0.45"
+      },
+      {
+        "line": 112,
+        "text": "FOCAL_WEIGHT = 0.30"
+      },
+      {
+        "line": 113,
+        "text": "TVERSKY_WEIGHT = 0.25"
+      },
+      {
+        "line": 115,
+        "text": "FOCAL_GAMMA = 2.0"
+      },
+      {
+        "line": 117,
+        "text": "TVERSKY_ALPHA = 0.30"
+      },
+      {
+        "line": 118,
+        "text": "TVERSKY_BETA = 0.70"
+      },
+      {
+        "line": 725,
+        "text": "    train_indices = rng_train.choice("
+      },
+      {
+        "line": 734,
+        "text": "            sorted(train_indices)"
+      },
+      {
+        "line": 774,
+        "text": "    val_indices = rng_val.choice("
+      },
+      {
+        "line": 783,
+        "text": "            sorted(val_indices)"
+      },
+      {
+        "line": 1145,
+        "text": "# LOSS FUNCTIONS"
+      },
+      {
+        "line": 1148,
+        "text": "def multiclass_dice_loss("
+      },
+      {
+        "line": 1194,
+        "text": "    dice = ("
+      },
+      {
+        "line": 1212,
+        "text": "            - dice[valid].mean()"
+      },
+      {
+        "line": 1215,
+        "text": "    return 1.0 - dice.mean()"
+      },
+      {
+        "line": 1218,
+        "text": "def focal_loss("
+      },
+      {
+        "line": 1251,
+        "text": "    focal_factor = ("
+      },
+      {
+        "line": 1254,
+        "text": "        FOCAL_GAMMA"
+      },
+      {
+        "line": 1257,
+        "text": "    loss = ("
+      },
+      {
+        "line": 1258,
+        "text": "        -focal_factor"
+      },
+      {
+        "line": 1274,
+        "text": "        loss * weight"
+      },
+      {
+        "line": 1278,
+        "text": "def tversky_loss("
+      },
+      {
+        "line": 1326,
+        "text": "    tversky = ("
+      },
+      {
+        "line": 1330,
+        "text": "        + TVERSKY_ALPHA * fp"
+      },
+      {
+        "line": 1331,
+        "text": "        + TVERSKY_BETA * fn"
+      },
+      {
+        "line": 1345,
+        "text": "            - tversky[valid].mean()"
+      },
+      {
+        "line": 1348,
+        "text": "    return 1.0 - tversky.mean()"
+      },
+      {
+        "line": 1351,
+        "text": "def clinical_loss("
+      },
+      {
+        "line": 1356,
+        "text": "    dice = multiclass_dice_loss("
+      },
+      {
+        "line": 1361,
+        "text": "    focal = focal_loss("
+      },
+      {
+        "line": 1366,
+        "text": "    tversky = tversky_loss("
+      },
+      {
+        "line": 1372,
+        "text": "        DICE_WEIGHT * dice"
+      },
+      {
+        "line": 1374,
+        "text": "        FOCAL_WEIGHT * focal"
+      },
+      {
+        "line": 1376,
+        "text": "        TVERSKY_WEIGHT * tversky"
+      },
+      {
+        "line": 1381,
+        "text": "        dice.detach(),"
+      },
+      {
+        "line": 1382,
+        "text": "        focal.detach(),"
+      },
+      {
+        "line": 1383,
+        "text": "        tversky.detach(),"
+      },
+      {
+        "line": 1391,
+        "text": "def dice_for_class("
+      },
+      {
+        "line": 1427,
+        "text": "def foreground_dice("
+      },
+      {
+        "line": 1468,
+        "text": "        \"foreground_dice\":"
+      },
+      {
+        "line": 1469,
+        "text": "            foreground_dice("
+      },
+      {
+        "line": 1493,
+        "text": "            f\"class_{class_id}_dice\""
+      },
+      {
+        "line": 1494,
+        "text": "        ] = dice_for_class("
+      },
+      {
+        "line": 1545,
+        "text": "    total_loss = 0.0"
+      },
+      {
+        "line": 1546,
+        "text": "    total_dice = 0.0"
+      },
+      {
+        "line": 1547,
+        "text": "    total_focal = 0.0"
+      },
+      {
+        "line": 1548,
+        "text": "    total_tversky = 0.0"
+      },
+      {
+        "line": 1602,
+        "text": "                    loss, dice_loss, focal, tversky = ("
+      },
+      {
+        "line": 1603,
+        "text": "                        clinical_loss("
+      },
+      {
+        "line": 1615,
+        "text": "                loss, dice_loss, focal, tversky = ("
+      },
+      {
+        "line": 1616,
+        "text": "                    clinical_loss("
+      },
+      {
+        "line": 1622,
+        "text": "            scaled_loss = ("
+      },
+      {
+        "line": 1623,
+        "text": "                loss"
+      },
+      {
+        "line": 1630,
+        "text": "                    scaled_loss"
+      },
+      {
+        "line": 1635,
+        "text": "                scaled_loss.backward()"
+      },
+      {
+        "line": 1680,
+        "text": "            total_loss += float("
+      },
+      {
+        "line": 1681,
+        "text": "                loss.detach()"
+      },
+      {
+        "line": 1686,
+        "text": "            total_dice += float("
+      },
+      {
+        "line": 1687,
+        "text": "                dice_loss"
+      },
+      {
+        "line": 1692,
+        "text": "            total_focal += float("
+      },
+      {
+        "line": 1693,
+        "text": "                focal"
+      },
+      {
+        "line": 1698,
+        "text": "            total_tversky += float("
+      },
+      {
+        "line": 1699,
+        "text": "                tversky"
+      },
+      {
+        "line": 1720,
+        "text": "        \"loss\": total_loss / successful,"
+      },
+      {
+        "line": 1721,
+        "text": "        \"dice_loss\":"
+      },
+      {
+        "line": 1722,
+        "text": "            total_dice / successful,"
+      },
+      {
+        "line": 1723,
+        "text": "        \"focal_loss\":"
+      },
+      {
+        "line": 1724,
+        "text": "            total_focal / successful,"
+      },
+      {
+        "line": 1725,
+        "text": "        \"tversky_loss\":"
+      },
+      {
+        "line": 1726,
+        "text": "            total_tversky / successful,"
+      },
+      {
+        "line": 1786,
+        "text": "    losses = []"
+      },
+      {
+        "line": 1829,
+        "text": "                    loss, _, _, _ = clinical_loss("
+      },
+      {
+        "line": 1840,
+        "text": "                loss, _, _, _ = clinical_loss("
+      },
+      {
+        "line": 1870,
+        "text": "                \"validation_loss\":"
+      },
+      {
+        "line": 1872,
+        "text": "                        loss"
+      },
+      {
+        "line": 1883,
+        "text": "            losses.append("
+      },
+      {
+        "line": 1885,
+        "text": "                    loss"
+      },
+      {
+        "line": 1954,
+        "text": "    global_dice = ("
+      },
+      {
+        "line": 1963,
+        "text": "    case_dices = ["
+      },
+      {
+        "line": 1965,
+        "text": "            x[\"foreground_dice\"]"
+      },
+      {
+        "line": 1969,
+        "text": "            x[\"foreground_dice\"]"
+      },
+      {
+        "line": 1973,
+        "text": "    class_dices = {}"
+      },
+      {
+        "line": 1987,
+        "text": "            class_dices[c] = float("
+      },
+      {
+        "line": 1993,
+        "text": "            class_dices[c] = ("
+      },
+      {
+        "line": 2002,
+        "text": "    macro_dice_values = ["
+      },
+      {
+        "line": 2004,
+        "text": "        for value in class_dices.values()"
+      },
+      {
+        "line": 2009,
+        "text": "        \"validation_loss\":"
+      },
+      {
+        "line": 2011,
+        "text": "                np.mean(losses)"
+      },
+      {
+        "line": 2013,
+        "text": "        \"global_foreground_dice\":"
+      },
+      {
+        "line": 2014,
+        "text": "            float(global_dice),"
+      },
+      {
+        "line": 2015,
+        "text": "        \"mean_case_foreground_dice\":"
+      },
+      {
+        "line": 2017,
+        "text": "                np.mean(case_dices)"
+      },
+      {
+        "line": 2019,
+        "text": "            if case_dices"
+      },
+      {
+        "line": 2021,
+        "text": "        \"median_case_foreground_dice\":"
+      },
+      {
+        "line": 2023,
+        "text": "                np.median(case_dices)"
+      },
+      {
+        "line": 2025,
+        "text": "            if case_dices"
+      },
+      {
+        "line": 2027,
+        "text": "        \"macro_foreground_dice\":"
+      },
+      {
+        "line": 2030,
+        "text": "                    macro_dice_values"
+      },
+      {
+        "line": 2033,
+        "text": "            if macro_dice_values"
+      },
+      {
+        "line": 2051,
+        "text": "            f\"class_{c}_dice\""
+      },
+      {
+        "line": 2052,
+        "text": "        ] = class_dices[c]"
+      },
+      {
+        "line": 2174,
+        "text": "        \"LOSS\""
+      },
+      {
+        "line": 2178,
+        "text": "        f\"Dice weight             : \""
+      },
+      {
+        "line": 2179,
+        "text": "        f\"{DICE_WEIGHT}\""
+      },
+      {
+        "line": 2183,
+        "text": "        f\"Focal weight            : \""
+      },
+      {
+        "line": 2184,
+        "text": "        f\"{FOCAL_WEIGHT}\""
+      },
+      {
+        "line": 2188,
+        "text": "        f\"Tversky weight          : \""
+      },
+      {
+        "line": 2189,
+        "text": "        f\"{TVERSKY_WEIGHT}\""
+      },
+      {
+        "line": 2193,
+        "text": "        f\"Focal gamma             : \""
+      },
+      {
+        "line": 2194,
+        "text": "        f\"{FOCAL_GAMMA}\""
+      },
+      {
+        "line": 2198,
+        "text": "        f\"Tversky alpha/beta      : \""
+      },
+      {
+        "line": 2199,
+        "text": "        f\"{TVERSKY_ALPHA}/{TVERSKY_BETA}\""
+      },
+      {
+        "line": 2441,
+        "text": "        f\"Starting global foreground Dice : \""
+      },
+      {
+        "line": 2442,
+        "text": "        f\"{start_eval['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2446,
+        "text": "        f\"Starting mean-case Dice          : \""
+      },
+      {
+        "line": 2447,
+        "text": "        f\"{start_eval['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2460,
+        "text": "    best_dice = float("
+      },
+      {
+        "line": 2462,
+        "text": "            \"global_foreground_dice\""
+      },
+      {
+        "line": 2476,
+        "text": "            \"global_foreground_dice\":"
+      },
+      {
+        "line": 2477,
+        "text": "                best_dice,"
+      },
+      {
+        "line": 2494,
+        "text": "                \"dice_weight\":"
+      },
+      {
+        "line": 2495,
+        "text": "                    DICE_WEIGHT,"
+      },
+      {
+        "line": 2496,
+        "text": "                \"focal_weight\":"
+      },
+      {
+        "line": 2497,
+        "text": "                    FOCAL_WEIGHT,"
+      },
+      {
+        "line": 2498,
+        "text": "                \"tversky_weight\":"
+      },
+      {
+        "line": 2499,
+        "text": "                    TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 2549,
+        "text": "            \"train_loss\":"
+      },
+      {
+        "line": 2550,
+        "text": "                train_stats[\"loss\"],"
+      },
+      {
+        "line": 2551,
+        "text": "            \"train_dice_loss\":"
+      },
+      {
+        "line": 2552,
+        "text": "                train_stats[\"dice_loss\"],"
+      },
+      {
+        "line": 2553,
+        "text": "            \"train_focal_loss\":"
+      },
+      {
+        "line": 2554,
+        "text": "                train_stats[\"focal_loss\"],"
+      },
+      {
+        "line": 2555,
+        "text": "            \"train_tversky_loss\":"
+      },
+      {
+        "line": 2556,
+        "text": "                train_stats[\"tversky_loss\"],"
+      },
+      {
+        "line": 2561,
+        "text": "            \"val_loss\":"
+      },
+      {
+        "line": 2563,
+        "text": "                    \"validation_loss\""
+      },
+      {
+        "line": 2565,
+        "text": "            \"val_global_foreground_dice\":"
+      },
+      {
+        "line": 2567,
+        "text": "                    \"global_foreground_dice\""
+      },
+      {
+        "line": 2569,
+        "text": "            \"val_mean_case_dice\":"
+      },
+      {
+        "line": 2571,
+        "text": "                    \"mean_case_foreground_dice\""
+      },
+      {
+        "line": 2573,
+        "text": "            \"val_median_case_dice\":"
+      },
+      {
+        "line": 2575,
+        "text": "                    \"median_case_foreground_dice\""
+      },
+      {
+        "line": 2577,
+        "text": "            \"val_macro_foreground_dice\":"
+      },
+      {
+        "line": 2579,
+        "text": "                    \"macro_foreground_dice\""
+      },
+      {
+        "line": 2599,
+        "text": "            f\"TrainLoss \""
+      },
+      {
+        "line": 2600,
+        "text": "            f\"{record['train_loss']:.6f} | \""
+      },
+      {
+        "line": 2601,
+        "text": "            f\"ValLoss \""
+      },
+      {
+        "line": 2602,
+        "text": "            f\"{record['val_loss']:.6f} | \""
+      },
+      {
+        "line": 2603,
+        "text": "            f\"ValGlobalDice \""
+      },
+      {
+        "line": 2604,
+        "text": "            f\"{record['val_global_foreground_dice']:.6f} | \""
+      },
+      {
+        "line": 2606,
+        "text": "            f\"{record['val_mean_case_dice']:.6f} | \""
+      },
+      {
+        "line": 2612,
+        "text": "        # Best checkpoint selected by GLOBAL foreground Dice."
+      },
+      {
+        "line": 2615,
+        "text": "        current_dice = ("
+      },
+      {
+        "line": 2617,
+        "text": "                \"val_global_foreground_dice\""
+      },
+      {
+        "line": 2622,
+        "text": "            np.isfinite(current_dice)"
+      },
+      {
+        "line": 2623,
+        "text": "            and current_dice > best_dice"
+      },
+      {
+        "line": 2626,
+        "text": "            best_dice = float("
+      },
+      {
+        "line": 2627,
+        "text": "                current_dice"
+      },
+      {
+        "line": 2640,
+        "text": "                    \"global_foreground_dice\":"
+      },
+      {
+        "line": 2641,
+        "text": "                        best_dice,"
+      },
+      {
+        "line": 2660,
+        "text": "                        \"dice_weight\":"
+      },
+      {
+        "line": 2661,
+        "text": "                            DICE_WEIGHT,"
+      },
+      {
+        "line": 2662,
+        "text": "                        \"focal_weight\":"
+      },
+      {
+        "line": 2663,
+        "text": "                            FOCAL_WEIGHT,"
+      },
+      {
+        "line": 2664,
+        "text": "                        \"tversky_weight\":"
+      },
+      {
+        "line": 2665,
+        "text": "                            TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 2685,
+        "text": "                f\"global Dice \""
+      },
+      {
+        "line": 2686,
+        "text": "                f\"{best_dice:.6f}\""
+      },
+      {
+        "line": 2703,
+        "text": "            \"best_global_foreground_dice\":"
+      },
+      {
+        "line": 2704,
+        "text": "                best_dice,"
+      },
+      {
+        "line": 2820,
+        "text": "        \"best_global_foreground_dice\":"
+      },
+      {
+        "line": 2821,
+        "text": "            best_dice,"
+      },
+      {
+        "line": 2822,
+        "text": "        \"verification_global_foreground_dice\":"
+      },
+      {
+        "line": 2824,
+        "text": "                \"global_foreground_dice\""
+      },
+      {
+        "line": 2826,
+        "text": "        \"verification_mean_case_dice\":"
+      },
+      {
+        "line": 2828,
+        "text": "                \"mean_case_foreground_dice\""
+      },
+      {
+        "line": 2830,
+        "text": "        \"verification_median_case_dice\":"
+      },
+      {
+        "line": 2832,
+        "text": "                \"median_case_foreground_dice\""
+      },
+      {
+        "line": 2834,
+        "text": "        \"verification_macro_foreground_dice\":"
+      },
+      {
+        "line": 2836,
+        "text": "                \"macro_foreground_dice\""
+      },
+      {
+        "line": 2860,
+        "text": "                \"dice_weight\":"
+      },
+      {
+        "line": 2861,
+        "text": "                    DICE_WEIGHT,"
+      },
+      {
+        "line": 2862,
+        "text": "                \"focal_weight\":"
+      },
+      {
+        "line": 2863,
+        "text": "                    FOCAL_WEIGHT,"
+      },
+      {
+        "line": 2864,
+        "text": "                \"tversky_weight\":"
+      },
+      {
+        "line": 2865,
+        "text": "                    TVERSKY_WEIGHT,"
+      },
+      {
+        "line": 2866,
+        "text": "                \"focal_gamma\":"
+      },
+      {
+        "line": 2867,
+        "text": "                    FOCAL_GAMMA,"
+      },
+      {
+        "line": 2868,
+        "text": "                \"tversky_alpha\":"
+      },
+      {
+        "line": 2869,
+        "text": "                    TVERSKY_ALPHA,"
+      },
+      {
+        "line": 2870,
+        "text": "                \"tversky_beta\":"
+      },
+      {
+        "line": 2871,
+        "text": "                    TVERSKY_BETA,"
+      },
+      {
+        "line": 2954,
+        "text": "        f\"Best global foreground Dice: \""
+      },
+      {
+        "line": 2955,
+        "text": "        f\"{best_dice:.6f}\""
+      },
+      {
+        "line": 2959,
+        "text": "        f\"Independent verification global Dice: \""
+      },
+      {
+        "line": 2960,
+        "text": "        f\"{verification['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2964,
+        "text": "        f\"Mean-case Dice: \""
+      },
+      {
+        "line": 2965,
+        "text": "        f\"{verification['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2969,
+        "text": "        f\"Median-case Dice: \""
+      },
+      {
+        "line": 2970,
+        "text": "        f\"{verification['median_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2974,
+        "text": "        f\"Macro foreground Dice: \""
+      },
+      {
+        "line": 2975,
+        "text": "        f\"{verification['macro_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2981,
+        "text": "        \"CLASS-WISE DICE\""
+      },
+      {
+        "line": 2990,
+        "text": "            f\"class_{c}_dice\""
+      },
+      {
+        "line": 3070,
+        "text": "        f\"Best global Dice        : \""
+      },
+      {
+        "line": 3071,
+        "text": "        f\"{best_dice:.6f}\""
+      },
+      {
+        "line": 3075,
+        "text": "        f\"Verification global Dice: \""
+      },
+      {
+        "line": 3076,
+        "text": "        f\"{verification['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3080,
+        "text": "        f\"Mean-case Dice          : \""
+      },
+      {
+        "line": 3081,
+        "text": "        f\"{verification['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3085,
+        "text": "        f\"Median-case Dice        : \""
+      },
+      {
+        "line": 3086,
+        "text": "        f\"{verification['median_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3090,
+        "text": "        f\"Macro foreground Dice   : \""
+      },
+      {
+        "line": 3091,
+        "text": "        f\"{verification['macro_foreground_dice']:.6f}\""
+      }
+    ],
+    "sampling_lines": [
+      {
+        "line": 29,
+        "text": "8. Uses foreground-aware crop sampling."
+      },
+      {
+        "line": 103,
+        "text": "CROP_SHAPE = (32, 64, 64)"
+      },
+      {
+        "line": 122,
+        "text": "# Foreground-aware training crop probability."
+      },
+      {
+        "line": 123,
+        "text": "FOREGROUND_CROP_PROBABILITY = 0.80"
+      },
+      {
+        "line": 680,
+        "text": "    # Deterministic sampling."
+      },
+      {
+        "line": 969,
+        "text": "# FOREGROUND CENTER"
+      },
+      {
+        "line": 972,
+        "text": "def mask_centroid("
+      },
+      {
+        "line": 1011,
+        "text": "            crop // 2,"
+      },
+      {
+        "line": 1012,
+        "text": "            full - crop // 2,"
+      },
+      {
+        "line": 1014,
+        "text": "        for full, crop in zip("
+      },
+      {
+        "line": 1016,
+        "text": "            CROP_SHAPE,"
+      },
+      {
+        "line": 1021,
+        "text": "def crop_bounds("
+      },
+      {
+        "line": 1027,
+        "text": "    for c, full, crop in zip("
+      },
+      {
+        "line": 1030,
+        "text": "        CROP_SHAPE,"
+      },
+      {
+        "line": 1034,
+        "text": "            c - crop // 2"
+      },
+      {
+        "line": 1041,
+        "text": "                full - crop,"
+      },
+      {
+        "line": 1045,
+        "text": "        end = start + crop"
+      },
+      {
+        "line": 1054,
+        "text": "def crop_case("
+      },
+      {
+        "line": 1066,
+        "text": "        < FOREGROUND_CROP_PROBABILITY"
+      },
+      {
+        "line": 1070,
+        "text": "        center = mask_centroid("
+      },
+      {
+        "line": 1076,
+        "text": "        # the same crop."
+      },
+      {
+        "line": 1082,
+        "text": "            crop,"
+      },
+      {
+        "line": 1087,
+        "text": "                CROP_SHAPE,"
+      },
+      {
+        "line": 1092,
+        "text": "                -max(1, crop // 8),"
+      },
+      {
+        "line": 1093,
+        "text": "                max(1, crop // 8),"
+      },
+      {
+        "line": 1099,
+        "text": "                crop // 2,"
+      },
+      {
+        "line": 1102,
+        "text": "                    full - crop // 2,"
+      },
+      {
+        "line": 1118,
+        "text": "            center = mask_centroid("
+      },
+      {
+        "line": 1129,
+        "text": "    bounds = crop_bounds("
+      },
+      {
+        "line": 1262,
+        "text": "    # Background remains important but foreground"
+      },
+      {
+        "line": 1264,
+        "text": "    foreground = ("
+      },
+      {
+        "line": 1270,
+        "text": "        + 2.0 * foreground"
+      },
+      {
+        "line": 1427,
+        "text": "def foreground_dice("
+      },
+      {
+        "line": 1468,
+        "text": "        \"foreground_dice\":"
+      },
+      {
+        "line": 1469,
+        "text": "            foreground_dice("
+      },
+      {
+        "line": 1473,
+        "text": "        \"target_foreground_voxels\":"
+      },
+      {
+        "line": 1479,
+        "text": "        \"predicted_foreground_voxels\":"
+      },
+      {
+        "line": 1573,
+        "text": "            image, mask = crop_case("
+      },
+      {
+        "line": 1800,
+        "text": "            image, mask = crop_case("
+      },
+      {
+        "line": 1965,
+        "text": "            x[\"foreground_dice\"]"
+      },
+      {
+        "line": 1969,
+        "text": "            x[\"foreground_dice\"]"
+      },
+      {
+        "line": 2013,
+        "text": "        \"global_foreground_dice\":"
+      },
+      {
+        "line": 2015,
+        "text": "        \"mean_case_foreground_dice\":"
+      },
+      {
+        "line": 2021,
+        "text": "        \"median_case_foreground_dice\":"
+      },
+      {
+        "line": 2027,
+        "text": "        \"macro_foreground_dice\":"
+      },
+      {
+        "line": 2039,
+        "text": "        \"target_foreground_voxels\":"
+      },
+      {
+        "line": 2041,
+        "text": "        \"predicted_foreground_voxels\":"
+      },
+      {
+        "line": 2154,
+        "text": "        f\"Training crop          : \""
+      },
+      {
+        "line": 2155,
+        "text": "        f\"{CROP_SHAPE}\""
+      },
+      {
+        "line": 2164,
+        "text": "        f\"Foreground crop prob.  : \""
+      },
+      {
+        "line": 2165,
+        "text": "        f\"{FOREGROUND_CROP_PROBABILITY}\""
+      },
+      {
+        "line": 2441,
+        "text": "        f\"Starting global foreground Dice : \""
+      },
+      {
+        "line": 2442,
+        "text": "        f\"{start_eval['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2447,
+        "text": "        f\"{start_eval['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2462,
+        "text": "            \"global_foreground_dice\""
+      },
+      {
+        "line": 2476,
+        "text": "            \"global_foreground_dice\":"
+      },
+      {
+        "line": 2488,
+        "text": "                \"crop_shape\":"
+      },
+      {
+        "line": 2489,
+        "text": "                    CROP_SHAPE,"
+      },
+      {
+        "line": 2500,
+        "text": "                \"foreground_crop_probability\":"
+      },
+      {
+        "line": 2501,
+        "text": "                    FOREGROUND_CROP_PROBABILITY,"
+      },
+      {
+        "line": 2565,
+        "text": "            \"val_global_foreground_dice\":"
+      },
+      {
+        "line": 2567,
+        "text": "                    \"global_foreground_dice\""
+      },
+      {
+        "line": 2571,
+        "text": "                    \"mean_case_foreground_dice\""
+      },
+      {
+        "line": 2575,
+        "text": "                    \"median_case_foreground_dice\""
+      },
+      {
+        "line": 2577,
+        "text": "            \"val_macro_foreground_dice\":"
+      },
+      {
+        "line": 2579,
+        "text": "                    \"macro_foreground_dice\""
+      },
+      {
+        "line": 2604,
+        "text": "            f\"{record['val_global_foreground_dice']:.6f} | \""
+      },
+      {
+        "line": 2612,
+        "text": "        # Best checkpoint selected by GLOBAL foreground Dice."
+      },
+      {
+        "line": 2617,
+        "text": "                \"val_global_foreground_dice\""
+      },
+      {
+        "line": 2640,
+        "text": "                    \"global_foreground_dice\":"
+      },
+      {
+        "line": 2654,
+        "text": "                        \"crop_shape\":"
+      },
+      {
+        "line": 2655,
+        "text": "                            CROP_SHAPE,"
+      },
+      {
+        "line": 2666,
+        "text": "                        \"foreground_crop_probability\":"
+      },
+      {
+        "line": 2667,
+        "text": "                            FOREGROUND_CROP_PROBABILITY,"
+      },
+      {
+        "line": 2703,
+        "text": "            \"best_global_foreground_dice\":"
+      },
+      {
+        "line": 2820,
+        "text": "        \"best_global_foreground_dice\":"
+      },
+      {
+        "line": 2822,
+        "text": "        \"verification_global_foreground_dice\":"
+      },
+      {
+        "line": 2824,
+        "text": "                \"global_foreground_dice\""
+      },
+      {
+        "line": 2828,
+        "text": "                \"mean_case_foreground_dice\""
+      },
+      {
+        "line": 2832,
+        "text": "                \"median_case_foreground_dice\""
+      },
+      {
+        "line": 2834,
+        "text": "        \"verification_macro_foreground_dice\":"
+      },
+      {
+        "line": 2836,
+        "text": "                \"macro_foreground_dice\""
+      },
+      {
+        "line": 2858,
+        "text": "                \"foreground_aware_crop_probability\":"
+      },
+      {
+        "line": 2859,
+        "text": "                    FOREGROUND_CROP_PROBABILITY,"
+      },
+      {
+        "line": 2954,
+        "text": "        f\"Best global foreground Dice: \""
+      },
+      {
+        "line": 2960,
+        "text": "        f\"{verification['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2965,
+        "text": "        f\"{verification['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2970,
+        "text": "        f\"{verification['median_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 2974,
+        "text": "        f\"Macro foreground Dice: \""
+      },
+      {
+        "line": 2975,
+        "text": "        f\"{verification['macro_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3076,
+        "text": "        f\"{verification['global_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3081,
+        "text": "        f\"{verification['mean_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3086,
+        "text": "        f\"{verification['median_case_foreground_dice']:.6f}\""
+      },
+      {
+        "line": 3090,
+        "text": "        f\"Macro foreground Dice   : \""
+      },
+      {
+        "line": 3091,
+        "text": "        f\"{verification['macro_foreground_dice']:.6f}\""
+      }
+    ],
+    "optimizer_lines": [
+      {
+        "line": 18,
+        "text": "Part98 already demonstrated that a 500/100 cohort can be constructed and trained"
+      },
+      {
+        "line": 99,
+        "text": "LEARNING_RATE = 2.0e-5"
+      },
+      {
+        "line": 100,
+        "text": "WEIGHT_DECAY = 1.0e-5"
+      },
+      {
+        "line": 1539,
+        "text": "    optimizer,"
+      },
+      {
+        "line": 1552,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 1653,
+        "text": "                        optimizer"
+      },
+      {
+        "line": 1662,
+        "text": "                        optimizer"
+      },
+      {
+        "line": 1674,
+        "text": "                    optimizer.step()"
+      },
+      {
+        "line": 1676,
+        "text": "                optimizer.zero_grad("
+      },
+      {
+        "line": 2130,
+        "text": "        f\"{LEARNING_RATE}\""
+      },
+      {
+        "line": 2135,
+        "text": "        f\"{WEIGHT_DECAY}\""
+      },
+      {
+        "line": 2400,
+        "text": "    # Optimizer"
+      },
+      {
+        "line": 2403,
+        "text": "    optimizer = torch.optim.AdamW("
+      },
+      {
+        "line": 2405,
+        "text": "        lr=LEARNING_RATE,"
+      },
+      {
+        "line": 2406,
+        "text": "        weight_decay=WEIGHT_DECAY,"
+      },
+      {
+        "line": 2474,
+        "text": "            \"optimizer_state_dict\":"
+      },
+      {
+        "line": 2475,
+        "text": "                optimizer.state_dict(),"
+      },
+      {
+        "line": 2480,
+        "text": "                \"learning_rate\":"
+      },
+      {
+        "line": 2481,
+        "text": "                    LEARNING_RATE,"
+      },
+      {
+        "line": 2482,
+        "text": "                \"weight_decay\":"
+      },
+      {
+        "line": 2483,
+        "text": "                    WEIGHT_DECAY,"
+      },
+      {
+        "line": 2529,
+        "text": "            optimizer,"
+      },
+      {
+        "line": 2638,
+        "text": "                    \"optimizer_state_dict\":"
+      },
+      {
+        "line": 2639,
+        "text": "                        optimizer.state_dict(),"
+      },
+      {
+        "line": 2646,
+        "text": "                        \"learning_rate\":"
+      },
+      {
+        "line": 2647,
+        "text": "                            LEARNING_RATE,"
+      },
+      {
+        "line": 2648,
+        "text": "                        \"weight_decay\":"
+      },
+      {
+        "line": 2649,
+        "text": "                            WEIGHT_DECAY,"
+      },
+      {
+        "line": 2699,
+        "text": "            \"optimizer_state_dict\":"
+      },
+      {
+        "line": 2700,
+        "text": "                optimizer.state_dict(),"
+      }
+    ],
+    "scheduler_lines": [],
+    "weights_lines": [
+      {
+        "line": 354,
+        "text": "            weights_only=False,"
+      }
+    ],
+    "training_lines": [
+      {
+        "line": 1552,
+        "text": "    optimizer.zero_grad("
+      },
+      {
+        "line": 1594,
+        "text": "                with torch.amp.autocast("
+      },
+      {
+        "line": 1631,
+        "text": "                ).backward()"
+      },
+      {
+        "line": 1635,
+        "text": "                scaled_loss.backward()"
+      },
+      {
+        "line": 1661,
+        "text": "                    scaler.step("
+      },
+      {
+        "line": 1674,
+        "text": "                    optimizer.step()"
+      },
+      {
+        "line": 1676,
+        "text": "                optimizer.zero_grad("
+      },
+      {
+        "line": 1821,
+        "text": "                with torch.amp.autocast("
+      },
+      {
+        "line": 2416,
+        "text": "        scaler = torch.amp.GradScaler("
+      }
+    ]
+  },
+  "configuration_comparison": {
+    "part98": {
+      "SEED": 42,
+      "EPOCHS": 12,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 5e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "NUM_CLASSES": 6,
+      "FULL_SHAPE": [
+        64,
+        96,
+        96
+      ],
+      "CROP_SHAPE": [
+        32,
+        64,
+        64
+      ],
+      "FEATURE_SIZE": 12,
+      "AUGMENT_PROB": 0.75,
+      "class_scores": [],
+      "best_epoch": -1,
+      "verify_classwise": []
+    },
+    "part99": {
+      "SEED": 42,
+      "EPOCHS": 8,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 2.5e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "CROP_DEPTH": 32,
+      "CROP_HEIGHT": 64,
+      "CROP_WIDTH": 64,
+      "FEATURE_SIZE": 12,
+      "NUM_CLASSES": 6,
+      "DICE_WEIGHT": 0.45,
+      "FOCAL_WEIGHT": 0.3,
+      "TVERSKY_WEIGHT": 0.25,
+      "FOCAL_GAMMA": 2.0,
+      "TVERSKY_ALPHA": 0.3,
+      "TVERSKY_BETA": 0.7,
+      "class_metrics": {},
+      "best_epoch": 0
+    },
+    "part100": {
+      "SEED": 42,
+      "EPOCHS": 10,
+      "BATCH_SIZE": 1,
+      "GRADIENT_ACCUMULATION": 4,
+      "LEARNING_RATE": 2e-05,
+      "WEIGHT_DECAY": 1e-05,
+      "FULL_SHAPE": [
+        64,
+        96,
+        96
+      ],
+      "CROP_SHAPE": [
+        32,
+        64,
+        64
+      ],
+      "FEATURE_SIZE": 12,
+      "NUM_CLASSES": 6,
+      "DICE_WEIGHT": 0.45,
+      "FOCAL_WEIGHT": 0.3,
+      "TVERSKY_WEIGHT": 0.25,
+      "FOCAL_GAMMA": 2.0,
+      "TVERSKY_ALPHA": 0.3,
+      "TVERSKY_BETA": 0.7,
+      "FOREGROUND_CROP_PROBABILITY": 0.8,
+      "CLASS_NAMES": {
+        "0": "Background",
+        "1": "Spinal Canal Stenosis",
+        "2": "Left Neural Foraminal Narrowing",
+        "3": "Right Neural Foraminal Narrowing",
+        "4": "Left Subarticular Stenosis",
+        "5": "Right Subarticular Stenosis"
+      },
+      "class_dices": {},
+      "best_epoch": 0
+    }
+  },
+  "part98_history": {
+    "exists": true,
+    "rows": 12,
+    "columns": [
+      "epoch",
+      "train_loss",
+      "train_fg_dice",
+      "val_loss",
+      "val_fg_dice",
+      "learning_rate",
+      "epoch_seconds",
+      "train_class_1_dice",
+      "train_class_2_dice",
+      "train_class_3_dice",
+      "train_class_4_dice",
+      "train_class_5_dice",
+      "val_class_1_dice",
+      "val_class_2_dice",
+      "val_class_3_dice",
+      "val_class_4_dice",
+      "val_class_5_dice"
+    ],
+    "best_dice": {
+      "column": "train_class_3_dice",
+      "value": 0.6620000004768372,
+      "row": 11
+    },
+    "loss_behavior": {
+      "train_loss": {
+        "first": 2.215412941455841,
+        "last": 1.812879166841507,
+        "minimum": 1.812879166841507
+      },
+      "val_loss": {
+        "first": 2.1919363212585448,
+        "last": 1.8186548376083371,
+        "minimum": 1.8186548376083371
+      }
+    },
+    "correlations": {
+      "train_fg_dice vs train_loss": -0.7330332306798,
+      "train_fg_dice vs val_loss": -0.7194838326549727,
+      "val_fg_dice vs train_loss": -0.6712257502432676,
+      "val_fg_dice vs val_loss": -0.6569763217403491,
+      "train_class_1_dice vs train_loss": -0.9465505329426631,
+      "train_class_1_dice vs val_loss": -0.9355943563167437,
+      "train_class_2_dice vs train_loss": -0.9133226660935758,
+      "train_class_2_dice vs val_loss": -0.9098812869659347,
+      "train_class_3_dice vs train_loss": -0.013445657543194989,
+      "train_class_3_dice vs val_loss": 0.004620142035254492,
+      "train_class_4_dice vs train_loss": -0.9353652703235036,
+      "train_class_4_dice vs val_loss": -0.940335227050184,
+      "train_class_5_dice vs train_loss": -0.831747658067485,
+      "train_class_5_dice vs val_loss": -0.8262693759821373,
+      "val_class_1_dice vs train_loss": -0.9541378499708207,
+      "val_class_1_dice vs val_loss": -0.9445808559371176,
+      "val_class_2_dice vs train_loss": -0.880905271099794,
+      "val_class_2_dice vs val_loss": -0.8817392644864265,
+      "val_class_3_dice vs train_loss": -0.007695744831812286,
+      "val_class_3_dice vs val_loss": 0.013751558450505116,
+      "val_class_4_dice vs train_loss": -0.9192302385290558,
+      "val_class_4_dice vs val_loss": -0.9279415567931939,
+      "val_class_5_dice vs train_loss": -0.8106601287439723,
+      "val_class_5_dice vs val_loss": -0.8067696521958262
+    }
+  },
+  "canonical_checkpoint": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+    "exists": true,
+    "size_mb": 54.039,
+    "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+    "load_pass": true,
+    "type": "dict",
+    "keys": [
+      "epoch",
+      "model_state_dict",
+      "optimizer_state_dict",
+      "scaler_state_dict",
+      "metrics",
+      "seed",
+      "feature_size",
+      "num_classes",
+      "full_shape",
+      "crop_shape",
+      "learning_rate",
+      "weight_decay",
+      "class_weights"
+    ],
+    "state_dict_key": "model_state_dict",
+    "epoch": 10,
+    "state_key_count": 159,
+    "tensor_count": 5019308
+  },
+  "strategy_result": {
+    "primary_diagnosis": "TRAINING_STRATEGY_AND_SPARSE_FOREGROUND_INTERACTION",
+    "recommendation": "TARGETED_RETRAINING_AFTER_LOSS_AND_CROP_AUDIT",
+    "loss_signals": {
+      "DiceCELoss": false,
+      "DiceLoss": false,
+      "CrossEntropyLoss": false,
+      "Focal": false,
+      "Tversky": false,
+      "BCEWithLogitsLoss": false
+    },
+    "foreground_sampling_signal": true,
+    "explicit_weighting_signal": true,
+    "findings": [
+      "Part114 measured 67.462x predicted foreground relative to target foreground.",
+      "Part115 measured mean P(FG)=0.513583 and P(BG)=0.486417, with no single-logit class-collapse diagnosis.",
+      "Part116 measured only 0.045820% validation foreground voxels, while all five foreground classes were present globally.",
+      "Part98 source contains foreground/positive sampling signals. The critical quantity is foreground density INSIDE sampled crops, not just full-volume density.",
+      "Part98 contains explicit weighting references. Increasing weights blindly is unsafe because the current model already overpredicts foreground by 67.462x.",
+      "Part104 SHA matches the canonical Part98-best checkpoint, so the Parts114-116 behavior is being observed from the exact selected Part98 model."
+    ],
+    "do_not_change_yet": [
+      "Swin-UNETR architecture",
+      "six-class label definition",
+      "Part9/Part11 loader contract",
+      "canonical Part104 checkpoint",
+      "class weights without verifying exact values and reduction",
+      "learning rate without evidence that LR is the primary failure"
+    ],
+    "next_retraining_focus": [
+      "Verify the exact Part98 loss formula and reduction.",
+      "Verify whether Dice includes/excludes background.",
+      "Verify empty-class handling and per-class Dice aggregation.",
+      "Verify focal/Tversky target encoding and normalization.",
+      "Verify all class/foreground weights and their normalization.",
+      "Measure foreground fraction inside actual training crops.",
+      "Measure how often training crops contain each class.",
+      "Run one-variable-at-a-time ablations; keep Part104 as the locked baseline."
+    ]
+  }
+}
+
+FINAL STATUS
+PASS — TRAINING STRATEGY / LOSS-MECHANISM AUDIT COMPLETED
+Primary diagnosis: TRAINING_STRATEGY_AND_SPARSE_FOREGROUND_INTERACTION
+Retraining recommendation: TARGETED_RETRAINING_AFTER_LOSS_AND_CROP_AUDIT

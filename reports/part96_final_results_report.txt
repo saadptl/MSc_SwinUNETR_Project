@@ -1,0 +1,94 @@
+==========================================================================================
+PART 96 — FINAL MODEL EVALUATION & PROJECT RESULTS CONSOLIDATION
+==========================================================================================
+
+PROJECT STATUS
+------------------------------------------------------------------------------------------
+PASS — FINAL REPRODUCIBLE RESULTS CONSOLIDATED
+
+FINAL SEGMENTATION MODEL
+------------------------------------------------------------------------------------------
+Part       : Part84
+Architecture: Swin-UNETR
+Parameters : 4,078,116
+Checkpoint : C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part84_final_reproducible_training\checkpoints\part84_best_model.pth
+SHA256     : b06dee9381cb210913053b4f4bbecc89ed520ae4b02b89f0e802b121c69113b8
+Global FG Dice       : 0.193388
+Mean-case FG Dice    : 0.193388
+Median-case FG Dice  : 0.203689
+Macro FG Dice        : 0.193388
+
+FINAL CLASSIFICATION MODEL
+------------------------------------------------------------------------------------------
+Part       : Part92
+Architecture: Part92CNN
+Parameters : 20,083
+Checkpoint : C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\classification\rsna_part92_class_imbalance_aware_training\checkpoints\part92_best_model.pth
+SHA256     : 3e05b6f14b85c2bcf5c08479d749e35255828e0853108fb3dfcd09a27b1c119b
+Accuracy           : 0.716626
+Balanced accuracy  : 0.438530
+Macro F1           : 0.442275
+Moderate recall    : 0.360377
+Severe recall      : 0.115894
+
+PART90 BASELINE COMPARISON
+------------------------------------------------------------------------------------------
+Part90 accuracy          : 0.775389
+Majority baseline       : 0.775389
+Part90 balanced accuracy: 0.333333
+Part90 Severe recall    : 0.000000
+Part92 accuracy change  : -0.058763
+Balanced accuracy gain  : 0.105197
+Moderate recall gain    : 0.360377
+Severe recall gain      : 0.115894
+
+INTEGRATED INFERENCE
+------------------------------------------------------------------------------------------
+Validation studies              : 395
+Successful studies              : 395
+Failed studies                  : 0
+Success rate                    : 1.0000
+Mean segmentation FG fraction  : 0.071236
+Mean classification confidence : 0.480336
+Mean Severe probability        : 0.240634
+
+EXPLAINABILITY
+------------------------------------------------------------------------------------------
+Validation studies       : 395
+Successful studies       : 395
+Visualizations           : 10
+Mean foreground fraction : 0.069968
+Mean classifier confidence: 0.480336
+Mean Severe probability  : 0.240634
+
+HISTORICAL PART71 RESULT
+------------------------------------------------------------------------------------------
+Historical reported Dice: 0.044026
+Status                  : NON-REPRODUCIBLE
+Decision                : Excluded from final reproducible performance claims.
+Reason                  : Parts79–83 could not reconstruct the historical
+                          result from the saved class-balanced checkpoint.
+
+IMPORTANT LIMITATIONS
+------------------------------------------------------------------------------------------
+- The final Swin-UNETR segmentation result is weak when judged by global foreground Dice.
+- Mean-case Dice is substantially higher than global Dice because it averages case-level/class-level behavior and should not be used alone to claim strong segmentation.
+- Part90 classification accuracy exactly matches the majority-class baseline and therefore should not be presented as strong predictive performance.
+- Part92 improves minority-class signal but Severe recall remains limited.
+- Part92 uses a different lightweight architecture from the actual Part90 architecture, so its improvement cannot be attributed solely to class weighting.
+- Parts94–95 are sequential inference pipelines. The classifier does not consume Swin-UNETR feature maps or segmentation masks as learned inputs.
+- Part95 provides spatial/output-level explainability rather than Grad-CAM, SHAP, or feature-level attribution.
+- The historical Part71 foreground Dice of 0.044026 is not reproducible and is excluded from final performance claims.
+
+FINAL INTERPRETATION
+------------------------------------------------------------------------------------------
+The project successfully produced a reproducible Swin-UNETR segmentation model, an imbalance-aware classification model, a sequential integrated inference pipeline, and an explainability pipeline. The technical pipeline was validated on the complete 395-study classification validation cohort. Predictive performance remains limited, particularly for segmentation and Severe-class classification, and these limitations should be reported explicitly rather than overstating model performance.
+
+OUTPUT FILES
+------------------------------------------------------------------------------------------
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\final\part96_final_results_consolidation\part96_final_results.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\final\part96_final_results_consolidation\part96_model_inventory.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\final\part96_final_results_consolidation\part96_reproducibility_audit.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\final\part96_final_results_consolidation\part96_project_statistics.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part96_final_results_report.txt
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part96_final_results_summary.json

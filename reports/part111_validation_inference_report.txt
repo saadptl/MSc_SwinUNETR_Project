@@ -1,0 +1,47 @@
+PART 111 — RSNA VALIDATION-COHORT FULL-VOLUME INFERENCE
+========================================================================
+
+Final status: FAIL — NO_VALIDATION_CASES_PROCESSED
+
+CHECKPOINT
+Path: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+ARCHITECTURE
+MONAI SwinUNETR
+in_channels=1
+out_channels=6
+feature_size=12
+spatial_dims=3
+use_checkpoint=False
+full_volume=(64, 96, 96)
+parameters=4,078,116
+state_dict_keys=159
+
+COHORT
+Rows: 100
+Unique studies: 86
+Duplicate rows: 14
+Successful cases: 0
+Failed cases: 100
+
+RUNTIME
+Device: cuda:0
+Total inference seconds: 53.120
+Mean inference seconds/case: None
+
+PSEUDO-MASK DICE SUMMARY
+Class 1 (Spinal Canal Stenosis): mean=None, median=None
+Class 2 (Left Neural Foraminal Narrowing): mean=None, median=None
+Class 3 (Right Neural Foraminal Narrowing): mean=None, median=None
+Class 4 (Left Subarticular Stenosis): mean=None, median=None
+Class 5 (Right Subarticular Stenosis): mean=None, median=None
+
+SCIENTIFIC NOTE
+The inference predictions are generated from the established RSNA validation cohort using the confirmed Part 104 checkpoint.
+The Dice values in this report are comparisons against the project's development/pseudo-mask targets and must not be presented as expert-ground-truth or clinical validation results.
+
+OUTPUTS
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part111_validation_full_volume_inference\part111_validation_case_inference.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part111_validation_full_volume_inference\predictions
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part111_validation_inference_summary.json

@@ -1,0 +1,127 @@
+{
+  "part": 104,
+  "status": "PASS \u2014 FINAL_SEGMENTATION_CHECKPOINT_SELECTED",
+  "selected_checkpoint": "Part98 best",
+  "selected_source": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_best_model.pth",
+  "published_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "rationale": "Part98 recorded best validation metric exceeds Part99's recorded best validation metric; Part98 is retained as the stronger recorded segmentation checkpoint.",
+  "part98": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_best_model.pth",
+    "exists": true,
+    "readable": true,
+    "size_mb": 54.039,
+    "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+    "key_count": 159,
+    "parameter_count": 5019308,
+    "epoch": 10
+  },
+  "part99_best": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\checkpoints\\part99_best_model.pth",
+    "exists": true,
+    "readable": true,
+    "size_mb": 54.04,
+    "sha256": "eddcacaadc7aae1f0017aaa5d1d14305ce7f45060cc5d22b17bd65fe16dc3ca1",
+    "key_count": 159,
+    "parameter_count": 5019308,
+    "epoch": 2
+  },
+  "part99_final": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\checkpoints\\part99_final_model.pth",
+    "exists": true,
+    "readable": true,
+    "size_mb": 54.041,
+    "sha256": "9cdc178818b4aa2e611f2feb930d14835885ff83a42d7c529399154056c9a412",
+    "key_count": 159,
+    "parameter_count": 5019308,
+    "epoch": 8
+  },
+  "part98_history": {
+    "exists": true,
+    "rows": 12,
+    "best_epoch": 10,
+    "best_metric": 0.2172496851095929,
+    "metric_name": "val_fg_dice",
+    "latest_epoch": 12,
+    "latest_metric": 0.21709076247084882
+  },
+  "part99_history": {
+    "exists": true,
+    "rows": 8,
+    "best_epoch": 2,
+    "best_metric": 0.0310755273661614,
+    "metric_name": "mean_case_dice",
+    "latest_epoch": 8,
+    "latest_metric": 0.021665300613149183
+  },
+  "comparison": {
+    "best_metric_delta": -0.1861741577434315,
+    "best_metric_relative_percent": -85.69593905257669,
+    "latest_metric_delta": -0.19542546185769966
+  },
+  "architecture_compatibility": {
+    "available": true,
+    "compatible": true,
+    "same_keys": true,
+    "same_shapes": true,
+    "a_keys": 159,
+    "b_keys": 159
+  },
+  "part99_case_metrics": {
+    "exists": true,
+    "rows": 100,
+    "columns": [
+      "validation_index",
+      "global_dice",
+      "precision",
+      "recall",
+      "pred_fg",
+      "target_fg",
+      "study_id"
+    ],
+    "numeric_summary": {
+      "validation_index": {
+        "count": 100,
+        "mean": 49.5,
+        "min": 0.0,
+        "max": 99.0
+      },
+      "global_dice": {
+        "count": 100,
+        "mean": 0.03107552736616139,
+        "min": 0.0,
+        "max": 0.379746835440853
+      },
+      "precision": {
+        "count": 100,
+        "mean": 0.026254511699251006,
+        "min": 0.0,
+        "max": 0.32289628179723195
+      },
+      "recall": {
+        "count": 100,
+        "mean": 0.05737372091853091,
+        "min": 0.0,
+        "max": 0.65306122444537
+      },
+      "pred_fg": {
+        "count": 100,
+        "mean": 186.38,
+        "min": 1.0,
+        "max": 1674.0
+      },
+      "target_fg": {
+        "count": 100,
+        "mean": 198.04,
+        "min": 24.0,
+        "max": 1088.0
+      },
+      "study_id": {
+        "count": 100,
+        "mean": 2139612544.88,
+        "min": 153831832.0,
+        "max": 4278146423.0
+      }
+    }
+  },
+  "clinical_interpretation_note": "These checkpoint-selection results are model-development metrics and must not be presented as clinical diagnostic accuracy or manual-ground-truth segmentation performance unless independently validated against appropriate expert annotations."
+}

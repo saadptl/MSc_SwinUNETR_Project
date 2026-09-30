@@ -1,0 +1,34 @@
+========================================================================================
+PART 106 — FINAL SEGMENTATION INFERENCE VALIDATION
+========================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Status: FAIL — FINAL_MODEL_INFERENCE_REQUIRES_REVIEW
+
+FINAL CHECKPOINT
+  Path: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+  SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+  Readable: True
+
+VALIDATION COHORT
+  Rows: 100
+  Unique study IDs: 86
+  Duplicate rows: 14
+
+MODEL
+  Factory: src.model.create_model
+  Runtime parameter count: 27521661
+  Missing keys: 173
+  Unexpected keys: 159
+
+FORWARD PASS
+  Device: None
+  Input: None
+  Output: None
+  Finite: None
+
+SCOPE
+This part validates checkpoint loading and model execution. It does not claim clinical diagnostic accuracy, expert-ground-truth segmentation accuracy, or clinical deployment readiness.
+
+ACTUAL DICOM CASE INFERENCE
+No parallel preprocessing pipeline was invented. The established project loader should be used for case-level inference in the next stage once its exact loader entry point is identified.

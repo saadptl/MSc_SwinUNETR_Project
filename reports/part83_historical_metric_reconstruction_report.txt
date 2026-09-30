@@ -1,0 +1,345 @@
+
+==============================================================================
+PART 83 — HISTORICAL METRIC RECONSTRUCTION
+==============================================================================
+Training is DISABLED. This is a forensic audit only.
+
+==============================================================================
+1. FILE FINGERPRINTS
+==============================================================================
+Part71 source: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\src\segmentation_rsna_part71_class_balanced_dicece_training.py
+  exists=True
+  size=28720
+  sha256=746e97ce43e59180b3f63a30de8e351b41b3f5ef79b7832cfec510c8d564fcb5
+Part71 class-balanced E3 checkpoint: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part71_class_balanced_dicece_training\checkpoints\part71_r2_full_class_balanced_epoch3.pth
+  exists=True
+  size=56679545
+  sha256=e3f305c1bca35f2eda143b6ddfebe6337d79f6493ea48b324b04ccfabe1bcddb
+Part71 summary: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part71_summary.json
+  exists=False
+Part71 report: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part71_report.txt
+  exists=False
+
+==============================================================================
+2. HISTORICAL REFERENCE DISCOVERY
+==============================================================================
+Source literal 0.044026 occurrences: 0
+Report/summary 0.044026 occurrences: 0
+
+==============================================================================
+3. ORIGINAL PART71 METRIC-RELATED CODE
+==============================================================================
+
+--- FUNCTION: evaluate ---
+def evaluate(
+    model: torch.nn.Module,
+    loss_fn: torch.nn.Module,
+    rows: pd.DataFrame,
+    part9: Any,
+    part11: Any,
+):
+    model.eval()
+
+    losses = []
+    class_records = []
+    case_records = []
+
+    with torch.no_grad():
+        for case_no, (_, row) in enumerate(rows.iterrows(), start=1):
+            image, target = load_case(row, part9, part11)
+
+            x = image.unsqueeze(0).unsqueeze(0).to(
+                DEVICE,
+                non_blocking=True,
+            )
+            y = target.unsqueeze(0).unsqueeze(0).to(DEVICE)
+
+            logits = model(x)
+            loss = loss_fn(logits, y)
+
+            pred = torch.argmax(logits, dim=1)[0].detach().cpu().numpy()
+            tgt = target.numpy()
+
+            losses.append(float(loss.detach().cpu()))
+
+            case_fg_target = int((tgt > 0).sum())
+            case_fg_pred = int((pred > 0).sum())
+
+            case_rec = {
+                "case_no": case_no,
+                "target_foreground_voxels": case_fg_target,
+                "predicted_foreground_voxels": case_fg_pred,
+                "empty_foreground_prediction": int(case_fg_pred == 0),
+            }
+
+            for c in range(1, NUM_CLASSES):
+                m = class_metrics(pred, tgt, c)
+                rec = {
+                    "case_no": case_no,
+                    "class_id": c,
+                    "class_name": CLASSES[c],
+                    **m,
+                }
+                class_records.append(rec)
+
+                for key, value in m.items():
+                    case_rec[f"class_{c}_{key}"] = value
+
+            case_records.append(case_rec)
+
+    cdf = pd.DataFrame(class_records)
+    kdf = pd.DataFrame(case_records)
+
+    summary = {
+        "loss": float(np.mean(losses)) if losses else float("nan"),
+        "foreground_target_voxels": int(kdf.target_foreground_voxels.sum()),
+        "foreground_predicted_voxels": int(kdf.predicted_foreground_voxels.sum()),
+        "foreground_empty_cases": int(
+            kdf.empty_foreground_prediction.sum()
+        ),
+        "cases": len(kdf),
+    }
+
+    class_summary = []
+    for c in range(1, NUM_CLASSES):
+        g = cdf[cdf.class_id == c]
+
+        tp = int(g.tp.sum())
+        fp = int(g.fp.sum())
+        fn = int(g.fn.sum())
+        pred_n = int(g.predicted_voxels.sum())
+        target_n = int(g.target_voxels.sum())
+
+        class_summary.append(
+            {
+                "class_id": c,
+                "class_name": CLASSES[c],
+                "target_voxels": target_n,
+                "predicted_voxels": pred_n,
+                "tp": tp,
+                "fp": fp,
+                "fn": fn,
+                "dice": safe_div(2 * tp, pred_n + target_n),
+                "precision": safe_div(tp, tp + fp),
+                "recall": safe_div(tp, tp + fn),
+                "iou": safe_div(tp, tp + fp + fn),
+                "empty_cases": int(g.empty_prediction.sum()),
+            }
+        )
+
+    # Micro foreground Dice.
+    total_tp = sum(int(x["tp"]) for x in class_summary)
+    total_pred = sum(int(x["predicted_voxels"]) for x in class_summary)
+    total_target = sum(int(x["target_voxels"]) for x in class_summary)
+
+    summary["foreground_dice"] = safe_div(
+        2 * total_tp,
+        total_pred + total_target,
+    )
+
+    return summary, pd.DataFrame(class_summary), cdf, kdf
+
+--- FUNCTION: train_one_epoch ---
+def train_one_epoch(
+    model: torch.nn.Module,
+    loss_fn: torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    rows: pd.DataFrame,
+    part9: Any,
+    part11: Any,
+):
+    model.train()
+
+    losses = []
+    target_fg = []
+    successful = 0
+
+    for _, row in rows.iterrows():
+        image, target = load_case(row, part9, part11)
+
+        x = image.unsqueeze(0).unsqueeze(0).to(
+            DEVICE,
+            non_blocking=True,
+        )
+        y = target.unsqueeze(0).unsqueeze(0).to(DEVICE)
+
+        optimizer.zero_grad(set_to_none=True)
+
+        with torch.autocast(
+            device_type="cuda",
+            enabled=DEVICE.type == "cuda",
+        ):
+            logits = model(x)
+            loss = loss_fn(logits, y)
+
+        if not torch.isfinite(loss):
+            raise FloatingPointError(
+                f"Non-finite loss: {float(loss.detach().cpu())}"
+            )
+
+        loss.backward()
+        optimizer.step()
+
+        losses.append(float(loss.detach().cpu()))
+        target_fg.append(int((target > 0).sum()))
+        successful += 1
+
+    return {
+        "loss": float(np.mean(losses)),
+        "mean_target_foreground_voxels": float(np.mean(target_fg)),
+        "successful_cases": successful,
+    }
+
+--- DICE-RELATED SOURCE LINES ---
+    3: RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION
+    7: Test whether explicit class-balanced DiceCELoss improves the severe
+   14:    - Original Part 11 DiceCELoss configuration
+   18:    - DiceCELoss with fixed class weights derived from the previously
+   54: from monai.losses import DiceCELoss
+   73: OUT = ROOT / "outputs" / "segmentation" / "rsna_part71_class_balanced_dicece_training"
+  331:         return DiceCELoss(
+  343:         return DiceCELoss(
+  399:     dice = safe_div(2 * tp, pred_n + target_n)
+  410:         "dice": dice,
+  506:                 "dice": safe_div(2 * tp, pred_n + target_n),
+  514:     # Micro foreground Dice.
+  519:     summary["foreground_dice"] = safe_div(
+  587:     val_fg_dice: float,
+  595:             "val_foreground_dice": val_fg_dice,
+  645:         f"FGDice={init_summary['foreground_dice']:.6f} "
+  657:             "val_fg_dice": init_summary["foreground_dice"],
+  697:                 "val_fg_dice": val_summary["foreground_dice"],
+  722:             f"FGDice={val_summary['foreground_dice']:.6f} "
+  733:             val_summary["foreground_dice"],
+  741:     best_idx = trajectory_df["val_fg_dice"].idxmax()
+  755:     print("RSNA-ONLY CLASS-BALANCED DICECELoss TRAINING ABLATION")
+  759:         "Test whether explicit class-balanced DiceCELoss improves "
+  841:         float(balanced_best["val_fg_dice"])
+  842:         - float(baseline_best["val_fg_dice"])
+  847:         f"Baseline best Dice        : "
+  848:         f"{float(baseline_best['val_fg_dice']):.6f} "
+  852:         f"Class-balanced best Dice  : "
+  853:         f"{float(balanced_best['val_fg_dice']):.6f} "
+  856:     print(f"Best Dice delta (B-A)     : {delta:+.6f}")
+  859:         diagnosis = "MEANINGFUL_CLASS_BALANCED_DICECE_IMPROVEMENT"
+  861:         diagnosis = "SMALL_CLASS_BALANCED_DICECE_IMPROVEMENT"
+  863:         diagnosis = "CLASS_BALANCED_DICECE_HURTS_PERFORMANCE"
+  865:         diagnosis = "NO_MEANINGFUL_CLASS_BALANCED_DICECE_ADVANTAGE"
+  912:                 "best_val_fg_dice": float(
+  913:                     baseline_best["val_fg_dice"]
+  928:                 "best_val_fg_dice": float(
+  929:                     balanced_best["val_fg_dice"]
+  945:         comparison["best_val_fg_dice"]
+  946:         - float(baseline_best["val_fg_dice"])
+  970:         "best_dice_delta": delta,
+  981:         "PART 71 - RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION",
+  984:         "A) R2_FULL_BASELINE - original Part 11 DiceCELoss",
+  985:         "B) R2_FULL_CLASS_BALANCED - explicit class-balanced DiceCELoss",
+  999:                 "best_dice_delta": delta,
+
+--- PREDICTION-RELATED SOURCE LINES ---
+  333:             softmax=True,
+  346:             softmax=True,
+  389:     p = pred == c
+  414:         "empty_prediction": int(pred_n == 0),
+  444:             pred = torch.argmax(logits, dim=1)[0].detach().cpu().numpy()
+  450:             case_fg_pred = int((pred > 0).sum())
+  456:                 "empty_foreground_prediction": int(case_fg_pred == 0),
+  482:             kdf.empty_foreground_prediction.sum()
+  510:                 "empty_cases": int(g.empty_prediction.sum()),
+  516:     total_pred = sum(int(x["predicted_voxels"]) for x in class_summary)
+
+--- AGGREGATION-RELATED SOURCE LINES ---
+  120: FG_WEIGHTS = RAW_FG_WEIGHTS / RAW_FG_WEIGHTS.mean()
+  269:         center = q.mean(axis=0)
+  392:     tp = int(np.logical_and(p, t).sum())
+  393:     fp = int(np.logical_and(p, ~t).sum())
+  394:     fn = int(np.logical_and(~p, t).sum())
+  396:     pred_n = int(p.sum())
+  397:     target_n = int(t.sum())
+  449:             case_fg_target = int((tgt > 0).sum())
+  450:             case_fg_pred = int((pred > 0).sum())
+  478:         "loss": float(np.mean(losses)) if losses else float("nan"),
+  479:         "foreground_target_voxels": int(kdf.target_foreground_voxels.sum()),
+  480:         "foreground_predicted_voxels": int(kdf.predicted_foreground_voxels.sum()),
+  482:             kdf.empty_foreground_prediction.sum()
+  491:         tp = int(g.tp.sum())
+  492:         fp = int(g.fp.sum())
+  493:         fn = int(g.fn.sum())
+  494:         pred_n = int(g.predicted_voxels.sum())
+  495:         target_n = int(g.target_voxels.sum())
+  510:                 "empty_cases": int(g.empty_prediction.sum()),
+  515:     total_tp = sum(int(x["tp"]) for x in class_summary)
+  516:     total_pred = sum(int(x["predicted_voxels"]) for x in class_summary)
+  517:     total_target = sum(int(x["target_voxels"]) for x in class_summary)
+  572:         target_fg.append(int((target > 0).sum()))
+  576:         "loss": float(np.mean(losses)),
+  577:         "mean_target_foreground_voxels": float(np.mean(target_fg)),
+
+==============================================================================
+4. DYNAMIC MODULE IMPORT
+==============================================================================
+Part9 import: OK
+Part11 import: OK
+Part71 import: OK
+Part71 callable dice_from_prediction: {'found': False}
+Part71 callable evaluate: {'found': True, 'name': 'evaluate', 'signature': "(model: 'torch.nn.Module', loss_fn: 'torch.nn.Module', rows: 'pd.DataFrame', part9: 'Any', part11: 'Any')", 'module': 'part83_part71'}
+Part71 callable validate: {'found': False}
+Part71 callable validation: {'found': False}
+Part71 callable create_model: {'found': True, 'name': 'create_model', 'signature': "(part11: 'Any')", 'module': 'part83_part71'}
+Part71 callable load_tensor_case: {'found': False}
+
+==============================================================================
+5. CLASS-BALANCED EPOCH3 CHECKPOINT
+==============================================================================
+Checkpoint top-level keys: ['epoch', 'condition', 'val_foreground_dice', 'model_state_dict', 'optimizer_state_dict', 'seed', 'device']
+State dict tensors: 159
+metadata[epoch] = 3
+metadata[seed] = 42
+Device: cuda:0
+Strict checkpoint load: OK: <All keys matched successfully>
+
+==============================================================================
+6. VALIDATION COHORT
+==============================================================================
+Validation rows evaluated: 50
+Validation columns: ['study_id', 'series_id', 'series_description', 'dicom_dir', 'dicom_count', 'first_dicom_path', 'pseudo_mask_path', 'pseudo_mask_filename', 'annotation_count', 'coordinate_study_id', 'condition_count', 'level_count', 'present_class_ids', 'has_dicom', 'has_pseudomask', 'study_id_match', 'eligible_before_mask_validation', 'pseudo_mask_valid', 'mask_shape', 'mask_dtype', 'mask_selected_key', 'foreground_voxels', 'mask_labels', 'pseudo_mask_error', 'dataset_eligible', 'split']
+
+==============================================================================
+7. CHECKPOINT PREDICTION RECONSTRUCTION
+==============================================================================
+Successful cases: 50/50
+
+==============================================================================
+8. METRIC RECONSTRUCTION RESULTS
+==============================================================================
+historical_reference: 0.044026262773
+global_voxel_pooled_foreground_dice: 0.001527267101945668
+mean_case_foreground_dice: 0.0015626057465807025
+global_macro_foreground_dice: 0.0013345476364005008
+global_support_weighted_macro_foreground_dice: 0.0013266623750884327
+mean_case_macro_foreground_dice: 0.005150617267047904
+target_fg_voxels: 11757
+pred_fg_voxels: 7603152
+
+==============================================================================
+9. PREDICTION-CONVERSION AUDIT
+==============================================================================
+Part71 source explicitly contains threshold prediction logic: False
+
+==============================================================================
+10. HISTORICAL REFERENCE COMPARISON
+==============================================================================
+global_voxel_pooled_foreground_dice: value=0.001527267102, abs_diff=0.042498995671
+mean_case_foreground_dice: value=0.001562605747, abs_diff=0.042463657026
+global_macro_foreground_dice: value=0.001334547636, abs_diff=0.042691715137
+global_support_weighted_macro_foreground_dice: value=0.001326662375, abs_diff=0.042699600398
+mean_case_macro_foreground_dice: value=0.005150617267, abs_diff=0.038875645506
+
+==============================================================================
+11. FINAL DIAGNOSIS
+==============================================================================
+HISTORICAL_0_044026_NOT_RECONSTRUCTED_FROM_SAVED_CHECKPOINT
+No tested metric reconstruction reproduces the historical 0.044026 from the saved class-balanced epoch3 checkpoint.
+This means the historical report value cannot currently be treated as a reproducible checkpoint-level validation metric.
+Do NOT start another training ablation. The correct next action is to inspect the historical Part71 report-generation path and preserve the discrepancy in the project report if the original value cannot be recovered.

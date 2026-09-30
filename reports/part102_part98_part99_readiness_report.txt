@@ -1,0 +1,54 @@
+==================================================================================
+PART 102 — PART 98 / PART 99 SEGMENTATION READINESS AUDIT
+==================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+
+PART 98 CHECKPOINT
+----------------------------------------------------------------------------------
+Exists: False
+Size MB: 0.000
+Epoch: None
+
+PART 15 INITIALIZATION
+----------------------------------------------------------------------------------
+Exists: True
+SHA256: 0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6
+Expected SHA256: 0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6
+Hash match: True
+
+MODEL COMPATIBILITY
+----------------------------------------------------------------------------------
+Imported: True
+Parameters: 4078116
+Expected parameters: 4078116
+Architecture match: True
+Part98 strict load: None
+
+COHORT RECOVERY
+----------------------------------------------------------------------------------
+Train cohort: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part98_strong_full_cohort_training\part98_train_cohort.csv
+Validation cohort: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part98_strong_full_cohort_training\part98_validation_cohort.csv
+Train rows: 500
+Validation rows: 100
+Train/validation overlap: 0
+
+FINAL DECISION
+----------------------------------------------------------------------------------
+PART98_REQUIRES_RETRAINING
+
+INTERPRETATION
+----------------------------------------------------------------------------------
+The Part98 artifact set is insufficient for a trustworthy Part99 run.
+If Part98 training actually completed, inspect the terminal output
+and training directory before retraining.
+Do not claim a Part98 result without a valid checkpoint and cohort.
+
+IMPORTANT
+----------------------------------------------------------------------------------
+This audit does not establish clinical validity.
+A stronger segmentation model still requires independent external
+validation, expert annotation quality, robustness testing, calibration,
+and prospective clinical evaluation before clinical deployment.
+
+==================================================================================

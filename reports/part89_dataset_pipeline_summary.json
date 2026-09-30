@@ -1,0 +1,52 @@
+{
+    "part": 89,
+    "title": "RSNA Classification Dataset and DataLoader Pipeline",
+    "seed": 42,
+    "dataset": {
+        "training_studies": 1580,
+        "validation_studies": 395,
+        "classification_targets": 25
+    },
+    "dataloader": {
+        "batch_size": 2,
+        "num_workers": 0,
+        "training_batches": 790,
+        "validation_batches": 198
+    },
+    "preprocessing": {
+        "target_shape": [
+            1,
+            32,
+            224,
+            224
+        ],
+        "normalization": "1st-99th percentile clipping",
+        "normalization_range": [
+            0.0,
+            1.0
+        ]
+    },
+    "label_encoding": {
+        "Normal/Mild": 0,
+        "Moderate": 1,
+        "Severe": 2,
+        "missing_label_representation": "label_mask=0"
+    },
+    "study_leakage": {
+        "overlap_count": 0,
+        "passed": true
+    },
+    "batch_validation": {
+        "batches_tested": 6,
+        "batches_passed": 6,
+        "batches_failed": 0
+    },
+    "outputs": {
+        "batch_results": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part89_dataset_pipeline\\part89_batch_validation_results.csv",
+        "report": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part89_dataset_pipeline_report.txt",
+        "summary_json": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part89_dataset_pipeline_summary.json"
+    },
+    "training_performed": false,
+    "segmentation_modified": false,
+    "overall_status": "PASS"
+}

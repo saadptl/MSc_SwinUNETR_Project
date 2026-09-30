@@ -1,0 +1,65 @@
+{
+    "part": 86,
+    "title": "RSNA Disease Classification Dataset Audit",
+    "dataset_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\dataset\\rsna-2024-lumbar-spine-degenerative-classification",
+    "train_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\dataset\\rsna-2024-lumbar-spine-degenerative-classification\\train.csv",
+    "rows": 1975,
+    "columns": 26,
+    "expected_target_count": 25,
+    "detected_target_count": 25,
+    "detected_targets": [
+        "spinal_canal_stenosis_l1_l2",
+        "spinal_canal_stenosis_l2_l3",
+        "spinal_canal_stenosis_l3_l4",
+        "spinal_canal_stenosis_l4_l5",
+        "spinal_canal_stenosis_l5_s1",
+        "left_neural_foraminal_narrowing_l1_l2",
+        "left_neural_foraminal_narrowing_l2_l3",
+        "left_neural_foraminal_narrowing_l3_l4",
+        "left_neural_foraminal_narrowing_l4_l5",
+        "left_neural_foraminal_narrowing_l5_s1",
+        "right_neural_foraminal_narrowing_l1_l2",
+        "right_neural_foraminal_narrowing_l2_l3",
+        "right_neural_foraminal_narrowing_l3_l4",
+        "right_neural_foraminal_narrowing_l4_l5",
+        "right_neural_foraminal_narrowing_l5_s1",
+        "left_subarticular_stenosis_l1_l2",
+        "left_subarticular_stenosis_l2_l3",
+        "left_subarticular_stenosis_l3_l4",
+        "left_subarticular_stenosis_l4_l5",
+        "left_subarticular_stenosis_l5_s1",
+        "right_subarticular_stenosis_l1_l2",
+        "right_subarticular_stenosis_l2_l3",
+        "right_subarticular_stenosis_l3_l4",
+        "right_subarticular_stenosis_l4_l5",
+        "right_subarticular_stenosis_l5_s1"
+    ],
+    "missing_expected_targets": [],
+    "identifier_audit": {
+        "study_id_column": true,
+        "study_rows": 1975,
+        "unique_studies": 1975,
+        "duplicate_study_rows": 0
+    },
+    "completeness": {
+        "total_studies": 1975,
+        "complete_studies": 1790,
+        "incomplete_studies": 185,
+        "complete_percentage": 90.63291139240506,
+        "incomplete_percentage": 9.367088607594937
+    },
+    "global_label_counts": {
+        "Normal/Mild": 37754,
+        "Moderate": 7960,
+        "Severe": 3089,
+        "MISSING": 572
+    },
+    "outputs": {
+        "label_distribution_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part86_dataset_audit\\part86_label_distribution.csv",
+        "missing_values_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part86_dataset_audit\\part86_missing_values.csv",
+        "study_summary_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part86_dataset_audit\\part86_study_summary.csv",
+        "report_txt": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part86_rsna_classification_dataset_audit_report.txt"
+    },
+    "training_performed": false,
+    "segmentation_modified": false
+}

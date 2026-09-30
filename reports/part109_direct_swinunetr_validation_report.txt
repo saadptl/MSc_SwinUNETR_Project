@@ -1,0 +1,24 @@
+PART 109 — DIRECT Swin-UNETR CHECKPOINT LOAD & FORWARD VALIDATION
+========================================================================================
+Checkpoint: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+MONAI version: 1.6.0
+Model kwargs: {'in_channels': 1, 'out_channels': 6, 'feature_size': 12, 'spatial_dims': 3, 'use_checkpoint': False}
+Checkpoint keys: 159
+Checkpoint tensor elements: 5,019,308
+Model keys: 159
+Model parameters: 4,078,116
+Exact key/shape match: True
+Strict load: True
+CPU forward: {'container': 'Tensor', 'shape': [1, 6, 64, 96, 96], 'dtype': 'torch.float32', 'min': -5.907699108123779, 'max': 3.2790567874908447, 'mean': -0.6307433247566223, 'std': 0.6913607716560364, 'predicted_class_voxel_counts': {'0': 457941, '1': 40127, '2': 20022, '3': 474, '4': 66024, '5': 5236}, 'channel_count': 6}
+CUDA forward: {'container': 'Tensor', 'shape': [1, 6, 64, 96, 96], 'dtype': 'torch.float32', 'min': -6.3946638107299805, 'max': 2.9993457794189453, 'mean': -0.6306601166725159, 'std': 0.6912141442298889, 'predicted_class_voxel_counts': {'0': 457772, '1': 39607, '2': 20431, '3': 489, '4': 66240, '5': 5285}, 'channel_count': 6}
+
+DIAGNOSIS
+----------------------------------------------------------------------------------------
+The selected Part 104 checkpoint exactly matches the historical MONAI SwinUNETR architecture (1 input channel, 6 output channels, feature_size 12). Strict loading succeeds and the model produces a 6-channel 3D segmentation output.
+
+FINAL STATUS
+----------------------------------------------------------------------------------------
+PASS — ORIGINAL_SWINUNETR_ARCHITECTURE_CONFIRMED_AND_CHECKPOINT_VALIDATED
+
+No training, source modification, package installation, or checkpoint overwrite was performed.

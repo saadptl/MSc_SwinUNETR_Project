@@ -1,0 +1,83 @@
+{
+  "part": 105,
+  "status": "FAIL \u2014 FINAL_SEGMENTATION_MODEL_REQUIRES_REVIEW",
+  "final_checkpoint": {
+    "exists": true,
+    "readable": true,
+    "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+    "size_mb": 54.039,
+    "state_dict_keys": 159,
+    "tensor_parameter_count": 5019308,
+    "checkpoint_metadata": {
+      "epoch": 10
+    },
+    "errors": []
+  },
+  "expected_parameter_count": 4078116,
+  "parameter_count_pass": false,
+  "canonical_validation_cohort": {
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\part98_validation_cohort.csv",
+    "exists": true,
+    "rows": 100,
+    "columns": [
+      "study_id",
+      "series_id",
+      "series_description",
+      "dicom_dir",
+      "dicom_count",
+      "first_dicom_path",
+      "pseudo_mask_path",
+      "pseudo_mask_filename",
+      "annotation_count",
+      "coordinate_study_id",
+      "condition_count",
+      "level_count",
+      "present_class_ids",
+      "has_dicom",
+      "has_pseudomask",
+      "study_id_match",
+      "eligible_before_mask_validation",
+      "pseudo_mask_valid",
+      "mask_shape",
+      "mask_dtype",
+      "mask_selected_key",
+      "foreground_voxels",
+      "mask_labels",
+      "pseudo_mask_error",
+      "dataset_eligible",
+      "split"
+    ],
+    "unique_study_ids": 86,
+    "duplicate_study_ids": 14,
+    "id_column": "study_id"
+  },
+  "train_validation_split": {
+    "train_unique_ids": 431,
+    "validation_unique_ids": 86,
+    "overlap": 0,
+    "pass": true
+  },
+  "part104_selection_records": [
+    {
+      "checkpoint": "Part98 best",
+      "exists": "True",
+      "readable": "True",
+      "size_mb": "54.039",
+      "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+      "parameter_count": "5019308",
+      "best_epoch": "10",
+      "best_validation_metric": "0.2172496851095929",
+      "selected": "True"
+    }
+  ],
+  "part104_comparison_file": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\part104_checkpoint_comparison.csv",
+  "part99_preservation": {
+    "best_exists": true,
+    "final_exists": true,
+    "case_metrics_exists": true
+  },
+  "cpu_reload_pass": true,
+  "cuda_reload_pass": true,
+  "cuda_reload_error": null,
+  "inference_scope": "This is an inference-readiness audit only. It does not claim clinical diagnostic accuracy and does not replace evaluation against expert-annotated ground truth."
+}

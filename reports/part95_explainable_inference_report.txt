@@ -1,0 +1,48 @@
+================================================================================
+PART 95 — EXPLAINABLE INTEGRATED INFERENCE
+================================================================================
+
+OBJECTIVE
+--------------------------------------------------------------------------------
+Generate interpretable spatial and probabilistic outputs from the integrated lumbar-spine MRI inference pipeline.
+
+VALIDATION
+--------------------------------------------------------------------------------
+Total studies      : 395
+Successful studies : 395
+Failed studies     : 0
+Success rate       : 1.0000
+
+SEGMENTATION EVIDENCE
+--------------------------------------------------------------------------------
+Mean foreground voxels : 41268.78
+Mean foreground fraction : 0.069968
+
+CLASSIFICATION EVIDENCE
+--------------------------------------------------------------------------------
+Mean classification confidence : 0.480336
+Mean Severe probability : 0.240634
+Predicted severity distribution:
+  Normal/Mild: 7708
+  Moderate: 1895
+  Severe: 272
+
+EXPLAINABILITY APPROACH
+--------------------------------------------------------------------------------
+1. MRI slices provide the original image context.
+2. Swin-UNETR segmentation provides spatial disease-region evidence.
+3. Classification probabilities provide severity prediction evidence.
+4. Confidence values quantify the classifier's probability concentration.
+
+IMPORTANT LIMITATION
+--------------------------------------------------------------------------------
+This is spatial/output-level explainability.
+The analysis does not claim Grad-CAM, SHAP, integrated gradients, or feature-level attribution.
+The segmentation and classification components were trained separately.
+Therefore the segmentation mask should be interpreted as spatial evidence rather than proof that the classifier directly used those specific voxels.
+
+FINAL STATUS
+--------------------------------------------------------------------------------
+PASS — EXPLAINABLE INFERENCE VALIDATED
+
+================================================================================

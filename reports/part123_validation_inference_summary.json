@@ -1,0 +1,31 @@
+{
+  "part": 113,
+  "status": "PASS \u2014 FULL_VALIDATION_INFERENCE_COMPLETED",
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part122_controlled_background_calibrated_loss_retraining\\checkpoints\\best_part122_model.pth",
+  "checkpoint_sha256": "84712e6a26a413026aac06aed86789e5cd3cdfb0b166af0615f94003345b3f4d",
+  "expected_checkpoint_sha256": "84712e6a26a413026aac06aed86789e5cd3cdfb0b166af0615f94003345b3f4d",
+  "cohort_rows": 100,
+  "successful_cases": 100,
+  "failed_cases": 0,
+  "total_seconds": 64.50300490000518,
+  "device": "cuda:0",
+  "model_parameters": 4078116,
+  "model_state_keys": 159,
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "loader_contract": {
+    "signature": "(row: 'pd.Series', part9: 'Any') -> 'Tuple[torch.Tensor, torch.Tensor, Dict[str, Any]]'",
+    "first_parameter": "row",
+    "second_parameter": "part9",
+    "order": "row,part9"
+  },
+  "outputs": {
+    "case_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\\inference\\part123_validation_case_inference.csv",
+    "prediction_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\\inference\\predictions"
+  },
+  "scientific_note": "Per-class Dice values compare predictions against the existing project pseudo-masks/development labels. They are not clinical expert-ground-truth performance measures."
+}

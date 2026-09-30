@@ -1,0 +1,21 @@
+PART 113 — ROBUST LOADER CONTRACT + FULL VALIDATION INFERENCE
+
+Status: PASS — FULL_VALIDATION_INFERENCE_COMPLETED
+Cohort rows: 100
+Successful: 100
+Failed: 0
+Device: cuda:0
+Checkpoint SHA256: 84712e6a26a413026aac06aed86789e5cd3cdfb0b166af0615f94003345b3f4d
+
+LIVE LOADER CONTRACT
+Signature: (row: 'pd.Series', part9: 'Any') -> 'Tuple[torch.Tensor, torch.Tensor, Dict[str, Any]]'
+Detected order: row,part9
+
+OUTPUTS
+Case CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\inference\part123_validation_case_inference.csv
+Prediction directory: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\inference\predictions
+Summary JSON: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part123_validation_inference_summary.json
+
+Scientific note:
+Dice values are against project pseudo-masks/development labels,
+not clinical expert-ground-truth annotations.

@@ -8,11 +8,15 @@ __pycache__/
 
 # Python virtual environments
 venv/
+venv*/
 .venv/
+.venv*/
 env/
+env*/
 ENV/
 env.bak/
 venv.bak/
+app_backup*/
 
 # Distribution / packaging
 build/

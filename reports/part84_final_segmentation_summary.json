@@ -1,0 +1,120 @@
+{
+  "part": 84,
+  "title": "Final Reproducible Segmentation Training",
+  "training_performed": true,
+  "seed": 42,
+  "device": "cuda:0",
+  "train_cases": 100,
+  "validation_cases": 50,
+  "epochs_requested": 8,
+  "epochs_completed": 8,
+  "learning_rate": 5e-05,
+  "weight_decay": 1e-05,
+  "crop_size": [
+    32,
+    64,
+    64
+  ],
+  "num_classes": 6,
+  "feature_size": 12,
+  "class_weights": [
+    0.01506900042295456,
+    0.7225949764251709,
+    0.9359949827194214,
+    1.017003059387207,
+    1.1783039569854736,
+    1.146101951599121
+  ],
+  "initialization": {
+    "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part15_extended_controlled_training\\checkpoints\\part15_initialization_from_part11.pth",
+    "sha256": "0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6",
+    "metadata": {
+      "epoch": 0,
+      "seed": 42
+    },
+    "load_result": "<All keys matched successfully>"
+  },
+  "best_epoch": 8,
+  "best_global_foreground_dice_training": 0.004313190909284466,
+  "best_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part84_final_reproducible_training\\checkpoints\\part84_best_model.pth",
+  "best_checkpoint_sha256": "b06dee9381cb210913053b4f4bbecc89ed520ae4b02b89f0e802b121c69113b8",
+  "final_verified_summary": {
+    "loss": 1.7964070010185242,
+    "foreground_target_voxels": 8628,
+    "foreground_predicted_voxels": 554760,
+    "foreground_empty_cases": 0,
+    "cases": 50,
+    "foreground_dice": 0.004313190909284466,
+    "mean_case_foreground_dice": 0.006432108749770255,
+    "macro_foreground_dice": 0.011215198734018958
+  },
+  "final_verified_classwise": [
+    {
+      "class_id": 1,
+      "target_voxels": 2515,
+      "predicted_voxels": 509982,
+      "tp": 802,
+      "fp": 509180,
+      "fn": 1713,
+      "dice": 0.003129774418191655,
+      "precision": 0.0015726045232968698,
+      "recall": 0.3188866799192092,
+      "iou": 0.0015673399192878263,
+      "empty_cases": 0
+    },
+    {
+      "class_id": 2,
+      "target_voxels": 2070,
+      "predicted_voxels": 144,
+      "tp": 1,
+      "fp": 143,
+      "fn": 2069,
+      "dice": 0.0009033423667529208,
+      "precision": 0.006944444443962191,
+      "recall": 0.00048309178743727977,
+      "iou": 0.0004518752824200096,
+      "empty_cases": 13
+    },
+    {
+      "class_id": 3,
+      "target_voxels": 1630,
+      "predicted_voxels": 2,
+      "tp": 0,
+      "fp": 2,
+      "fn": 1630,
+      "dice": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "iou": 0.0,
+      "empty_cases": 49
+    },
+    {
+      "class_id": 4,
+      "target_voxels": 1237,
+      "predicted_voxels": 37445,
+      "tp": 248,
+      "fp": 37197,
+      "fn": 989,
+      "dice": 0.012822501421846643,
+      "precision": 0.006623047135797404,
+      "recall": 0.20048504446078833,
+      "iou": 0.0064526200759727195,
+      "empty_cases": 0
+    },
+    {
+      "class_id": 5,
+      "target_voxels": 1176,
+      "predicted_voxels": 7187,
+      "tp": 164,
+      "fp": 7023,
+      "fn": 1012,
+      "dice": 0.03922037546330357,
+      "precision": 0.022818978711530793,
+      "recall": 0.13945578231173933,
+      "iou": 0.02000243932184412,
+      "empty_cases": 4
+    }
+  ],
+  "historical_part71_metric_0_044026_used": false,
+  "status": "FINAL_SEGMENTATION_TRAINING_COMPLETE"
+}

@@ -1,0 +1,101 @@
+{
+    "project_title": "Explainable Swin-UNETR Framework for Automated Lumbar Spine Disease Detection and Classification from MRI Images",
+    "generated_at": "2026-09-08T20:09:52.956831",
+    "final_status": "PASS \u2014 FINAL MSc REPORT PACKAGE GENERATED",
+    "segmentation": {
+        "model": "Swin-UNETR",
+        "checkpoint": "outputs/segmentation/rsna_part84_final_reproducible_training/checkpoints/part84_best_model.pth",
+        "parameters": 4078116,
+        "training_epochs": 8,
+        "validation_studies": 50,
+        "global_foreground_dice": 0.193388,
+        "mean_case_foreground_dice": 0.193388,
+        "median_case_foreground_dice": 0.203689,
+        "macro_foreground_dice": 0.193388,
+        "status": "FINAL REPRODUCIBLE"
+    },
+    "classification_baseline_part90": {
+        "part": "Part90",
+        "model": "Lightweight3DCNN",
+        "parameters": 77907,
+        "validation_studies": 395,
+        "accuracy": 0.775389,
+        "majority_baseline": 0.775389,
+        "balanced_accuracy": 0.333333,
+        "moderate_recall": 0.0,
+        "severe_recall": 0.0
+    },
+    "classification_final_part92": {
+        "part": "Part92",
+        "model": "Part92CNN",
+        "parameters": 20083,
+        "training_epochs": 5,
+        "selected_epoch": 1,
+        "validation_studies": 395,
+        "accuracy": 0.716626,
+        "majority_baseline": 0.775389,
+        "balanced_accuracy": 0.43853,
+        "macro_f1": 0.442275,
+        "moderate_recall": 0.360377,
+        "severe_recall": 0.115894,
+        "normal_mild_recall": 0.904806,
+        "status": "FINAL CLASSIFIER"
+    },
+    "integrated_inference": {
+        "validation_studies": 395,
+        "successful": 395,
+        "failed": 0,
+        "success_rate": 1.0,
+        "mean_segmentation_fg_fraction": 0.071236,
+        "mean_segmentation_fg_voxels": 42016.76,
+        "mean_classifier_confidence": 0.480336,
+        "mean_severe_probability": 0.240634
+    },
+    "explainability": {
+        "validation_studies": 395,
+        "successful": 395,
+        "failed": 0,
+        "success_rate": 1.0,
+        "visualizations": 10,
+        "mean_foreground_fraction": 0.069968,
+        "mean_classifier_confidence": 0.480336,
+        "mean_severe_probability": 0.240634
+    },
+    "reproducibility": {
+        "Part84 final segmentation checkpoint": {
+            "status": "REPRODUCIBLE",
+            "evidence": "Frozen checkpoint exists and Part85 independently reloaded it."
+        },
+        "Part85 segmentation audit": {
+            "status": "REPRODUCIBLE",
+            "evidence": "50 validation studies evaluated with frozen Part84 checkpoint."
+        },
+        "Part90 baseline classification": {
+            "status": "REPRODUCIBLE",
+            "evidence": "Part93 strict-loaded and evaluated Part90 checkpoint."
+        },
+        "Part92 imbalance-aware classification": {
+            "status": "REPRODUCIBLE",
+            "evidence": "Part93 strict-loaded and evaluated Part92 checkpoint."
+        },
+        "Part94 integrated inference": {
+            "status": "VALIDATED",
+            "evidence": "395/395 validation studies processed successfully."
+        },
+        "Part95 explainability": {
+            "status": "VALIDATED",
+            "evidence": "395/395 validation studies processed and 10 representative visualizations generated."
+        },
+        "Historical Part71 Dice = 0.044026": {
+            "status": "NON-REPRODUCIBLE",
+            "evidence": "Parts79\u201383 could not reconstruct the historical value from the saved checkpoint."
+        }
+    },
+    "historical_part71": {
+        "reported_dice": 0.044026,
+        "status": "NON-REPRODUCIBLE",
+        "included_in_final_claims": false
+    },
+    "important_methodological_caveat": "Part90 and Part92 use different architectures, so their comparison is not a perfectly isolated single-variable class-weighting ablation.",
+    "clinical_status": "Research prototype only; not clinically validated or suitable for clinical deployment."
+}

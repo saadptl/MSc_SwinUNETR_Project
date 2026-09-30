@@ -1,0 +1,20 @@
+PART 116 — TARGET / LABEL INTEGRITY + LEARNABILITY AUDIT
+
+Status: PASS — TARGET_LABEL_INTEGRITY_LEARNABILITY_AUDIT_COMPLETED
+Validation rows: 100
+Primary diagnosis: EXTREME_FOREGROUND_TARGET_SPARSITY
+Retraining recommendation: TARGET_SPARSITY_REQUIRES_TRAINING_STRATEGY_REVIEW
+
+Foreground fraction: 0.00045820
+Background/foreground ratio: 2181.4317x
+Rare classes (<25% cases): []
+Ultra-rare classes (<10% cases): []
+Globally absent classes: []
+Fragmented classes: []
+
+Learnability concerns:
+  None under the conservative diagnostic rules.
+
+Scientific limitation:
+Targets are project pseudo-masks/development labels.
+This audit does not establish clinical expert-groundtruth quality.

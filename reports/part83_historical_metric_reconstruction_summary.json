@@ -1,0 +1,1790 @@
+{
+  "part": "83",
+  "title": "Historical Metric Reconstruction",
+  "training_performed": false,
+  "status": "HISTORICAL_0_044026_NOT_RECONSTRUCTED_FROM_SAVED_CHECKPOINT",
+  "files": {
+    "part71_source": {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part71_class_balanced_dicece_training.py",
+      "exists": true,
+      "sha256": "746e97ce43e59180b3f63a30de8e351b41b3f5ef79b7832cfec510c8d564fcb5"
+    },
+    "class_balanced_epoch3": {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part71_class_balanced_dicece_training\\checkpoints\\part71_r2_full_class_balanced_epoch3.pth",
+      "exists": true,
+      "sha256": "e3f305c1bca35f2eda143b6ddfebe6337d79f6493ea48b324b04ccfabe1bcddb"
+    }
+  },
+  "historical_reference": {
+    "source_candidates": [],
+    "report_candidates": []
+  },
+  "source_metric_inspection": {
+    "functions_found": {
+      "evaluate": "def evaluate(\n    model: torch.nn.Module,\n    loss_fn: torch.nn.Module,\n    rows: pd.DataFrame,\n    part9: Any,\n    part11: Any,\n):\n    model.eval()\n\n    losses = []\n    class_records = []\n    case_records = []\n\n    with torch.no_grad():\n        for case_no, (_, row) in enumerate(rows.iterrows(), start=1):\n            image, target = load_case(row, part9, part11)\n\n            x = image.unsqueeze(0).unsqueeze(0).to(\n                DEVICE,\n                non_blocking=True,\n            )\n            y = target.unsqueeze(0).unsqueeze(0).to(DEVICE)\n\n            logits = model(x)\n            loss = loss_fn(logits, y)\n\n            pred = torch.argmax(logits, dim=1)[0].detach().cpu().numpy()\n            tgt = target.numpy()\n\n            losses.append(float(loss.detach().cpu()))\n\n            case_fg_target = int((tgt > 0).sum())\n            case_fg_pred = int((pred > 0).sum())\n\n            case_rec = {\n                \"case_no\": case_no,\n                \"target_foreground_voxels\": case_fg_target,\n                \"predicted_foreground_voxels\": case_fg_pred,\n                \"empty_foreground_prediction\": int(case_fg_pred == 0),\n            }\n\n            for c in range(1, NUM_CLASSES):\n                m = class_metrics(pred, tgt, c)\n                rec = {\n                    \"case_no\": case_no,\n                    \"class_id\": c,\n                    \"class_name\": CLASSES[c],\n                    **m,\n                }\n                class_records.append(rec)\n\n                for key, value in m.items():\n                    case_rec[f\"class_{c}_{key}\"] = value\n\n            case_records.append(case_rec)\n\n    cdf = pd.DataFrame(class_records)\n    kdf = pd.DataFrame(case_records)\n\n    summary = {\n        \"loss\": float(np.mean(losses)) if losses else float(\"nan\"),\n        \"foreground_target_voxels\": int(kdf.target_foreground_voxels.sum()),\n        \"foreground_predicted_voxels\": int(kdf.predicted_foreground_voxels.sum()),\n        \"foreground_empty_cases\": int(\n            kdf.empty_foreground_prediction.sum()\n        ),\n        \"cases\": len(kdf),\n    }\n\n    class_summary = []\n    for c in range(1, NUM_CLASSES):\n        g = cdf[cdf.class_id == c]\n\n        tp = int(g.tp.sum())\n        fp = int(g.fp.sum())\n        fn = int(g.fn.sum())\n        pred_n = int(g.predicted_voxels.sum())\n        target_n = int(g.target_voxels.sum())\n\n        class_summary.append(\n            {\n                \"class_id\": c,\n                \"class_name\": CLASSES[c],\n                \"target_voxels\": target_n,\n                \"predicted_voxels\": pred_n,\n                \"tp\": tp,\n                \"fp\": fp,\n                \"fn\": fn,\n                \"dice\": safe_div(2 * tp, pred_n + target_n),\n                \"precision\": safe_div(tp, tp + fp),\n                \"recall\": safe_div(tp, tp + fn),\n                \"iou\": safe_div(tp, tp + fp + fn),\n                \"empty_cases\": int(g.empty_prediction.sum()),\n            }\n        )\n\n    # Micro foreground Dice.\n    total_tp = sum(int(x[\"tp\"]) for x in class_summary)\n    total_pred = sum(int(x[\"predicted_voxels\"]) for x in class_summary)\n    total_target = sum(int(x[\"target_voxels\"]) for x in class_summary)\n\n    summary[\"foreground_dice\"] = safe_div(\n        2 * total_tp,\n        total_pred + total_target,\n    )\n\n    return summary, pd.DataFrame(class_summary), cdf, kdf",
+      "train_one_epoch": "def train_one_epoch(\n    model: torch.nn.Module,\n    loss_fn: torch.nn.Module,\n    optimizer: torch.optim.Optimizer,\n    rows: pd.DataFrame,\n    part9: Any,\n    part11: Any,\n):\n    model.train()\n\n    losses = []\n    target_fg = []\n    successful = 0\n\n    for _, row in rows.iterrows():\n        image, target = load_case(row, part9, part11)\n\n        x = image.unsqueeze(0).unsqueeze(0).to(\n            DEVICE,\n            non_blocking=True,\n        )\n        y = target.unsqueeze(0).unsqueeze(0).to(DEVICE)\n\n        optimizer.zero_grad(set_to_none=True)\n\n        with torch.autocast(\n            device_type=\"cuda\",\n            enabled=DEVICE.type == \"cuda\",\n        ):\n            logits = model(x)\n            loss = loss_fn(logits, y)\n\n        if not torch.isfinite(loss):\n            raise FloatingPointError(\n                f\"Non-finite loss: {float(loss.detach().cpu())}\"\n            )\n\n        loss.backward()\n        optimizer.step()\n\n        losses.append(float(loss.detach().cpu()))\n        target_fg.append(int((target > 0).sum()))\n        successful += 1\n\n    return {\n        \"loss\": float(np.mean(losses)),\n        \"mean_target_foreground_voxels\": float(np.mean(target_fg)),\n        \"successful_cases\": successful,\n    }",
+      "create_model": "def create_model(part11: Any):\n    model = part11.create_model(DEVICE).to(DEVICE)\n    return model"
+    },
+    "metric_keywords": {
+      "\\bdice\\b": [
+        399,
+        410,
+        506,
+        514,
+        847,
+        852,
+        856
+      ],
+      "foreground": [
+        20,
+        111,
+        112,
+        454,
+        455,
+        456,
+        479,
+        480,
+        481,
+        482,
+        514,
+        519,
+        577,
+        595,
+        645,
+        646,
+        647,
+        657,
+        658,
+        659,
+        694,
+        697,
+        699,
+        702,
+        720,
+        722,
+        723,
+        724,
+        733
+      ],
+      "per[_ ]class": [],
+      "classwise": [
+        898,
+        903,
+        1014,
+        1015
+      ],
+      "mean": [
+        19,
+        113,
+        120,
+        269,
+        478,
+        576,
+        577,
+        694,
+        720,
+        859,
+        865
+      ],
+      "sum": [
+        392,
+        393,
+        394,
+        396,
+        397,
+        449,
+        450,
+        477,
+        479,
+        480,
+        482,
+        487,
+        491,
+        492,
+        493,
+        494,
+        495,
+        497,
+        510,
+        515,
+        516,
+        517,
+        519,
+        524,
+        572,
+        635,
+        644,
+        645,
+        646,
+        647,
+        656,
+        657,
+        658,
+        659,
+        678,
+        696,
+        697,
+        698,
+        701,
+        721,
+        722,
+        723,
+        724,
+        733,
+        824,
+        845,
+        954,
+        975,
+        976,
+        1017
+      ],
+      "argmax": [
+        444
+      ],
+      "softmax": [
+        333,
+        346
+      ],
+      "sigmoid": [],
+      "threshold": [],
+      "prediction": [
+        414,
+        456,
+        482,
+        510
+      ],
+      "pred": [
+        388,
+        389,
+        396,
+        399,
+        406,
+        414,
+        444,
+        450,
+        455,
+        456,
+        460,
+        480,
+        482,
+        494,
+        502,
+        506,
+        510,
+        516,
+        521,
+        646,
+        658,
+        698,
+        699,
+        723,
+        918,
+        919,
+        934,
+        935
+      ],
+      "target": [
+        388,
+        390,
+        397,
+        399,
+        405,
+        433,
+        439,
+        445,
+        449,
+        454,
+        479,
+        495,
+        501,
+        506,
+        517,
+        521,
+        542,
+        546,
+        552,
+        572,
+        577,
+        655,
+        693,
+        694,
+        720
+      ],
+      "intersection": [],
+      "union": [],
+      "torch\\.save": [
+        591
+      ],
+      "json": [
+        43,
+        975,
+        976,
+        992,
+        995,
+        1017
+      ],
+      "summary": [
+        477,
+        487,
+        497,
+        515,
+        516,
+        517,
+        519,
+        524,
+        635,
+        644,
+        645,
+        646,
+        647,
+        656,
+        657,
+        658,
+        659,
+        678,
+        696,
+        697,
+        698,
+        701,
+        721,
+        722,
+        723,
+        724,
+        733,
+        824,
+        845,
+        954,
+        975,
+        976,
+        1017
+      ],
+      "report": [
+        74,
+        77,
+        893,
+        898,
+        903,
+        950,
+        975,
+        980,
+        1007,
+        1008,
+        1013,
+        1014,
+        1015,
+        1016,
+        1017,
+        1018
+      ]
+    },
+    "dice_related_lines": [
+      {
+        "line": 3,
+        "text": "RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION"
+      },
+      {
+        "line": 7,
+        "text": "Test whether explicit class-balanced DiceCELoss improves the severe"
+      },
+      {
+        "line": 14,
+        "text": "   - Original Part 11 DiceCELoss configuration"
+      },
+      {
+        "line": 18,
+        "text": "   - DiceCELoss with fixed class weights derived from the previously"
+      },
+      {
+        "line": 54,
+        "text": "from monai.losses import DiceCELoss"
+      },
+      {
+        "line": 73,
+        "text": "OUT = ROOT / \"outputs\" / \"segmentation\" / \"rsna_part71_class_balanced_dicece_training\""
+      },
+      {
+        "line": 331,
+        "text": "        return DiceCELoss("
+      },
+      {
+        "line": 343,
+        "text": "        return DiceCELoss("
+      },
+      {
+        "line": 399,
+        "text": "    dice = safe_div(2 * tp, pred_n + target_n)"
+      },
+      {
+        "line": 410,
+        "text": "        \"dice\": dice,"
+      },
+      {
+        "line": 506,
+        "text": "                \"dice\": safe_div(2 * tp, pred_n + target_n),"
+      },
+      {
+        "line": 514,
+        "text": "    # Micro foreground Dice."
+      },
+      {
+        "line": 519,
+        "text": "    summary[\"foreground_dice\"] = safe_div("
+      },
+      {
+        "line": 587,
+        "text": "    val_fg_dice: float,"
+      },
+      {
+        "line": 595,
+        "text": "            \"val_foreground_dice\": val_fg_dice,"
+      },
+      {
+        "line": 645,
+        "text": "        f\"FGDice={init_summary['foreground_dice']:.6f} \""
+      },
+      {
+        "line": 657,
+        "text": "            \"val_fg_dice\": init_summary[\"foreground_dice\"],"
+      },
+      {
+        "line": 697,
+        "text": "                \"val_fg_dice\": val_summary[\"foreground_dice\"],"
+      },
+      {
+        "line": 722,
+        "text": "            f\"FGDice={val_summary['foreground_dice']:.6f} \""
+      },
+      {
+        "line": 733,
+        "text": "            val_summary[\"foreground_dice\"],"
+      },
+      {
+        "line": 741,
+        "text": "    best_idx = trajectory_df[\"val_fg_dice\"].idxmax()"
+      },
+      {
+        "line": 755,
+        "text": "    print(\"RSNA-ONLY CLASS-BALANCED DICECELoss TRAINING ABLATION\")"
+      },
+      {
+        "line": 759,
+        "text": "        \"Test whether explicit class-balanced DiceCELoss improves \""
+      },
+      {
+        "line": 841,
+        "text": "        float(balanced_best[\"val_fg_dice\"])"
+      },
+      {
+        "line": 842,
+        "text": "        - float(baseline_best[\"val_fg_dice\"])"
+      },
+      {
+        "line": 847,
+        "text": "        f\"Baseline best Dice        : \""
+      },
+      {
+        "line": 848,
+        "text": "        f\"{float(baseline_best['val_fg_dice']):.6f} \""
+      },
+      {
+        "line": 852,
+        "text": "        f\"Class-balanced best Dice  : \""
+      },
+      {
+        "line": 853,
+        "text": "        f\"{float(balanced_best['val_fg_dice']):.6f} \""
+      },
+      {
+        "line": 856,
+        "text": "    print(f\"Best Dice delta (B-A)     : {delta:+.6f}\")"
+      },
+      {
+        "line": 859,
+        "text": "        diagnosis = \"MEANINGFUL_CLASS_BALANCED_DICECE_IMPROVEMENT\""
+      },
+      {
+        "line": 861,
+        "text": "        diagnosis = \"SMALL_CLASS_BALANCED_DICECE_IMPROVEMENT\""
+      },
+      {
+        "line": 863,
+        "text": "        diagnosis = \"CLASS_BALANCED_DICECE_HURTS_PERFORMANCE\""
+      },
+      {
+        "line": 865,
+        "text": "        diagnosis = \"NO_MEANINGFUL_CLASS_BALANCED_DICECE_ADVANTAGE\""
+      },
+      {
+        "line": 912,
+        "text": "                \"best_val_fg_dice\": float("
+      },
+      {
+        "line": 913,
+        "text": "                    baseline_best[\"val_fg_dice\"]"
+      },
+      {
+        "line": 928,
+        "text": "                \"best_val_fg_dice\": float("
+      },
+      {
+        "line": 929,
+        "text": "                    balanced_best[\"val_fg_dice\"]"
+      },
+      {
+        "line": 945,
+        "text": "        comparison[\"best_val_fg_dice\"]"
+      },
+      {
+        "line": 946,
+        "text": "        - float(baseline_best[\"val_fg_dice\"])"
+      },
+      {
+        "line": 970,
+        "text": "        \"best_dice_delta\": delta,"
+      },
+      {
+        "line": 981,
+        "text": "        \"PART 71 - RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION\","
+      },
+      {
+        "line": 984,
+        "text": "        \"A) R2_FULL_BASELINE - original Part 11 DiceCELoss\","
+      },
+      {
+        "line": 985,
+        "text": "        \"B) R2_FULL_CLASS_BALANCED - explicit class-balanced DiceCELoss\","
+      },
+      {
+        "line": 999,
+        "text": "                \"best_dice_delta\": delta,"
+      }
+    ],
+    "prediction_related_lines": [
+      {
+        "line": 333,
+        "text": "            softmax=True,"
+      },
+      {
+        "line": 346,
+        "text": "            softmax=True,"
+      },
+      {
+        "line": 389,
+        "text": "    p = pred == c"
+      },
+      {
+        "line": 414,
+        "text": "        \"empty_prediction\": int(pred_n == 0),"
+      },
+      {
+        "line": 444,
+        "text": "            pred = torch.argmax(logits, dim=1)[0].detach().cpu().numpy()"
+      },
+      {
+        "line": 450,
+        "text": "            case_fg_pred = int((pred > 0).sum())"
+      },
+      {
+        "line": 456,
+        "text": "                \"empty_foreground_prediction\": int(case_fg_pred == 0),"
+      },
+      {
+        "line": 482,
+        "text": "            kdf.empty_foreground_prediction.sum()"
+      },
+      {
+        "line": 510,
+        "text": "                \"empty_cases\": int(g.empty_prediction.sum()),"
+      },
+      {
+        "line": 516,
+        "text": "    total_pred = sum(int(x[\"predicted_voxels\"]) for x in class_summary)"
+      }
+    ],
+    "aggregation_related_lines": [
+      {
+        "line": 120,
+        "text": "FG_WEIGHTS = RAW_FG_WEIGHTS / RAW_FG_WEIGHTS.mean()"
+      },
+      {
+        "line": 269,
+        "text": "        center = q.mean(axis=0)"
+      },
+      {
+        "line": 392,
+        "text": "    tp = int(np.logical_and(p, t).sum())"
+      },
+      {
+        "line": 393,
+        "text": "    fp = int(np.logical_and(p, ~t).sum())"
+      },
+      {
+        "line": 394,
+        "text": "    fn = int(np.logical_and(~p, t).sum())"
+      },
+      {
+        "line": 396,
+        "text": "    pred_n = int(p.sum())"
+      },
+      {
+        "line": 397,
+        "text": "    target_n = int(t.sum())"
+      },
+      {
+        "line": 449,
+        "text": "            case_fg_target = int((tgt > 0).sum())"
+      },
+      {
+        "line": 450,
+        "text": "            case_fg_pred = int((pred > 0).sum())"
+      },
+      {
+        "line": 478,
+        "text": "        \"loss\": float(np.mean(losses)) if losses else float(\"nan\"),"
+      },
+      {
+        "line": 479,
+        "text": "        \"foreground_target_voxels\": int(kdf.target_foreground_voxels.sum()),"
+      },
+      {
+        "line": 480,
+        "text": "        \"foreground_predicted_voxels\": int(kdf.predicted_foreground_voxels.sum()),"
+      },
+      {
+        "line": 482,
+        "text": "            kdf.empty_foreground_prediction.sum()"
+      },
+      {
+        "line": 491,
+        "text": "        tp = int(g.tp.sum())"
+      },
+      {
+        "line": 492,
+        "text": "        fp = int(g.fp.sum())"
+      },
+      {
+        "line": 493,
+        "text": "        fn = int(g.fn.sum())"
+      },
+      {
+        "line": 494,
+        "text": "        pred_n = int(g.predicted_voxels.sum())"
+      },
+      {
+        "line": 495,
+        "text": "        target_n = int(g.target_voxels.sum())"
+      },
+      {
+        "line": 510,
+        "text": "                \"empty_cases\": int(g.empty_prediction.sum()),"
+      },
+      {
+        "line": 515,
+        "text": "    total_tp = sum(int(x[\"tp\"]) for x in class_summary)"
+      },
+      {
+        "line": 516,
+        "text": "    total_pred = sum(int(x[\"predicted_voxels\"]) for x in class_summary)"
+      },
+      {
+        "line": 517,
+        "text": "    total_target = sum(int(x[\"target_voxels\"]) for x in class_summary)"
+      },
+      {
+        "line": 572,
+        "text": "        target_fg.append(int((target > 0).sum()))"
+      },
+      {
+        "line": 576,
+        "text": "        \"loss\": float(np.mean(losses)),"
+      },
+      {
+        "line": 577,
+        "text": "        \"mean_target_foreground_voxels\": float(np.mean(target_fg)),"
+      }
+    ],
+    "loss_related_lines": [
+      {
+        "line": 3,
+        "text": "RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION"
+      },
+      {
+        "line": 7,
+        "text": "Test whether explicit class-balanced DiceCELoss improves the severe"
+      },
+      {
+        "line": 14,
+        "text": "   - Original Part 11 DiceCELoss configuration"
+      },
+      {
+        "line": 18,
+        "text": "   - DiceCELoss with fixed class weights derived from the previously"
+      },
+      {
+        "line": 19,
+        "text": "     established empirical class-frequency weights, normalized to mean 1"
+      },
+      {
+        "line": 20,
+        "text": "     over the five foreground classes and with a reduced background weight."
+      },
+      {
+        "line": 32,
+        "text": "- weight decay 1e-5"
+      },
+      {
+        "line": 54,
+        "text": "from monai.losses import DiceCELoss"
+      },
+      {
+        "line": 73,
+        "text": "OUT = ROOT / \"outputs\" / \"segmentation\" / \"rsna_part71_class_balanced_dicece_training\""
+      },
+      {
+        "line": 98,
+        "text": "WEIGHT_DECAY = 1e-5"
+      },
+      {
+        "line": 111,
+        "text": "# Part 49 empirical foreground-frequency weights."
+      },
+      {
+        "line": 113,
+        "text": "# weights to mean 1. Background is deliberately downweighted because"
+      },
+      {
+        "line": 115,
+        "text": "RAW_FG_WEIGHTS = np.array("
+      },
+      {
+        "line": 120,
+        "text": "FG_WEIGHTS = RAW_FG_WEIGHTS / RAW_FG_WEIGHTS.mean()"
+      },
+      {
+        "line": 122,
+        "text": "# Conservative background weight; this is the intervention component."
+      },
+      {
+        "line": 123,
+        "text": "CLASS_BALANCED_WEIGHTS = np.concatenate("
+      },
+      {
+        "line": 124,
+        "text": "    [np.array([0.05], dtype=np.float32), FG_WEIGHTS]"
+      },
+      {
+        "line": 321,
+        "text": "# MODEL / LOSS"
+      },
+      {
+        "line": 329,
+        "text": "def create_loss(condition: str):"
+      },
+      {
+        "line": 331,
+        "text": "        return DiceCELoss("
+      },
+      {
+        "line": 337,
+        "text": "        weights = torch.tensor("
+      },
+      {
+        "line": 338,
+        "text": "            CLASS_BALANCED_WEIGHTS,"
+      },
+      {
+        "line": 343,
+        "text": "        return DiceCELoss("
+      },
+      {
+        "line": 347,
+        "text": "            weight=weights,"
+      },
+      {
+        "line": 420,
+        "text": "    loss_fn: torch.nn.Module,"
+      },
+      {
+        "line": 427,
+        "text": "    losses = []"
+      },
+      {
+        "line": 442,
+        "text": "            loss = loss_fn(logits, y)"
+      },
+      {
+        "line": 447,
+        "text": "            losses.append(float(loss.detach().cpu()))"
+      },
+      {
+        "line": 478,
+        "text": "        \"loss\": float(np.mean(losses)) if losses else float(\"nan\"),"
+      },
+      {
+        "line": 533,
+        "text": "    loss_fn: torch.nn.Module,"
+      },
+      {
+        "line": 541,
+        "text": "    losses = []"
+      },
+      {
+        "line": 561,
+        "text": "            loss = loss_fn(logits, y)"
+      },
+      {
+        "line": 563,
+        "text": "        if not torch.isfinite(loss):"
+      },
+      {
+        "line": 565,
+        "text": "                f\"Non-finite loss: {float(loss.detach().cpu())}\""
+      },
+      {
+        "line": 568,
+        "text": "        loss.backward()"
+      },
+      {
+        "line": 571,
+        "text": "        losses.append(float(loss.detach().cpu()))"
+      },
+      {
+        "line": 576,
+        "text": "        \"loss\": float(np.mean(losses)),"
+      },
+      {
+        "line": 624,
+        "text": "    loss_fn = create_loss(condition)"
+      },
+      {
+        "line": 629,
+        "text": "        weight_decay=WEIGHT_DECAY,"
+      },
+      {
+        "line": 637,
+        "text": "        loss_fn,"
+      },
+      {
+        "line": 644,
+        "text": "        f\"INIT | val_loss={init_summary['loss']:.6f} \""
+      },
+      {
+        "line": 654,
+        "text": "            \"train_loss\": np.nan,"
+      },
+      {
+        "line": 656,
+        "text": "            \"val_loss\": init_summary[\"loss\"],"
+      },
+      {
+        "line": 671,
+        "text": "            loss_fn,"
+      },
+      {
+        "line": 680,
+        "text": "            loss_fn,"
+      },
+      {
+        "line": 692,
+        "text": "                \"train_loss\": train_info[\"loss\"],"
+      },
+      {
+        "line": 696,
+        "text": "                \"val_loss\": val_summary[\"loss\"],"
+      },
+      {
+        "line": 719,
+        "text": "            f\"train_loss={train_info['loss']:.6f} \""
+      },
+      {
+        "line": 721,
+        "text": "            f\"val_loss={val_summary['loss']:.6f} \""
+      },
+      {
+        "line": 755,
+        "text": "    print(\"RSNA-ONLY CLASS-BALANCED DICECELoss TRAINING ABLATION\")"
+      },
+      {
+        "line": 759,
+        "text": "        \"Test whether explicit class-balanced DiceCELoss improves \""
+      },
+      {
+        "line": 798,
+        "text": "    print(\"Class-balanced weights:\")"
+      },
+      {
+        "line": 799,
+        "text": "    for c, w in enumerate(CLASS_BALANCED_WEIGHTS):"
+      },
+      {
+        "line": 859,
+        "text": "        diagnosis = \"MEANINGFUL_CLASS_BALANCED_DICECE_IMPROVEMENT\""
+      },
+      {
+        "line": 861,
+        "text": "        diagnosis = \"SMALL_CLASS_BALANCED_DICECE_IMPROVEMENT\""
+      },
+      {
+        "line": 863,
+        "text": "        diagnosis = \"CLASS_BALANCED_DICECE_HURTS_PERFORMANCE\""
+      },
+      {
+        "line": 865,
+        "text": "        diagnosis = \"NO_MEANINGFUL_CLASS_BALANCED_DICECE_ADVANTAGE\""
+      },
+      {
+        "line": 915,
+        "text": "                \"best_val_loss\": float("
+      },
+      {
+        "line": 916,
+        "text": "                    baseline_best[\"val_loss\"]"
+      },
+      {
+        "line": 931,
+        "text": "                \"best_val_loss\": float("
+      },
+      {
+        "line": 932,
+        "text": "                    balanced_best[\"val_loss\"]"
+      },
+      {
+        "line": 963,
+        "text": "        \"weight_decay\": WEIGHT_DECAY,"
+      },
+      {
+        "line": 967,
+        "text": "        \"class_balanced_weights\": CLASS_BALANCED_WEIGHTS.tolist(),"
+      },
+      {
+        "line": 981,
+        "text": "        \"PART 71 - RSNA-ONLY CLASS-BALANCED DICECE TRAINING ABLATION\","
+      },
+      {
+        "line": 984,
+        "text": "        \"A) R2_FULL_BASELINE - original Part 11 DiceCELoss\","
+      },
+      {
+        "line": 985,
+        "text": "        \"B) R2_FULL_CLASS_BALANCED - explicit class-balanced DiceCELoss\","
+      },
+      {
+        "line": 991,
+        "text": "        \"CLASS-BALANCED WEIGHTS:\","
+      },
+      {
+        "line": 992,
+        "text": "        json.dumps(CLASS_BALANCED_WEIGHTS.tolist(), indent=2),"
+      }
+    ]
+  },
+  "imports": {
+    "part9": true,
+    "part11": true,
+    "part71": true
+  },
+  "checkpoint_metadata": {
+    "epoch": 3,
+    "seed": 42
+  },
+  "validation_rows": 50,
+  "results": {
+    "historical_reference": 0.044026262773,
+    "global_voxel_pooled_foreground_dice": 0.001527267101945668,
+    "mean_case_foreground_dice": 0.0015626057465807025,
+    "global_macro_foreground_dice": 0.0013345476364005008,
+    "global_support_weighted_macro_foreground_dice": 0.0013266623750884327,
+    "mean_case_macro_foreground_dice": 0.005150617267047904,
+    "target_fg_voxels": 11757,
+    "pred_fg_voxels": 7603152
+  },
+  "comparison": {
+    "global_voxel_pooled_foreground_dice": {
+      "value": 0.001527267101945668,
+      "absolute_difference": 0.042498995671054335,
+      "matches_within_1e-6": false,
+      "matches_within_1e-4": false,
+      "matches_within_1e-3": false
+    },
+    "mean_case_foreground_dice": {
+      "value": 0.0015626057465807025,
+      "absolute_difference": 0.0424636570264193,
+      "matches_within_1e-6": false,
+      "matches_within_1e-4": false,
+      "matches_within_1e-3": false
+    },
+    "global_macro_foreground_dice": {
+      "value": 0.0013345476364005008,
+      "absolute_difference": 0.0426917151365995,
+      "matches_within_1e-6": false,
+      "matches_within_1e-4": false,
+      "matches_within_1e-3": false
+    },
+    "global_support_weighted_macro_foreground_dice": {
+      "value": 0.0013266623750884327,
+      "absolute_difference": 0.04269960039791157,
+      "matches_within_1e-6": false,
+      "matches_within_1e-4": false,
+      "matches_within_1e-3": false
+    },
+    "mean_case_macro_foreground_dice": {
+      "value": 0.005150617267047904,
+      "absolute_difference": 0.0388756455059521,
+      "matches_within_1e-6": false,
+      "matches_within_1e-4": false,
+      "matches_within_1e-3": false
+    }
+  },
+  "case_records": [
+    {
+      "case_index": 1,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 136,
+      "pred_fg": 182893,
+      "global_fg_dice": 0.0007649061078298649,
+      "macro_fg_dice": 0.001048178370925635
+    },
+    {
+      "case_index": 2,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 236,
+      "pred_fg": 155181,
+      "global_fg_dice": 0.0029469105696929582,
+      "macro_fg_dice": 0.20071269626671326
+    },
+    {
+      "case_index": 3,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 267,
+      "pred_fg": 187942,
+      "global_fg_dice": 0.0021678028150087314,
+      "macro_fg_dice": 0.005616382698507319
+    },
+    {
+      "case_index": 4,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 443,
+      "pred_fg": 131489,
+      "global_fg_dice": 0.006715580753796901,
+      "macro_fg_dice": 0.001643998387798442
+    },
+    {
+      "case_index": 5,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 242,
+      "pred_fg": 124854,
+      "global_fg_dice": 0.00020784037866916546,
+      "macro_fg_dice": 1.9598666696040265e-11
+    },
+    {
+      "case_index": 6,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 141,
+      "pred_fg": 144648,
+      "global_fg_dice": 0.0016161448729529442,
+      "macro_fg_dice": 0.0003680665810979809
+    },
+    {
+      "case_index": 7,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 90,
+      "pred_fg": 186779,
+      "global_fg_dice": 5.3513423842367996e-14,
+      "macro_fg_dice": 3.793306529924026e-11
+    },
+    {
+      "case_index": 8,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 105,
+      "pred_fg": 136811,
+      "global_fg_dice": 0.0008180198078383228,
+      "macro_fg_dice": 2.935107606497317e-11
+    },
+    {
+      "case_index": 9,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 437,
+      "pred_fg": 175708,
+      "global_fg_dice": 0.0019869993471854446,
+      "macro_fg_dice": 0.0012340918975213186
+    },
+    {
+      "case_index": 10,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 187,
+      "pred_fg": 158541,
+      "global_fg_dice": 0.00044100599774454146,
+      "macro_fg_dice": 7.857349369694952e-11
+    },
+    {
+      "case_index": 11,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 81,
+      "pred_fg": 171476,
+      "global_fg_dice": 0.0005012911161304696,
+      "macro_fg_dice": 4.371746176076879e-05
+    },
+    {
+      "case_index": 12,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 232,
+      "pred_fg": 141868,
+      "global_fg_dice": 0.0018578465869808684,
+      "macro_fg_dice": 2.1446581000888306e-11
+    },
+    {
+      "case_index": 13,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 87,
+      "pred_fg": 177971,
+      "global_fg_dice": 0.0006964022959372397,
+      "macro_fg_dice": 0.002199413517397772
+    },
+    {
+      "case_index": 14,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 316,
+      "pred_fg": 171158,
+      "global_fg_dice": 0.0032424740777608706,
+      "macro_fg_dice": 0.007014784094820847
+    },
+    {
+      "case_index": 15,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 99,
+      "pred_fg": 119252,
+      "global_fg_dice": 0.0016589722751378993,
+      "macro_fg_dice": 0.00042981811471810676
+    },
+    {
+      "case_index": 16,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 733,
+      "pred_fg": 151995,
+      "global_fg_dice": 0.0015059452098500925,
+      "macro_fg_dice": 8.352534765103987e-12
+    },
+    {
+      "case_index": 17,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 216,
+      "pred_fg": 130025,
+      "global_fg_dice": 0.0023494905598849558,
+      "macro_fg_dice": 0.0005656873838192062
+    },
+    {
+      "case_index": 18,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 281,
+      "pred_fg": 136366,
+      "global_fg_dice": 0.0006147226064969875,
+      "macro_fg_dice": 1.2832677090302314e-11
+    },
+    {
+      "case_index": 19,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 99,
+      "pred_fg": 136887,
+      "global_fg_dice": 0.0009052019915173151,
+      "macro_fg_dice": 2.5721419294937268e-11
+    },
+    {
+      "case_index": 20,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 568,
+      "pred_fg": 130360,
+      "global_fg_dice": 0.00247464255170762,
+      "macro_fg_dice": 0.0027088036239692912
+    },
+    {
+      "case_index": 21,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 204,
+      "pred_fg": 172261,
+      "global_fg_dice": 0.0008581451309540569,
+      "macro_fg_dice": 0.000406891820143942
+    },
+    {
+      "case_index": 22,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 40,
+      "pred_fg": 144712,
+      "global_fg_dice": 0.0005526693932380517,
+      "macro_fg_dice": 0.00013331446830382488
+    },
+    {
+      "case_index": 23,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 267,
+      "pred_fg": 145892,
+      "global_fg_dice": 0.0036535553746944315,
+      "macro_fg_dice": 0.0008851762960931363
+    },
+    {
+      "case_index": 24,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 235,
+      "pred_fg": 119431,
+      "global_fg_dice": 0.0009693647319204311,
+      "macro_fg_dice": 0.006968641140872508
+    },
+    {
+      "case_index": 25,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 921,
+      "pred_fg": 177212,
+      "global_fg_dice": 0.005849561844295787,
+      "macro_fg_dice": 0.0017728533923426885
+    },
+    {
+      "case_index": 26,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 66,
+      "pred_fg": 165260,
+      "global_fg_dice": 0.00038711394463058514,
+      "macro_fg_dice": 4.333814153200113e-11
+    },
+    {
+      "case_index": 27,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 84,
+      "pred_fg": 137569,
+      "global_fg_dice": 0.0012204601426048672,
+      "macro_fg_dice": 0.0002860357506804967
+    },
+    {
+      "case_index": 28,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 168,
+      "pred_fg": 120283,
+      "global_fg_dice": 0.000697379017276677,
+      "macro_fg_dice": 2.1686708570030162e-11
+    },
+    {
+      "case_index": 29,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 225,
+      "pred_fg": 186522,
+      "global_fg_dice": 0.0015636128024010256,
+      "macro_fg_dice": 0.0015889465078194917
+    },
+    {
+      "case_index": 30,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 115,
+      "pred_fg": 178170,
+      "global_fg_dice": 0.001121799366239385,
+      "macro_fg_dice": 0.0024968668367229066
+    },
+    {
+      "case_index": 31,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 144,
+      "pred_fg": 151277,
+      "global_fg_dice": 0.0016906505703302916,
+      "macro_fg_dice": 0.00040183973656803576
+    },
+    {
+      "case_index": 32,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 135,
+      "pred_fg": 128999,
+      "global_fg_dice": 0.0017036566667955996,
+      "macro_fg_dice": 0.0003919613600138288
+    },
+    {
+      "case_index": 33,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 584,
+      "pred_fg": 143377,
+      "global_fg_dice": 0.00722417877070823,
+      "macro_fg_dice": 0.001853801408125809
+    },
+    {
+      "case_index": 34,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 62,
+      "pred_fg": 162717,
+      "global_fg_dice": 8.600618021980193e-05,
+      "macro_fg_dice": 2.1116032678203989e-10
+    },
+    {
+      "case_index": 35,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 33,
+      "pred_fg": 150000,
+      "global_fg_dice": 0.0004399032213579385,
+      "macro_fg_dice": 9.923644385860364e-05
+    },
+    {
+      "case_index": 36,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 258,
+      "pred_fg": 154496,
+      "global_fg_dice": 0.0014862297582614028,
+      "macro_fg_dice": 2.3035519663249497e-11
+    },
+    {
+      "case_index": 37,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 241,
+      "pred_fg": 119877,
+      "global_fg_dice": 0.0009823673388666993,
+      "macro_fg_dice": 2.1048370025734746e-11
+    },
+    {
+      "case_index": 38,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 198,
+      "pred_fg": 145258,
+      "global_fg_dice": 0.0006874931251374512,
+      "macro_fg_dice": 2.6663609878011602e-11
+    },
+    {
+      "case_index": 39,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 528,
+      "pred_fg": 121949,
+      "global_fg_dice": 0.0023024731174830946,
+      "macro_fg_dice": 0.00963391137800005
+    },
+    {
+      "case_index": 40,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 583,
+      "pred_fg": 115283,
+      "global_fg_dice": 0.003987364714497438,
+      "macro_fg_dice": 1.464963907769367e-11
+    },
+    {
+      "case_index": 41,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 109,
+      "pred_fg": 171735,
+      "global_fg_dice": 0.0005586462140662135,
+      "macro_fg_dice": 0.00019686425420702857
+    },
+    {
+      "case_index": 42,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 178,
+      "pred_fg": 167559,
+      "global_fg_dice": 0.000953874219820257,
+      "macro_fg_dice": 0.0007813474244606893
+    },
+    {
+      "case_index": 43,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 89,
+      "pred_fg": 149363,
+      "global_fg_dice": 0.0007627867141958111,
+      "macro_fg_dice": 0.0013133141918323095
+    },
+    {
+      "case_index": 44,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 271,
+      "pred_fg": 142410,
+      "global_fg_dice": 0.0005186394825519502,
+      "macro_fg_dice": 1.9078431095843594e-11
+    },
+    {
+      "case_index": 45,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 99,
+      "pred_fg": 142603,
+      "global_fg_dice": 0.0013734916119604928,
+      "macro_fg_dice": 0.00033379633090621413
+    },
+    {
+      "case_index": 46,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 318,
+      "pred_fg": 166834,
+      "global_fg_dice": 0.0011486551163610876,
+      "macro_fg_dice": 0.0014532491167323588
+    },
+    {
+      "case_index": 47,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 154,
+      "pred_fg": 193857,
+      "global_fg_dice": 9.27782445840652e-05,
+      "macro_fg_dice": 1.0083362282856506e-09
+    },
+    {
+      "case_index": 48,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 109,
+      "pred_fg": 183292,
+      "global_fg_dice": 0.0007851647483382978,
+      "macro_fg_dice": 0.001321158999888459
+    },
+    {
+      "case_index": 49,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 50,
+      "pred_fg": 153813,
+      "global_fg_dice": 5.199430668841424e-05,
+      "macro_fg_dice": 1.9422890520647668e-10
+    },
+    {
+      "case_index": 50,
+      "image_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_shape": [
+        64,
+        96,
+        96
+      ],
+      "target_fg": 293,
+      "pred_fg": 138937,
+      "global_fg_dice": 0.000948071536378586,
+      "macro_fg_dice": 0.0016260162787375312
+    }
+  ]
+}

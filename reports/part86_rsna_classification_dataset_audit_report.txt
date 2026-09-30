@@ -1,0 +1,252 @@
+==============================================================================
+PART 86 — RSNA DISEASE CLASSIFICATION DATASET AUDIT
+==============================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+RSNA dataset: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\dataset\rsna-2024-lumbar-spine-degenerative-classification
+train.csv: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\dataset\rsna-2024-lumbar-spine-degenerative-classification\train.csv
+
+DATASET SIZE
+------------------------------------------------------------------------------
+Studies/rows: 1975
+Columns: 26
+
+CLASSIFICATION TARGET AUDIT
+------------------------------------------------------------------------------
+Expected targets: 25
+Detected targets: 25
+  [FOUND] spinal_canal_stenosis_l1_l2
+  [FOUND] spinal_canal_stenosis_l2_l3
+  [FOUND] spinal_canal_stenosis_l3_l4
+  [FOUND] spinal_canal_stenosis_l4_l5
+  [FOUND] spinal_canal_stenosis_l5_s1
+  [FOUND] left_neural_foraminal_narrowing_l1_l2
+  [FOUND] left_neural_foraminal_narrowing_l2_l3
+  [FOUND] left_neural_foraminal_narrowing_l3_l4
+  [FOUND] left_neural_foraminal_narrowing_l4_l5
+  [FOUND] left_neural_foraminal_narrowing_l5_s1
+  [FOUND] right_neural_foraminal_narrowing_l1_l2
+  [FOUND] right_neural_foraminal_narrowing_l2_l3
+  [FOUND] right_neural_foraminal_narrowing_l3_l4
+  [FOUND] right_neural_foraminal_narrowing_l4_l5
+  [FOUND] right_neural_foraminal_narrowing_l5_s1
+  [FOUND] left_subarticular_stenosis_l1_l2
+  [FOUND] left_subarticular_stenosis_l2_l3
+  [FOUND] left_subarticular_stenosis_l3_l4
+  [FOUND] left_subarticular_stenosis_l4_l5
+  [FOUND] left_subarticular_stenosis_l5_s1
+  [FOUND] right_subarticular_stenosis_l1_l2
+  [FOUND] right_subarticular_stenosis_l2_l3
+  [FOUND] right_subarticular_stenosis_l3_l4
+  [FOUND] right_subarticular_stenosis_l4_l5
+  [FOUND] right_subarticular_stenosis_l5_s1
+
+IDENTIFIER AUDIT
+------------------------------------------------------------------------------
+study_id_column: True
+study_rows: 1975
+unique_studies: 1975
+duplicate_study_rows: 0
+
+CASE COMPLETENESS
+------------------------------------------------------------------------------
+total_studies: 1975
+complete_studies: 1790
+incomplete_studies: 185
+complete_percentage: 90.63%
+incomplete_percentage: 9.37%
+
+CONDITION-LEVEL LABEL SUMMARY
+------------------------------------------------------------------------------
+
+Spinal Canal Stenosis
+  Normal/Mild  :  8664
+  Moderate     :   736
+  Severe       :   470
+  MISSING      :     5
+
+Left Neural Foraminal Narrowing
+  Normal/Mild  :  7672
+  Moderate     :  1794
+  Severe       :   399
+  MISSING      :    10
+
+Right Neural Foraminal Narrowing
+  Normal/Mild  :  7685
+  Moderate     :  1770
+  Severe       :   380
+  MISSING      :    40
+
+Left Subarticular Stenosis
+  Normal/Mild  :  6864
+  Moderate     :  1835
+  Severe       :   913
+  MISSING      :   263
+
+Right Subarticular Stenosis
+  Normal/Mild  :  6869
+  Moderate     :  1825
+  Severe       :   927
+  MISSING      :   254
+
+TARGET-LEVEL LABEL DISTRIBUTION
+------------------------------------------------------------------------------
+
+spinal_canal_stenosis_l1_l2
+  Normal/Mild  :  1886 ( 95.49%)
+  Moderate     :    67 (  3.39%)
+  Severe       :    21 (  1.06%)
+  MISSING      :     1 (  0.05%)
+
+spinal_canal_stenosis_l2_l3
+  Normal/Mild  :  1770 ( 89.62%)
+  Moderate     :   151 (  7.65%)
+  Severe       :    53 (  2.68%)
+  MISSING      :     1 (  0.05%)
+
+spinal_canal_stenosis_l3_l4
+  Normal/Mild  :  1622 ( 82.13%)
+  Moderate     :   230 ( 11.65%)
+  Severe       :   122 (  6.18%)
+  MISSING      :     1 (  0.05%)
+
+spinal_canal_stenosis_l4_l5
+  Normal/Mild  :  1482 ( 75.04%)
+  Severe       :   255 ( 12.91%)
+  Moderate     :   237 ( 12.00%)
+  MISSING      :     1 (  0.05%)
+
+spinal_canal_stenosis_l5_s1
+  Normal/Mild  :  1904 ( 96.41%)
+  Moderate     :    51 (  2.58%)
+  Severe       :    19 (  0.96%)
+  MISSING      :     1 (  0.05%)
+
+left_neural_foraminal_narrowing_l1_l2
+  Normal/Mild  :  1908 ( 96.61%)
+  Moderate     :    63 (  3.19%)
+  Severe       :     2 (  0.10%)
+  MISSING      :     2 (  0.10%)
+
+left_neural_foraminal_narrowing_l2_l3
+  Normal/Mild  :  1791 ( 90.68%)
+  Moderate     :   171 (  8.66%)
+  Severe       :    11 (  0.56%)
+  MISSING      :     2 (  0.10%)
+
+left_neural_foraminal_narrowing_l3_l4
+  Normal/Mild  :  1522 ( 77.06%)
+  Moderate     :   411 ( 20.81%)
+  Severe       :    40 (  2.03%)
+  MISSING      :     2 (  0.10%)
+
+left_neural_foraminal_narrowing_l4_l5
+  Normal/Mild  :  1204 ( 60.96%)
+  Moderate     :   629 ( 31.85%)
+  Severe       :   140 (  7.09%)
+  MISSING      :     2 (  0.10%)
+
+left_neural_foraminal_narrowing_l5_s1
+  Normal/Mild  :  1247 ( 63.14%)
+  Moderate     :   520 ( 26.33%)
+  Severe       :   206 ( 10.43%)
+  MISSING      :     2 (  0.10%)
+
+right_neural_foraminal_narrowing_l1_l2
+  Normal/Mild  :  1891 ( 95.75%)
+  Moderate     :    63 (  3.19%)
+  Severe       :    13 (  0.66%)
+  MISSING      :     8 (  0.41%)
+
+right_neural_foraminal_narrowing_l2_l3
+  Normal/Mild  :  1793 ( 90.78%)
+  Moderate     :   168 (  8.51%)
+  MISSING      :     8 (  0.41%)
+  Severe       :     6 (  0.30%)
+
+right_neural_foraminal_narrowing_l3_l4
+  Normal/Mild  :  1512 ( 76.56%)
+  Moderate     :   414 ( 20.96%)
+  Severe       :    41 (  2.08%)
+  MISSING      :     8 (  0.41%)
+
+right_neural_foraminal_narrowing_l4_l5
+  Normal/Mild  :  1208 ( 61.16%)
+  Moderate     :   629 ( 31.85%)
+  Severe       :   130 (  6.58%)
+  MISSING      :     8 (  0.41%)
+
+right_neural_foraminal_narrowing_l5_s1
+  Normal/Mild  :  1281 ( 64.86%)
+  Moderate     :   496 ( 25.11%)
+  Severe       :   190 (  9.62%)
+  MISSING      :     8 (  0.41%)
+
+left_subarticular_stenosis_l1_l2
+  Normal/Mild  :  1690 ( 85.57%)
+  MISSING      :   164 (  8.30%)
+  Moderate     :    93 (  4.71%)
+  Severe       :    28 (  1.42%)
+
+left_subarticular_stenosis_l2_l3
+  Normal/Mild  :  1555 ( 78.73%)
+  Moderate     :   255 ( 12.91%)
+  Severe       :    83 (  4.20%)
+  MISSING      :    82 (  4.15%)
+
+left_subarticular_stenosis_l3_l4
+  Normal/Mild  :  1324 ( 67.04%)
+  Moderate     :   454 ( 22.99%)
+  Severe       :   194 (  9.82%)
+  MISSING      :     3 (  0.15%)
+
+left_subarticular_stenosis_l4_l5
+  Normal/Mild  :   887 ( 44.91%)
+  Moderate     :   624 ( 31.59%)
+  Severe       :   461 ( 23.34%)
+  MISSING      :     3 (  0.15%)
+
+left_subarticular_stenosis_l5_s1
+  Normal/Mild  :  1408 ( 71.29%)
+  Moderate     :   409 ( 20.71%)
+  Severe       :   147 (  7.44%)
+  MISSING      :    11 (  0.56%)
+
+right_subarticular_stenosis_l1_l2
+  Normal/Mild  :  1680 ( 85.06%)
+  MISSING      :   161 (  8.15%)
+  Moderate     :   110 (  5.57%)
+  Severe       :    24 (  1.22%)
+
+right_subarticular_stenosis_l2_l3
+  Normal/Mild  :  1577 ( 79.85%)
+  Moderate     :   243 ( 12.30%)
+  MISSING      :    82 (  4.15%)
+  Severe       :    73 (  3.70%)
+
+right_subarticular_stenosis_l3_l4
+  Normal/Mild  :  1322 ( 66.94%)
+  Moderate     :   454 ( 22.99%)
+  Severe       :   197 (  9.97%)
+  MISSING      :     2 (  0.10%)
+
+right_subarticular_stenosis_l4_l5
+  Normal/Mild  :   891 ( 45.11%)
+  Moderate     :   622 ( 31.49%)
+  Severe       :   460 ( 23.29%)
+  MISSING      :     2 (  0.10%)
+
+right_subarticular_stenosis_l5_s1
+  Normal/Mild  :  1399 ( 70.84%)
+  Moderate     :   396 ( 20.05%)
+  Severe       :   173 (  8.76%)
+  MISSING      :     7 (  0.35%)
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS: All 25 RSNA classification targets were detected.
+INFO: Some studies contain missing labels.
+
+Part 86 performs dataset auditing only.
+No neural-network training was performed.
+No Part 84/85 segmentation checkpoint was modified.

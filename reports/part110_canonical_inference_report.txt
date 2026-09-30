@@ -1,0 +1,92 @@
+PART 110 — CANONICAL SwinUNETR SEGMENTATION INFERENCE FACTORY & SMOKE TEST
+=========================================================================
+
+Final status:
+PASS — CANONICAL_SWINUNETR_INFERENCE_PATH_ESTABLISHED
+
+Checkpoint:
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+SHA256:
+fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+Confirmed architecture:
+- MONAI SwinUNETR
+- in_channels = 1
+- out_channels = 6
+- feature_size = 12
+- spatial_dims = 3
+- use_checkpoint = False
+- full volume = (64, 96, 96)
+- training crop = (32, 64, 64)
+
+Checkpoint/model validation:
+- checkpoint keys = 159
+- model keys = 159
+- common keys = 159
+- shape matches = 159
+- shape mismatches = 0
+- missing keys = 0
+- unexpected keys = 0
+- exact key + shape match = True
+
+Strict checkpoint load:
+PASS
+
+CPU smoke test:
+{
+  "output_shape": [
+    1,
+    6,
+    64,
+    96,
+    96
+  ],
+  "logit_min": -5.964972972869873,
+  "logit_max": 3.0460479259490967,
+  "logit_mean": -0.6312593817710876,
+  "logit_std": 0.6917166113853455,
+  "predicted_class_distribution": {
+    "0": 457639,
+    "1": 40327,
+    "2": 19837,
+    "3": 478,
+    "4": 66331,
+    "5": 5212
+  }
+}
+CPU time:
+2.2807178999646567
+
+CUDA smoke test:
+{
+  "output_shape": [
+    1,
+    6,
+    64,
+    96,
+    96
+  ],
+  "logit_min": -5.965670585632324,
+  "logit_max": 3.0459275245666504,
+  "logit_mean": -0.6312618851661682,
+  "logit_std": 0.6917198896408081,
+  "predicted_class_distribution": {
+    "0": 457647,
+    "1": 40326,
+    "2": 19833,
+    "3": 477,
+    "4": 66331,
+    "5": 5210
+  }
+}
+CUDA time:
+0.8368080999935046
+
+IMPORTANT SCIENTIFIC NOTE
+-------------------------
+The smoke test uses a deterministic synthetic 3D tensor solely to validate
+model construction, checkpoint loading, tensor dimensions, and runtime
+inference. It is not a patient prediction and must not be interpreted as
+clinical performance or segmentation accuracy.
+
+Part 110 does not train the model, modify the checkpoint, or modify src/model.py.

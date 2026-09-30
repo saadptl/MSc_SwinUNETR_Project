@@ -1,0 +1,96 @@
+{
+  "part": 110,
+  "status": "PASS",
+  "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "checkpoint_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "architecture": {
+    "name": "MONAI SwinUNETR",
+    "in_channels": 1,
+    "out_channels": 6,
+    "feature_size": 12,
+    "spatial_dims": 3,
+    "use_checkpoint": false,
+    "full_volume_shape": [
+      64,
+      96,
+      96
+    ],
+    "training_crop_shape": [
+      32,
+      64,
+      64
+    ]
+  },
+  "runtime": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pytorch": "2.11.0+cu128",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 2050"
+  },
+  "validation": {
+    "checkpoint_keys": 159,
+    "model_keys": 159,
+    "common_keys": 159,
+    "shape_matches": 159,
+    "shape_mismatches": [],
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "exact_key_shape_match": true
+  },
+  "smoke_test": {
+    "seed": 110,
+    "input_shape": [
+      1,
+      1,
+      64,
+      96,
+      96
+    ],
+    "cpu": {
+      "output_shape": [
+        1,
+        6,
+        64,
+        96,
+        96
+      ],
+      "logit_min": -5.964972972869873,
+      "logit_max": 3.0460479259490967,
+      "logit_mean": -0.6312593817710876,
+      "logit_std": 0.6917166113853455,
+      "predicted_class_distribution": {
+        "0": 457639,
+        "1": 40327,
+        "2": 19837,
+        "3": 478,
+        "4": 66331,
+        "5": 5212
+      }
+    },
+    "cpu_time_sec": 2.2807178999646567,
+    "cuda": {
+      "output_shape": [
+        1,
+        6,
+        64,
+        96,
+        96
+      ],
+      "logit_min": -5.965670585632324,
+      "logit_max": 3.0459275245666504,
+      "logit_mean": -0.6312618851661682,
+      "logit_std": 0.6917198896408081,
+      "predicted_class_distribution": {
+        "0": 457647,
+        "1": 40326,
+        "2": 19833,
+        "3": 477,
+        "4": 66331,
+        "5": 5210
+      }
+    },
+    "cuda_time_sec": 0.8368080999935046
+  },
+  "scientific_note": "This part validates the inference architecture and runtime using a deterministic synthetic input. It is not a clinical performance evaluation and does not establish expert-ground-truth segmentation accuracy."
+}

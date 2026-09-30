@@ -1,0 +1,19 @@
+{
+  "part": 121,
+  "purpose": "Full 100-row validation inference and prediction-distribution audit using Part122 best checkpoint.",
+  "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part122_controlled_background_calibrated_loss_retraining\\checkpoints\\best_part122_model.pth",
+  "checkpoint_sha256": "84712e6a26a413026aac06aed86789e5cd3cdfb0b166af0615f94003345b3f4d",
+  "part122_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part122_controlled_background_calibrated_loss_retraining",
+  "part104_preserved": true,
+  "validation_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\part99_validation_cohort_reconstructed.csv",
+  "validation_cohort_rows": 100,
+  "part113_reused": true,
+  "part114_reused": true,
+  "part113_return_code": 0,
+  "part114_return_code": 0,
+  "inference_output_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\\inference",
+  "audit_output_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part123_part122_best_full_validation_inference_and_distribution_audit\\audit",
+  "elapsed_seconds": 116.90324419998797,
+  "status": "PASS",
+  "note": "Segmentation Dice values in this pipeline are against existing development/pseudo-mask targets, not clinical expert ground truth."
+}

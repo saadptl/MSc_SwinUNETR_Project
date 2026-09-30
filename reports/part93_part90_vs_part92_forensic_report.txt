@@ -1,0 +1,75 @@
+================================================================================
+PART 93 — PART90 VS PART92 CLASSIFICATION FORENSIC EVALUATION
+================================================================================
+
+OBJECTIVE
+--------------------------------------------------------------------------------
+Evaluate the saved Part90 and Part92 checkpoints on the identical Part87 study-level validation set.
+
+ARCHITECTURE VALIDITY NOTE
+--------------------------------------------------------------------------------
+Part90 model parameters: 77,907
+Part92 model parameters: 20,083
+Part90 uses the actual Lightweight3DCNN class from the Part90 training script.
+Part92 uses the actual Part90CNN class from the Part92 training script.
+Because the architectures differ, Part92 must NOT be described as a pure class-weight-only ablation of Part90.
+
+PART90 RESULTS
+--------------------------------------------------------------------------------
+Accuracy              : 0.775389
+Majority baseline     : 0.775389
+Accuracy gain         : 0.000000
+Balanced accuracy     : 0.333333
+Macro precision       : 0.775389
+Macro recall          : 0.333333
+Macro F1              : 0.873486
+Normal/Mild recall    : 1.000000
+Moderate recall       : 0.000000
+Severe recall         : 0.000000
+
+PART92 RESULTS
+--------------------------------------------------------------------------------
+Accuracy              : 0.716626
+Majority baseline     : 0.775389
+Accuracy gain         : -0.058763
+Balanced accuracy     : 0.438530
+Macro precision       : 0.466185
+Macro recall          : 0.438530
+Macro F1              : 0.442275
+Normal/Mild recall    : 0.839319
+Moderate recall       : 0.360377
+Severe recall         : 0.115894
+
+COMPARISON
+--------------------------------------------------------------------------------
+Accuracy                         Part90=0.775389 Part92=0.716626 Delta=-0.058763
+Majority baseline                Part90=0.775389 Part92=0.775389 Delta=+0.000000
+Accuracy gain over majority      Part90=0.000000 Part92=-0.058763 Delta=-0.058763
+Balanced accuracy                Part90=0.333333 Part92=0.438530 Delta=+0.105197
+Macro precision                  Part90=0.775389 Part92=0.466185 Delta=-0.309204
+Macro recall                     Part90=0.333333 Part92=0.438530 Delta=+0.105197
+Macro F1                         Part90=0.873486 Part92=0.442275 Delta=-0.431211
+Normal/Mild recall               Part90=1.000000 Part92=0.839319 Delta=-0.160681
+Moderate recall                  Part90=0.000000 Part92=0.360377 Delta=+0.360377
+Severe recall                    Part90=0.000000 Part92=0.115894 Delta=+0.115894
+
+PREDICTED CLASS DISTRIBUTION
+--------------------------------------------------------------------------------
+Normal/Mild     Part90=1.000000 Part92=0.778358
+Moderate        Part90=0.000000 Part92=0.194103
+Severe          Part90=0.000000 Part92=0.027539
+
+FINAL DIAGNOSIS
+--------------------------------------------------------------------------------
+PART92_SHOWS_NONTRIVIAL_MINOR_CLASS_SIGNAL
+Severe recall improved relative to Part90.
+Part92 prediction distribution is not overwhelmingly concentrated on Normal/Mild.
+
+INTERPRETATION
+--------------------------------------------------------------------------------
+The RSNA classification targets are strongly class-imbalanced, therefore raw accuracy alone is insufficient.
+Macro F1, balanced accuracy, and minority-class recall are emphasized.
+A reduction in raw accuracy can be acceptable if it corresponds to meaningful gains in Moderate and Severe detection.
+Because Part90 and Part92 use different model architectures, their difference cannot be attributed exclusively to class weighting.
+
+================================================================================

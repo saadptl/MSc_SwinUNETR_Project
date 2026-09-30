@@ -1,0 +1,29 @@
+========================================================================================
+PART 105 — FINAL SEGMENTATION INFERENCE READINESS AUDIT
+========================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Status: FAIL — FINAL_SEGMENTATION_MODEL_REQUIRES_REVIEW
+
+FINAL CHECKPOINT
+  Path: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+  SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+  Readable: True
+  Parameter count: 5019308
+
+VALIDATION COHORT
+  Rows: 100
+  Unique studies: 86
+  Duplicates: 14
+  Train/validation overlap: 0
+
+PART104 SELECTION
+  Selected records: 1
+  Selected source: Part98 best
+
+RUNTIME
+  CPU reload: True
+  CUDA reload: True
+
+INTERPRETATION
+This is an inference-readiness audit only. It does not claim clinical diagnostic accuracy and does not replace evaluation against expert-annotated ground truth.

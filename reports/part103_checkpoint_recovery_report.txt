@@ -1,0 +1,30 @@
+========================================================================================
+PART 103 — PART98 CHECKPOINT RECOVERY + PART99 LINEAGE VERIFICATION
+========================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Status: PASS — PART98_CHECKPOINT_AVAILABLE_AND_LINEAGE_VERIFIED
+
+PART98
+  Best checkpoint exists: True
+  History rows: 12
+  Selected best epoch: 10
+  Selection reason: Highest recorded validation Dice-like metric (0.217250).
+
+COHORTS
+  Train rows: 500
+  Validation rows: 100
+  Overlap: 0
+
+PART99
+  Best checkpoint: True
+  Final checkpoint: True
+
+RECOVERY
+{
+  "performed": false,
+  "reason": "Canonical Part98 best checkpoint already exists."
+}
+
+IMPORTANT
+Part99 was never renamed or substituted as Part98. Any recovered Part98 checkpoint must originate from genuine Part98 artifacts.

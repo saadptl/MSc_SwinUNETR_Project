@@ -1,0 +1,31 @@
+{
+  "part": 113,
+  "status": "PASS \u2014 FULL_VALIDATION_INFERENCE_COMPLETED",
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "checkpoint_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "expected_checkpoint_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "cohort_rows": 100,
+  "successful_cases": 100,
+  "failed_cases": 0,
+  "total_seconds": 58.87562229996547,
+  "device": "cuda:0",
+  "model_parameters": 4078116,
+  "model_state_keys": 159,
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "loader_contract": {
+    "signature": "(row: 'pd.Series', part9: 'Any') -> 'Tuple[torch.Tensor, torch.Tensor, Dict[str, Any]]'",
+    "first_parameter": "row",
+    "second_parameter": "part9",
+    "order": "row,part9"
+  },
+  "outputs": {
+    "case_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part113_robust_loader_contract_and_full_inference\\part113_validation_case_inference.csv",
+    "prediction_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part113_robust_loader_contract_and_full_inference\\predictions"
+  },
+  "scientific_note": "Per-class Dice values compare predictions against the existing project pseudo-masks/development labels. They are not clinical expert-ground-truth performance measures."
+}

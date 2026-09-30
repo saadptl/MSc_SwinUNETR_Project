@@ -1,0 +1,70 @@
+{
+    "part": 87,
+    "title": "Leakage-Free RSNA Classification Split",
+    "seed": 42,
+    "train_fraction": 0.8,
+    "dataset": {
+        "rows": 1975,
+        "unique_studies": 1975,
+        "classification_targets": 25
+    },
+    "split": {
+        "train_studies": 1580,
+        "validation_studies": 395,
+        "train_percentage": 80.0,
+        "validation_percentage": 20.0,
+        "study_overlap": 0
+    },
+    "series_selection": {
+        "primary": "Sagittal T2/STIR",
+        "fallbacks": [
+            "Sagittal T1",
+            "Axial T2"
+        ],
+        "total_studies": 1975,
+        "selected_series": 1975,
+        "missing_series": 0,
+        "coverage_percentage": 100.0,
+        "training_selected": 1580,
+        "validation_selected": 395
+    },
+    "target_columns": [
+        "spinal_canal_stenosis_l1_l2",
+        "spinal_canal_stenosis_l2_l3",
+        "spinal_canal_stenosis_l3_l4",
+        "spinal_canal_stenosis_l4_l5",
+        "spinal_canal_stenosis_l5_s1",
+        "left_neural_foraminal_narrowing_l1_l2",
+        "left_neural_foraminal_narrowing_l2_l3",
+        "left_neural_foraminal_narrowing_l3_l4",
+        "left_neural_foraminal_narrowing_l4_l5",
+        "left_neural_foraminal_narrowing_l5_s1",
+        "right_neural_foraminal_narrowing_l1_l2",
+        "right_neural_foraminal_narrowing_l2_l3",
+        "right_neural_foraminal_narrowing_l3_l4",
+        "right_neural_foraminal_narrowing_l4_l5",
+        "right_neural_foraminal_narrowing_l5_s1",
+        "left_subarticular_stenosis_l1_l2",
+        "left_subarticular_stenosis_l2_l3",
+        "left_subarticular_stenosis_l3_l4",
+        "left_subarticular_stenosis_l4_l5",
+        "left_subarticular_stenosis_l5_s1",
+        "right_subarticular_stenosis_l1_l2",
+        "right_subarticular_stenosis_l2_l3",
+        "right_subarticular_stenosis_l3_l4",
+        "right_subarticular_stenosis_l4_l5",
+        "right_subarticular_stenosis_l5_s1"
+    ],
+    "outputs": {
+        "train_manifest": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_train_manifest.csv",
+        "validation_manifest": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_validation_manifest.csv",
+        "train_study_ids": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_train_study_ids.csv",
+        "validation_study_ids": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_validation_study_ids.csv",
+        "leakage_audit": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_study_overlap_audit.csv",
+        "series_summary": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_series_selection_summary.csv",
+        "target_summary": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part87_study_level_split\\part87_split_target_summary.csv",
+        "report": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part87_classification_split_report.txt"
+    },
+    "training_performed": false,
+    "segmentation_modified": false
+}

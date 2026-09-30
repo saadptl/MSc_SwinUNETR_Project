@@ -1,0 +1,57 @@
+{
+  "status": "COMPLETED",
+  "part": "126",
+  "purpose": "foreground-calibrated segmentation fine-tuning",
+  "training_performed": true,
+  "epochs_completed": 12,
+  "best_epoch": 1,
+  "best_validation_foreground_dice": 0.0,
+  "training_time_seconds": 5069.1285235881805,
+  "part104_sha256_expected": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "part104_sha256_at_start": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "part104_protected": true,
+  "architecture": {
+    "in_channels": 1,
+    "out_channels": 6,
+    "feature_size": 12,
+    "spatial_dims": 3,
+    "parameter_count": 4078116
+  },
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "crop_shape": [
+    32,
+    64,
+    64
+  ],
+  "foreground_crop_probability": 0.75,
+  "random_crop_probability": 0.25,
+  "loss": {
+    "cross_entropy_weight": 1.0,
+    "tversky_weight": 1.0,
+    "tversky_alpha": 0.7,
+    "tversky_beta": 0.3,
+    "description": "cross-entropy + foreground Tversky with stronger false-positive penalty"
+  },
+  "learning_rate": 5e-05,
+  "weight_decay": 1e-05,
+  "sliding_window": {
+    "roi_size": [
+      32,
+      64,
+      64
+    ],
+    "overlap": 0.5,
+    "sw_batch_size": 1,
+    "mode": "gaussian",
+    "sigma_scale": 0.125
+  },
+  "best_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part126_foreground_calibrated_finetuning\\checkpoints\\best_part126_model.pth",
+  "final_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part126_foreground_calibrated_finetuning\\checkpoints\\final_part126_model.pth",
+  "history_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part126_foreground_calibrated_finetuning\\part126_training_history.csv",
+  "clinical_validation": false,
+  "note": "Targets are development/pseudo-mask labels. Results must not be interpreted as clinical validation."
+}

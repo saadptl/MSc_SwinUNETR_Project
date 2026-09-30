@@ -1,0 +1,42 @@
+PART 92 — CLASS-IMBALANCE-AWARE CLASSIFICATION TRAINING
+==============================================================================
+
+Dataset: RSNA 2024 Lumbar Spine Degenerative Classification
+Train studies: 1580
+Validation studies: 395
+Study overlap: 0
+
+Class weights:
+  Normal/Mild = 1.0000
+  Moderate    = 2.5000
+  Severe      = 4.0000
+
+FINAL VALIDATION METRICS
+------------------------------------------------------------------------------
+Accuracy              : 0.750717
+Majority baseline     : 0.775389
+Accuracy gain         : -0.024672
+Balanced accuracy     : 0.409760
+Macro precision       : 0.487229
+Macro recall          : 0.409760
+Macro F1              : 0.412496
+Normal/Mild recall    : 0.904806
+Moderate recall       : 0.288050
+Severe recall         : 0.036424
+
+TRUE CLASS COUNTS
+Normal/Mild : 7574
+Moderate    : 1590
+Severe      : 604
+
+PREDICTED CLASS COUNTS
+Normal/Mild : 8344
+Moderate    : 1351
+Severe      : 73
+
+DIAGNOSIS
+CLASS_WEIGHTING_REVEALS_NONTRIVIAL_SEVERITY_SIGNAL
+
+Interpretation:
+The Part 91 baseline predicted Normal/Mild for every valid label. Part 92 introduces class-weighted cross-entropy while keeping the dataset split and model configuration controlled.
+Accuracy must be interpreted together with balanced accuracy, macro F1, and Moderate/Severe recall.

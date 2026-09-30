@@ -1,0 +1,11 @@
+{
+  "part": 120,
+  "status": "PASS",
+  "diagnosis": "FOREGROUND_OVERSEGMENTATION_REDUCED_VS_PART104",
+  "best_epoch": 12,
+  "best_dice": 0.6227955950245846,
+  "best_fg_ratio": 0.48142927002144353,
+  "best_sha256": "075bffabe423008cf389ff06c6680d75d6d208270e5e709f7a5994e9ec8c4abe",
+  "final_sha256": "9058e7f41df55701a411b00150a959f9424a7060a5d7d9de9e32ff7c2a566289",
+  "part104_overwritten": false
+}

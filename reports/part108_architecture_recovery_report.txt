@@ -1,0 +1,29 @@
+PART 108 — ORIGINAL SEGMENTATION ARCHITECTURE RECOVERY
+========================================================================================
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Checkpoint: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+Checkpoint SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+Checkpoint keys: 159
+Checkpoint tensor elements: 5,019,308
+MONAI available: True
+MONAI version: 1.6.0
+Candidate constructors: 19
+Exact architecture match: False
+
+CHECKPOINT METADATA
+----------------------------------------------------------------------------------------
+feature_size: 12
+num_classes: 6
+full_shape: [64, 96, 96]
+crop_shape: [32, 64, 64]
+epoch: 10
+
+FINAL DIAGNOSIS
+----------------------------------------------------------------------------------------
+No tested candidate exactly matches the checkpoint. The checkpoint remains untouched; additional recovery from the Part 98 training/model source is required.
+
+FINAL STATUS
+----------------------------------------------------------------------------------------
+REVIEW_REQUIRED — ORIGINAL_ARCHITECTURE_NOT_YET_RECONSTRUCTED
+
+This diagnostic did not train, modify source files, install packages, or overwrite the checkpoint.

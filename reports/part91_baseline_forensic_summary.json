@@ -1,0 +1,45 @@
+{
+    "part": 91,
+    "title": "Classification Baseline Forensic Evaluation",
+    "seed": 42,
+    "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part90_controlled_baseline\\checkpoints\\part90_best_model.pth",
+    "checkpoint_epoch": 5,
+    "dataset": {
+        "training_studies": 1580,
+        "validation_studies": 395,
+        "study_overlap": 0
+    },
+    "overall": {
+        "accuracy": 0.7753890253890254,
+        "majority_baseline_accuracy": 0.7753890253890254,
+        "difference_from_majority": 0.0,
+        "macro_target_accuracy": 0.7765378084734641,
+        "macro_balanced_accuracy": 0.5,
+        "macro_precision": 0.2588459361578214,
+        "macro_recall": 0.33333333333333337,
+        "macro_f1": 0.28819267080056127,
+        "valid_labels": 9768
+    },
+    "class_recall": {
+        "normal_mild": 1.0,
+        "moderate": 0.0,
+        "severe": 0.0
+    },
+    "prediction_distribution": {
+        "normal_mild": 9768,
+        "moderate": 0,
+        "severe": 0
+    },
+    "diagnosis": "MAJORITY_CLASS_COLLAPSE",
+    "outputs": {
+        "per_target_metrics": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part91_baseline_forensic_evaluation\\part91_per_target_metrics.csv",
+        "confusion_matrices": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part91_baseline_forensic_evaluation\\part91_confusion_matrices.csv",
+        "predictions": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part91_baseline_forensic_evaluation\\part91_validation_predictions.csv",
+        "class_distribution": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part91_baseline_forensic_evaluation\\part91_prediction_class_distribution.csv",
+        "report": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part91_baseline_forensic_report.txt",
+        "summary": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part91_baseline_forensic_summary.json"
+    },
+    "training_performed": false,
+    "segmentation_modified": false,
+    "status": "PASS"
+}

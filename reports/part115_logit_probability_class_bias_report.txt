@@ -1,0 +1,28 @@
+PART 115 — LOGIT / PROBABILITY / CLASS-BIAS DIAGNOSTIC
+
+Status: PASS — LOGIT_PROBABILITY_CLASS_BIAS_DIAGNOSTIC_COMPLETED
+Checkpoint SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+Completed cases: 100
+Failed cases: 0
+
+Mean entropy: 1.438613
+Mean confidence: 0.487567
+Mean foreground probability: 0.513583
+Mean background probability: 0.486417
+Mean FG-BG margin: 0.027165
+Fraction FG > BG: 0.430332
+Mean class-1 probability: 0.141227
+Class-1 > other-FG fraction: 0.017341
+
+Dominant foreground class: 1
+Dominant foreground share: 0.851420
+Class-1 probability share of foreground: 0.274985
+Part113 argmax agreement: 0.999855
+
+Class-bias diagnosis: NO_SINGLE_LOGIT_CLASS_BIAS
+Confidence diagnosis: LOW_CONFIDENCE_MODEL_OUTPUTS
+Primary diagnosis: LOGIT_PATTERN_REQUIRES_DEEPER_ANALYSIS
+
+Scientific limitation:
+The targets are project pseudo-masks/development labels.
+These diagnostics are not clinical expert-groundtruth performance.

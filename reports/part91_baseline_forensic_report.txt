@@ -1,0 +1,52 @@
+==============================================================================
+PART 91 — CLASSIFICATION BASELINE FORENSIC EVALUATION
+==============================================================================
+
+DATASET
+------------------------------------------------------------------------------
+Training studies: 1580
+Validation studies: 395
+Study overlap: 0
+
+MODEL
+------------------------------------------------------------------------------
+Part 90 Lightweight 3D CNN
+Checkpoint epoch: 5
+
+OVERALL PERFORMANCE
+------------------------------------------------------------------------------
+Model accuracy: 0.775389
+Majority baseline: 0.775389
+Model - majority: 0.000000
+Macro target accuracy: 0.776538
+Macro balanced accuracy: 0.500000
+Macro precision: 0.258846
+Macro recall: 0.333333
+Macro F1: 0.288193
+
+CLASS RECALL
+------------------------------------------------------------------------------
+Normal/Mild recall: 1.000000
+Moderate recall: 0.000000
+Severe recall: 0.000000
+
+PREDICTION DISTRIBUTION
+------------------------------------------------------------------------------
+Normal/Mild: 9768
+Moderate: 0
+Severe: 0
+
+DIAGNOSIS
+------------------------------------------------------------------------------
+MAJORITY_CLASS_COLLAPSE
+
+INTERPRETATION
+------------------------------------------------------------------------------
+Overall accuracy must not be used alone because the RSNA classification targets are strongly imbalanced.
+Macro F1, balanced accuracy, and Moderate/Severe recall are therefore emphasized.
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS — Part 90 checkpoint forensic evaluation completed.
+No training was performed.
+No segmentation checkpoint was modified.

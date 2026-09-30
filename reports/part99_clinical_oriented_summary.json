@@ -1,0 +1,104 @@
+{
+  "part": 99,
+  "title": "Advanced Clinical-Oriented Swin-UNETR Fine-Tuning",
+  "status": "PASS \u2014 CLINICAL-ORIENTED FINE-TUNING COMPLETED",
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 2050",
+  "configuration": {
+    "epochs": 8,
+    "batch_size": 1,
+    "gradient_accumulation": 4,
+    "learning_rate": 2.5e-05,
+    "weight_decay": 1e-05,
+    "full_volume": [
+      64,
+      96,
+      96
+    ],
+    "training_crop": [
+      32,
+      64,
+      64
+    ],
+    "feature_size": 12,
+    "num_classes": 6,
+    "amp": true,
+    "seed": 42
+  },
+  "loss": {
+    "dice_weight": 0.45,
+    "focal_weight": 0.3,
+    "tversky_weight": 0.25,
+    "focal_gamma": 2.0,
+    "tversky_alpha": 0.3,
+    "tversky_beta": 0.7
+  },
+  "cohort": {
+    "train_rows": 500,
+    "validation_rows": 100,
+    "overlap": 0
+  },
+  "initialization": {
+    "source": "Part98 best checkpoint",
+    "part15_sha256": "0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6"
+  },
+  "initial_metrics": {
+    "global_dice": 0.028875026350100655,
+    "mean_case_dice": 0.029775935698967082,
+    "median_case_dice": 0.0183813092022383
+  },
+  "final_metrics": {
+    "global_dice": 0.07164039331978783,
+    "mean_case_dice": 0.0310755273661614,
+    "median_case_dice": 0.0,
+    "loss": 0.7655276727676391,
+    "class_metrics": {
+      "1": {
+        "dice": 0.10716535051591145,
+        "precision": 0.07211319032400593,
+        "recall": 0.20852187028618302
+      },
+      "2": {
+        "dice": 0.0,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "3": {
+        "dice": 0.0,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "4": {
+        "dice": 0.05870362821023501,
+        "precision": 0.05202312138709529,
+        "recall": 0.06735266604271585
+      },
+      "5": {
+        "dice": 0.01677316293923014,
+        "precision": 0.039772727271974,
+        "recall": 0.010627530364318688
+      }
+    }
+  },
+  "improvement": {
+    "global_dice_delta": 0.04276536696968718
+  },
+  "best_epoch": 2,
+  "checkpoints": {
+    "best": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\checkpoints\\part99_best_model.pth",
+    "final": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\checkpoints\\part99_final_model.pth"
+  },
+  "outputs": {
+    "history_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\part99_training_history.csv",
+    "case_metrics_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\part99_validation_case_metrics.csv"
+  },
+  "clinical_interpretation": {
+    "training_completed": true,
+    "frozen_best_checkpoint_verified": true,
+    "study_level_overlap": 0,
+    "clinical_validation_completed": false,
+    "regulatory_validation_completed": false,
+    "deployment_ready": false,
+    "note": "This experiment improves training toward a sensitivity-oriented segmentation objective, but does not constitute clinical validation, regulatory clearance, or proof of clinical safety."
+  }
+}

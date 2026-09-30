@@ -1,0 +1,25 @@
+PART 98 — STRONG FULL-COHORT SWIN-UNETR SEGMENTATION TRAINING
+==========================================================================================
+
+Training samples       : 500
+Validation samples     : 100
+Epochs completed       : 12
+Best epoch             : 10
+Best validation Dice   : 0.217250
+Verification Dice      : 0.241052
+Verification loss      : 1.828608
+
+Classwise verification Dice:
+Class 1: 0.021378
+Class 2: 0.172884
+Class 3: 0.680000
+Class 4: 0.017890
+Class 5: 0.313108
+
+Interpretation:
+Part98 is intended to strengthen the segmentation model before dashboard integration.
+The RSNA segmentation supervision is based on localizer/point-derived pseudo-masks rather than dense expert voxel-wise segmentation masks.
+Therefore Dice performance should be interpreted as pseudo-mask agreement rather than clinical segmentation accuracy.
+
+Clinical limitation:
+This experiment does not establish clinical safety, clinical efficacy, regulatory compliance, or readiness for autonomous diagnosis.

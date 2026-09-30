@@ -1,0 +1,11 @@
+{
+  "part": 124,
+  "status": "PASS",
+  "diagnosis": "FOREGROUND_DICE_ONLY_ABLATION_COMPLETED",
+  "best_epoch": 7,
+  "best_dice": 0.024828853812905435,
+  "best_fg_ratio": 206.83402972646232,
+  "best_sha256": "453bbc34db9429355f709b6125dfdbfa0d3f7dc05b2bdc6294ea8cf23e6077a1",
+  "final_sha256": "ead34e566aa8b3891048c95371bbe42062a2e65ee3d87a2ba7346477986b4c53",
+  "part104_overwritten": false
+}

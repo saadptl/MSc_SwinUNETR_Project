@@ -164,7 +164,7 @@ def build_pdf_report(
     summary_data = [
         ["Analysis Date", generated_at],
         ["Prediction", prediction["class_name"]],
-        ["Confidence", f"{prediction['confidence']:.2f}%"],
+        ["Confidence", f"{float(prediction['confidence']) if float(prediction.get('confidence', 0.0)) > 1.0 else float(prediction.get('confidence', 0.0))*100:.2f}%"],
         ["DICOM Slices", _safe(series["number_of_slices"])],
         ["Inference Device", _safe(prediction["device"])],
         ["Input Tensor", _safe(result["tensor_shape"])],
@@ -297,9 +297,11 @@ def build_pdf_report(
 
     probability_rows = [["Class", "Probability"]]
     for name, probability in prediction["probabilities"].items():
+        p_val = float(probability)
+        p_str = f"{p_val if p_val > 1.0 else p_val * 100:.2f}%"
         probability_rows.append([
             name,
-            f"{probability:.4f}%",
+            p_str,
         ])
 
     probability_table = Table(

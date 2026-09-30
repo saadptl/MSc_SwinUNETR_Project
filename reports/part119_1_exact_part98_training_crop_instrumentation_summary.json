@@ -1,0 +1,75 @@
+{
+  "status": "PARTIAL_OR_FAILED",
+  "part": "119.1",
+  "purpose": "Exact Part98 training dataset and crop instrumentation audit",
+  "read_only": true,
+  "training_performed": false,
+  "backward_performed": false,
+  "optimizer_step_performed": false,
+  "checkpoint_modified": false,
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "part98_path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part98_strong_full_cohort_training.py",
+  "train_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\part98_train_cohort.csv",
+  "part104_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "part104_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "canonical_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "canonical_sha_match": true,
+  "python": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\venv\\Scripts\\python.exe",
+  "python_version": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 2050",
+  "source_dataset_resolution": {
+    "selected": {
+      "name": "StrongSegmentationDataset",
+      "score": 60,
+      "has_getitem": true,
+      "has_len": true,
+      "source_lines": [
+        508,
+        590
+      ],
+      "text": "class StrongSegmentationDataset(Dataset):\n\n    def __init__(\n        self,\n        cohort_path: Path,\n        training: bool,\n    ):\n        self.cohort_path = Path(cohort_path)\n        self.training = training\n\n        self.df = pd.read_csv(self.cohort_path)\n\n        if len(self.df) == 0:\n            raise RuntimeError(\n                f\"Cohort is empty: {self.cohort_path}\"\n            )\n\n    def __len__(self):\n        return len(self.df)\n\n    def _load_case(self, row):\n\n        loaded = part11.load_tensor_case(\n            row,\n            part9,\n        )\n\n        if not isinstance(loaded, (tuple, list)):\n            raise RuntimeError(\n                \"Part11 load_tensor_case() did not return a tuple/list.\"\n            )\n\n        if len(loaded) < 2:\n            raise RuntimeError(\n                \"Part11 load_tensor_case() returned fewer than 2 values.\"\n            )\n\n        image = loaded[0]\n        mask = loaded[1]\n\n        image = normalize_image_tensor(image)\n        mask = normalize_mask_tensor(mask)\n\n        return image, mask\n\n    def __getitem__(self, index):\n\n        row = self.df.iloc[index]\n\n        image, mask = self._load_case(row)\n\n        image = normalize_mri(image)\n\n        image = resize_3d(\n            image,\n            FULL_SHAPE,\n        )\n\n        mask = resize_mask_3d(\n            mask,\n            FULL_SHAPE,\n        )\n\n        center = compute_foreground_center(mask)\n\n        image, mask = crop_3d(\n            image,\n            mask,\n            CROP_SHAPE,\n            center,\n        )\n\n        if self.training:\n            image, mask = augment_pair(\n                image,\n                mask,\n            )\n\n        image = image.unsqueeze(0)\n\n        mask = mask.unsqueeze(0)\n\n        return image.float(), mask.long()"
+    },
+    "candidates": [
+      {
+        "name": "StrongSegmentationDataset",
+        "score": 60,
+        "has_getitem": true,
+        "has_len": true,
+        "source_lines": [
+          508,
+          590
+        ]
+      }
+    ]
+  },
+  "import_info": {
+    "attempted": true,
+    "completed": true,
+    "module": "part98_exact_audit_import",
+    "error": null
+  },
+  "dataset_instantiation": {
+    "completed": false,
+    "dataset_class": "StrongSegmentationDataset",
+    "error": "RuntimeError('Could not instantiate the resolved Part98 Dataset class. []')",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part119_1_exact_part98_training_crop_instrumentation_audit.py\", line 1182, in main\n    dataset, dataset_meta, constructor_failures = instantiate_dataset(\n  File \"C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part119_1_exact_part98_training_crop_instrumentation_audit.py\", line 588, in instantiate_dataset\n    raise RuntimeError(\nRuntimeError: Could not instantiate the resolved Part98 Dataset class. []\n"
+  },
+  "requested_cases": 0,
+  "completed_cases": 0,
+  "failed_cases": 0,
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "crop_shape": [
+    32,
+    64,
+    64
+  ],
+  "min_foreground_voxels": 20,
+  "primary_diagnosis": "PART98_DATASET_INSTANTIATION_FAILED",
+  "recommendation": "Do not retrain. Resolve the exact Part98 Dataset constructor and rerun the instrumentation."
+}

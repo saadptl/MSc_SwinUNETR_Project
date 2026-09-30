@@ -1,0 +1,44 @@
+==============================================================================
+PART 90 — CONTROLLED 3D CNN CLASSIFICATION BASELINE
+==============================================================================
+
+Training studies: 1580
+Validation studies: 395
+Study overlap: 0
+
+MODEL
+------------------------------------------------------------------------------
+Lightweight 3D CNN
+Parameters: 77,907
+Input: (1, 32, 224, 224)
+Targets: 25
+Classes: 3
+
+TRAINING
+------------------------------------------------------------------------------
+Epochs: 5
+Batch size: 1
+Gradient accumulation: 4
+Learning rate: 0.0001
+Weight decay: 1e-05
+AMP: True
+
+BEST RESULT
+------------------------------------------------------------------------------
+Best epoch: 5
+Validation loss: 0.587556
+Validation accuracy: 0.775389
+Macro target accuracy: 0.776538
+Valid labels: 9768
+
+CHECKPOINT
+------------------------------------------------------------------------------
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\classification\rsna_part90_controlled_baseline\checkpoints\part90_best_model.pth
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS — Controlled classification baseline completed.
+
+This experiment establishes a baseline.
+It does not replace the planned Swin-based classification architecture.
+Segmentation checkpoints were not modified.

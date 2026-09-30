@@ -1,0 +1,75 @@
+================================================================================
+PART 99 — ADVANCED CLINICAL-ORIENTED SWIN-UNETR FINE-TUNING
+================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Device: cuda:0
+GPU: NVIDIA GeForce RTX 2050
+
+CONFIGURATION
+--------------------------------------------------------------------------------
+Epochs: 8
+Batch size: 1
+Gradient accumulation: 4
+Learning rate: 2.5e-05
+Weight decay: 1e-05
+Training crop: (32, 64, 64)
+Feature size: 12
+
+LOSS
+--------------------------------------------------------------------------------
+Dice weight: 0.45
+Focal weight: 0.3
+Tversky weight: 0.25
+Focal gamma: 2.0
+Tversky alpha: 0.3
+Tversky beta: 0.7
+
+COHORT
+--------------------------------------------------------------------------------
+Training studies: 500
+Validation studies: 100
+Train/validation overlap: 0
+
+INITIALIZATION
+--------------------------------------------------------------------------------
+Source: Part98 best checkpoint
+Part15 SHA256: 0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6
+
+RESULTS
+--------------------------------------------------------------------------------
+Initial global foreground Dice: 0.028875
+Final global foreground Dice: 0.071640
+Final mean-case foreground Dice: 0.031076
+Final median-case foreground Dice: 0.000000
+Global Dice improvement: +0.042765
+Best epoch: 2
+
+CLASS-WISE RESULTS
+--------------------------------------------------------------------------------
+Class 1: Dice=0.107165, Precision=0.072113, Recall=0.208522
+Class 2: Dice=0.000000, Precision=0.000000, Recall=0.000000
+Class 3: Dice=0.000000, Precision=0.000000, Recall=0.000000
+Class 4: Dice=0.058704, Precision=0.052023, Recall=0.067353
+Class 5: Dice=0.016773, Precision=0.039773, Recall=0.010628
+
+REPRODUCIBILITY
+--------------------------------------------------------------------------------
+Part15 initialization hash verified.
+Training/validation overlap checked.
+Best checkpoint independently reloaded.
+Final metrics independently recomputed.
+
+CLINICAL INTERPRETATION
+--------------------------------------------------------------------------------
+The training objective is designed to emphasize foreground overlap and sensitivity through Dice, Focal, and Tversky components.
+The experiment is clinically oriented but remains a research-stage model evaluation.
+The RSNA labels used in this project are not equivalent to expert voxel-level segmentation ground truth.
+Therefore segmentation performance must not be interpreted as proof of clinical diagnostic safety.
+External validation, expert annotation validation, calibration, robustness testing, prospective evaluation, and regulatory assessment would still be required before any real clinical deployment.
+
+FINAL STATUS
+--------------------------------------------------------------------------------
+PASS — CLINICAL-ORIENTED FINE-TUNING COMPLETED
+
+================================================================================

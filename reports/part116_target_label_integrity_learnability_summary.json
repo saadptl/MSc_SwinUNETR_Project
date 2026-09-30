@@ -1,0 +1,50 @@
+{
+  "part": 116,
+  "status": "PASS \u2014 TARGET_LABEL_INTEGRITY_LEARNABILITY_AUDIT_COMPLETED",
+  "validation_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\part99_validation_cohort_reconstructed.csv",
+  "validation_rows": 100,
+  "completed_target_cases": 100,
+  "failures": [],
+  "expected_shape": [
+    64,
+    96,
+    96
+  ],
+  "total_target_voxels": 58982400,
+  "class_total_voxels": [
+    58955374,
+    5310,
+    7053,
+    7463,
+    3679,
+    3521
+  ],
+  "class_case_presence": [
+    100,
+    25,
+    38,
+    39,
+    32,
+    32
+  ],
+  "validation_foreground_fraction": 0.00045820448133680557,
+  "background_foreground_ratio": 2181.4317324058316,
+  "rare_classes_under_25_percent": [],
+  "ultra_rare_classes_under_10_percent": [],
+  "globally_absent_classes": [],
+  "fragmented_classes": [],
+  "learnability_concerns": [],
+  "primary_diagnosis": "EXTREME_FOREGROUND_TARGET_SPARSITY",
+  "retraining_recommendation": "TARGET_SPARSITY_REQUIRES_TRAINING_STRATEGY_REVIEW",
+  "training_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part8_dataset_construction\\manifests\\rsna_part8_train_manifest.csv",
+  "training_rows": 4395,
+  "outputs": {
+    "case_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part116_target_label_integrity_learnability_audit\\part116_case_target_integrity_audit.csv",
+    "class_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part116_target_label_integrity_learnability_audit\\part116_class_target_distribution_summary.csv",
+    "component_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part116_target_label_integrity_learnability_audit\\part116_component_size_summary.csv",
+    "cohort_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part116_target_label_integrity_learnability_audit\\part116_cohort_distribution_summary.csv",
+    "summary_json": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part116_target_label_integrity_learnability_summary.json",
+    "report_txt": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part116_target_label_integrity_learnability_report.txt"
+  },
+  "scientific_note": "Targets are project pseudo-masks/development labels. This audit does not establish clinical expert-groundtruth quality."
+}

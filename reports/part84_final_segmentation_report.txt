@@ -1,0 +1,168 @@
+==============================================================================
+PART 84 — FINAL REPRODUCIBLE SEGMENTATION TRAINING
+==============================================================================
+Training is ENABLED.
+Device: cuda:0
+Seed: 42
+Train cases: 100
+Validation cases: 50
+Epochs: 8
+Learning rate: 5e-05
+Weight decay: 1e-05
+Crop: (32, 64, 64)
+Historical Part71 value 0.044026 is NOT used for selection.
+
+Part15 initialization SHA256:
+  0900c0e6490fdaddf455763b465d4a607acfb310349c9f9ec82a61117016aec6
+Part9 import: OK
+Part11 import: OK
+Loaded train cohort: 500 rows
+Using first 100 training rows
+Loaded validation cohort: 100 rows
+Using first 50 validation rows
+Model total parameters: 4,078,116
+Model trainable parameters: 4,078,116
+Part15 initialization load: OK
+  <All keys matched successfully>
+
+Class weights:
+  class 0: 0.015069
+  class 1: 0.722595
+  class 2: 0.935995
+  class 3: 1.017003
+  class 4: 1.178304
+  class 5: 1.146102
+
+==============================================================================
+INITIALIZATION EVALUATION
+==============================================================================
+
+INIT | loss=2.150472 | globalFGDice=0.001032 | meanCaseFGDice=0.004595 | PredFG=2705611
+
+==============================================================================
+EPOCH 1/8
+==============================================================================
+TRAIN | loss=2.133897 | meanTargetFG=192.86 | time=52.6s
+
+VAL   | loss=2.108438 | globalFGDice=0.001133 | meanCaseFGDice=0.004684 | macroFGDice=0.000939 | PredFG=2482259 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.001545 P=0.000775 R=0.297018 Pred=964371 Target=2515
+  C2: Dice=0.001050 P=0.000531 R=0.044444 Pred=173195 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=4 Target=1630
+  C4: Dice=0.000840 P=0.000421 R=0.447858 Pred=1317253 Target=1237
+  C5: Dice=0.001258 P=0.000656 R=0.015306 Pred=27436 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=1 globalFGDice=0.001133
+
+==============================================================================
+EPOCH 2/8
+==============================================================================
+TRAIN | loss=2.093527 | meanTargetFG=192.86 | time=40.8s
+
+VAL   | loss=2.072100 | globalFGDice=0.001437 | meanCaseFGDice=0.004735 | macroFGDice=0.001081 | PredFG=2333110 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002133 P=0.001069 R=0.407555 Pred=958783 Target=2515
+  C2: Dice=0.001417 P=0.000718 R=0.052174 Pred=150350 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=2 Target=1630
+  C4: Dice=0.000896 P=0.000448 R=0.436540 Pred=1204341 Target=1237
+  C5: Dice=0.000961 P=0.000509 R=0.008503 Pred=19634 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=2 globalFGDice=0.001437
+
+==============================================================================
+EPOCH 3/8
+==============================================================================
+TRAIN | loss=2.056817 | meanTargetFG=192.86 | time=40.2s
+
+VAL   | loss=2.038416 | globalFGDice=0.001621 | meanCaseFGDice=0.004753 | macroFGDice=0.001171 | PredFG=2193495 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002361 P=0.001183 R=0.466004 Pred=990338 Target=2515
+  C2: Dice=0.001624 P=0.000826 R=0.049275 Pred=123520 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=1 Target=1630
+  C4: Dice=0.000945 P=0.000473 R=0.407437 Pred=1065649 Target=1237
+  C5: Dice=0.000923 P=0.000500 R=0.005952 Pred=13987 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=3 globalFGDice=0.001621
+
+==============================================================================
+EPOCH 4/8
+==============================================================================
+TRAIN | loss=2.021793 | meanTargetFG=192.86 | time=39.5s
+
+VAL   | loss=2.006421 | globalFGDice=0.001691 | meanCaseFGDice=0.004794 | macroFGDice=0.001336 | PredFG=2037132 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002260 P=0.001133 R=0.474751 Pred=1054265 Target=2515
+  C2: Dice=0.001778 P=0.000912 R=0.034783 Pred=78919 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=3 Target=1630
+  C4: Dice=0.001016 P=0.000509 R=0.367017 Pred=892811 Target=1237
+  C5: Dice=0.001625 P=0.000898 R=0.008503 Pred=11134 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=4 globalFGDice=0.001691
+
+==============================================================================
+EPOCH 5/8
+==============================================================================
+TRAIN | loss=1.987260 | meanTargetFG=192.86 | time=38.6s
+
+VAL   | loss=1.975074 | globalFGDice=0.001749 | meanCaseFGDice=0.004976 | macroFGDice=0.001945 | PredFG=1692604 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002040 P=0.001022 R=0.425447 Pred=1046617 Target=2515
+  C2: Dice=0.002550 P=0.001480 R=0.009179 Pred=12834 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=36 Target=1630
+  C4: Dice=0.001148 P=0.000575 R=0.283751 Pred=610231 Target=1237
+  C5: Dice=0.003990 P=0.002097 R=0.040816 Pred=22886 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=5 globalFGDice=0.001749
+
+==============================================================================
+EPOCH 6/8
+==============================================================================
+TRAIN | loss=1.947315 | meanTargetFG=192.86 | time=38.7s
+
+VAL   | loss=1.922906 | globalFGDice=0.002488 | meanCaseFGDice=0.005299 | macroFGDice=0.002405 | PredFG=1254409 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002404 P=0.001205 R=0.442147 Pred=922793 Target=2515
+  C2: Dice=0.000856 P=0.003759 R=0.000483 Pred=266 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=822 Target=1630
+  C4: Dice=0.006746 P=0.003456 R=0.140663 Pred=50351 Target=1237
+  C5: Dice=0.002019 P=0.001014 R=0.241497 Pred=280177 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=6 globalFGDice=0.002488
+
+==============================================================================
+EPOCH 7/8
+==============================================================================
+TRAIN | loss=1.879537 | meanTargetFG=192.86 | time=38.3s
+
+VAL   | loss=1.852674 | globalFGDice=0.002703 | meanCaseFGDice=0.004915 | macroFGDice=0.005680 | PredFG=696555 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.002236 P=0.001122 R=0.297813 Pred=667539 Target=2515
+  C2: Dice=0.000000 P=0.000000 R=0.000000 Pred=166 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=11 Target=1630
+  C4: Dice=0.013382 P=0.007330 R=0.076799 Pred=12961 Target=1237
+  C5: Dice=0.012783 P=0.006865 R=0.092687 Pred=15878 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=7 globalFGDice=0.002703
+
+==============================================================================
+EPOCH 8/8
+==============================================================================
+TRAIN | loss=1.810857 | meanTargetFG=192.86 | time=38.5s
+
+VAL   | loss=1.796407 | globalFGDice=0.004313 | meanCaseFGDice=0.006432 | macroFGDice=0.011215 | PredFG=554760 | Empty=0/50
+Classwise validation Dice:
+  C1: Dice=0.003130 P=0.001573 R=0.318887 Pred=509982 Target=2515
+  C2: Dice=0.000903 P=0.006944 R=0.000483 Pred=144 Target=2070
+  C3: Dice=0.000000 P=0.000000 R=0.000000 Pred=2 Target=1630
+  C4: Dice=0.012823 P=0.006623 R=0.200485 Pred=37445 Target=1237
+  C5: Dice=0.039220 P=0.022819 R=0.139456 Pred=7187 Target=1176
+*** NEW BEST CHECKPOINT *** epoch=8 globalFGDice=0.004313
+
+==============================================================================
+BEST CHECKPOINT RE-EVALUATION
+==============================================================================
+
+BEST VERIFY | epoch=8 | globalFGDice=0.004313 | meanCaseFGDice=0.006432 | macroFGDice=0.011215 | PredFG=554760
+
+==============================================================================
+FINAL PART84 STATUS
+==============================================================================
+FINAL_SEGMENTATION_TRAINING_COMPLETE
+Best epoch: 8
+Verified global foreground Dice: 0.004313
+Verified mean-case foreground Dice: 0.006432
+Best checkpoint: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part84_final_reproducible_training\checkpoints\part84_best_model.pth
+Best checkpoint SHA256: b06dee9381cb210913053b4f4bbecc89ed520ae4b02b89f0e802b121c69113b8

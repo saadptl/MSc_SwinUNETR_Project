@@ -1,0 +1,655 @@
+{
+  "part": 111,
+  "status": "FAIL \u2014 NO_VALIDATION_CASES_PROCESSED",
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "checkpoint_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "validation_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\part98_validation_cohort.csv",
+  "cohort_rows": 100,
+  "unique_studies": 86,
+  "duplicate_rows": 14,
+  "successful_cases": 0,
+  "failed_cases": 100,
+  "total_inference_seconds": 53.11976750002941,
+  "mean_inference_seconds": null,
+  "architecture": {
+    "name": "MONAI SwinUNETR",
+    "in_channels": 1,
+    "out_channels": 6,
+    "feature_size": 12,
+    "spatial_dims": 3,
+    "use_checkpoint": false,
+    "full_volume_shape": [
+      64,
+      96,
+      96
+    ],
+    "parameters": 4078116,
+    "state_dict_keys": 159
+  },
+  "class_names": {
+    "0": "Background",
+    "1": "Spinal Canal Stenosis",
+    "2": "Left Neural Foraminal Narrowing",
+    "3": "Right Neural Foraminal Narrowing",
+    "4": "Left Subarticular Stenosis",
+    "5": "Right Subarticular Stenosis"
+  },
+  "prediction_directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part111_validation_full_volume_inference\\predictions",
+  "case_results_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part111_validation_full_volume_inference\\part111_validation_case_inference.csv",
+  "pseudo_mask_metrics": {
+    "class_1_dice_pseudomask_mean": null,
+    "class_2_dice_pseudomask_mean": null,
+    "class_3_dice_pseudomask_mean": null,
+    "class_4_dice_pseudomask_mean": null,
+    "class_5_dice_pseudomask_mean": null,
+    "class_1_dice_pseudomask_median": null,
+    "class_2_dice_pseudomask_median": null,
+    "class_3_dice_pseudomask_median": null,
+    "class_4_dice_pseudomask_median": null,
+    "class_5_dice_pseudomask_median": null,
+    "note": "These Dice values compare predictions against the existing development/pseudo-mask targets used by the project. They are not expert-ground-truth clinical segmentation metrics."
+  },
+  "case_failures": [
+    {
+      "row_index": 0,
+      "study_id": "961169106",
+      "series_id": "1260127192",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 1,
+      "study_id": "3043181990",
+      "series_id": "792407196",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 2,
+      "study_id": "3189076268",
+      "series_id": "3298674001",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 3,
+      "study_id": "3327162027",
+      "series_id": "4235478147",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 4,
+      "study_id": "3563559233",
+      "series_id": "2800437838",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 5,
+      "study_id": "3522926594",
+      "series_id": "4280971241",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 6,
+      "study_id": "3748910433",
+      "series_id": "4272776545",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 7,
+      "study_id": "4193490688",
+      "series_id": "940766287",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 8,
+      "study_id": "2266719355",
+      "series_id": "1065552624",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 9,
+      "study_id": "899435449",
+      "series_id": "973782617",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 10,
+      "study_id": "1013589491",
+      "series_id": "598943280",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 11,
+      "study_id": "1292979992",
+      "series_id": "463429448",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 12,
+      "study_id": "326589617",
+      "series_id": "3607346776",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 13,
+      "study_id": "2139209036",
+      "series_id": "678474176",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 14,
+      "study_id": "4278146423",
+      "series_id": "2307241674",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 15,
+      "study_id": "391103067",
+      "series_id": "3707725327",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 16,
+      "study_id": "1872256708",
+      "series_id": "3910234897",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 17,
+      "study_id": "1040921274",
+      "series_id": "1685444328",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 18,
+      "study_id": "594735110",
+      "series_id": "3717729365",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 19,
+      "study_id": "3327162027",
+      "series_id": "1374650320",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 20,
+      "study_id": "1871675162",
+      "series_id": "1791666862",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 21,
+      "study_id": "2615694902",
+      "series_id": "1358207531",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 22,
+      "study_id": "1678430295",
+      "series_id": "2944463048",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 23,
+      "study_id": "1013589491",
+      "series_id": "2391548363",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 24,
+      "study_id": "153831832",
+      "series_id": "1455727141",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 25,
+      "study_id": "2755347468",
+      "series_id": "3708423406",
+      "error": "AttributeError: 'dict' object has no attribute 'index'"
+    },
+    {
+      "row_index": 26,
+      "study_id": "2434132259",
+      "series_id": "681911441",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 27,
+      "study_id": "2085508136",
+      "series_id": "1183295996",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 28,
+      "study_id": "2826913245",
+      "series_id": "1314230807",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 29,
+      "study_id": "182843007",
+      "series_id": "780324614",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 30,
+      "study_id": "3686953707",
+      "series_id": "543025966",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 31,
+      "study_id": "2826913245",
+      "series_id": "1525781141",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 32,
+      "study_id": "3139265320",
+      "series_id": "1753194850",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 33,
+      "study_id": "1106510276",
+      "series_id": "2740847627",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 34,
+      "study_id": "344297746",
+      "series_id": "2116827468",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 35,
+      "study_id": "677672203",
+      "series_id": "2248773820",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 36,
+      "study_id": "1406775031",
+      "series_id": "2247587670",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 37,
+      "study_id": "704573554",
+      "series_id": "1699734064",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 38,
+      "study_id": "3521369408",
+      "series_id": "472218767",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 39,
+      "study_id": "3242507143",
+      "series_id": "4243001764",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 40,
+      "study_id": "209512460",
+      "series_id": "3034643284",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 41,
+      "study_id": "1541885165",
+      "series_id": "3776739153",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 42,
+      "study_id": "1237708996",
+      "series_id": "2591362212",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 43,
+      "study_id": "2239199413",
+      "series_id": "2322807347",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 44,
+      "study_id": "434221231",
+      "series_id": "3697211146",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 45,
+      "study_id": "1444565004",
+      "series_id": "1369145083",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 46,
+      "study_id": "2624498059",
+      "series_id": "2488822988",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 47,
+      "study_id": "1211350060",
+      "series_id": "4077721724",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 48,
+      "study_id": "344297746",
+      "series_id": "4254564292",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 49,
+      "study_id": "858422574",
+      "series_id": "1378904240",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 50,
+      "study_id": "3043181990",
+      "series_id": "3661847162",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 51,
+      "study_id": "511308298",
+      "series_id": "351950791",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 52,
+      "study_id": "1289563234",
+      "series_id": "4061095237",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 53,
+      "study_id": "4013386850",
+      "series_id": "1977969815",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 54,
+      "study_id": "1751480356",
+      "series_id": "33346226",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 55,
+      "study_id": "2897377266",
+      "series_id": "594467518",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 56,
+      "study_id": "3189076268",
+      "series_id": "2266012592",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 57,
+      "study_id": "2830065820",
+      "series_id": "738864232",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 58,
+      "study_id": "3560499468",
+      "series_id": "3880800850",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 59,
+      "study_id": "1774588202",
+      "series_id": "3951969305",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 60,
+      "study_id": "1777645381",
+      "series_id": "1438513204",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 61,
+      "study_id": "2076247669",
+      "series_id": "2416388206",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 62,
+      "study_id": "1796029449",
+      "series_id": "996181429",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 63,
+      "study_id": "2626030939",
+      "series_id": "956892659",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 64,
+      "study_id": "961169106",
+      "series_id": "1114492275",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 65,
+      "study_id": "332284668",
+      "series_id": "4277644621",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 66,
+      "study_id": "3627827753",
+      "series_id": "2162444079",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 67,
+      "study_id": "1644861124",
+      "series_id": "1595773852",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 68,
+      "study_id": "2626030939",
+      "series_id": "1515032584",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 69,
+      "study_id": "1440537582",
+      "series_id": "3694546203",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 70,
+      "study_id": "2024656887",
+      "series_id": "1421487648",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 71,
+      "study_id": "1545888499",
+      "series_id": "2294427958",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 72,
+      "study_id": "476210376",
+      "series_id": "3077475641",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 73,
+      "study_id": "1166421944",
+      "series_id": "4052001585",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 74,
+      "study_id": "2172940318",
+      "series_id": "3141412625",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 75,
+      "study_id": "4227229807",
+      "series_id": "3825110100",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 76,
+      "study_id": "3030943727",
+      "series_id": "1640350580",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 77,
+      "study_id": "2022619830",
+      "series_id": "3927325878",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 78,
+      "study_id": "1228406967",
+      "series_id": "3868795667",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 79,
+      "study_id": "2357870240",
+      "series_id": "1446524665",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 80,
+      "study_id": "3522926594",
+      "series_id": "2247250261",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 81,
+      "study_id": "2469878020",
+      "series_id": "962279416",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 82,
+      "study_id": "4137194670",
+      "series_id": "3534247404",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 83,
+      "study_id": "3934148010",
+      "series_id": "3625340069",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 84,
+      "study_id": "2945946028",
+      "series_id": "1612707049",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 85,
+      "study_id": "3777295871",
+      "series_id": "2369952823",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 86,
+      "study_id": "2830065820",
+      "series_id": "3243602987",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 87,
+      "study_id": "3777295871",
+      "series_id": "3190524416",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 88,
+      "study_id": "859570985",
+      "series_id": "1415295523",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 89,
+      "study_id": "3103144308",
+      "series_id": "3716495523",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 90,
+      "study_id": "3694933394",
+      "series_id": "3504634864",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 91,
+      "study_id": "2436764599",
+      "series_id": "3865389161",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 92,
+      "study_id": "2363875605",
+      "series_id": "1460471282",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 93,
+      "study_id": "1613634521",
+      "series_id": "3603339858",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 94,
+      "study_id": "1613634521",
+      "series_id": "379008764",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 95,
+      "study_id": "4060447686",
+      "series_id": "1489657411",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 96,
+      "study_id": "368044905",
+      "series_id": "2346455131",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 97,
+      "study_id": "2469878020",
+      "series_id": "1213732371",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 98,
+      "study_id": "269259654",
+      "series_id": "3937773383",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "row_index": 99,
+      "study_id": "4278146423",
+      "series_id": "3938923057",
+      "error": "ValueError: too many values to unpack (expected 2)"
+    }
+  ]
+}

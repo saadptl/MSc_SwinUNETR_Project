@@ -1,0 +1,39 @@
+{
+  "part": 127,
+  "clinical_validation": false,
+  "part104_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "validation_cases": 100,
+  "completed": 100,
+  "failures": [],
+  "best_raw_threshold": {
+    "threshold": 0.8,
+    "mean_foreground_dice": 0.0008893952560479197,
+    "mean_macro_foreground_dice": 0.0005939304672461063,
+    "mean_precision": 0.0006760073265650407,
+    "mean_recall": 0.003611111111111111,
+    "mean_pred_target_volume_ratio": 13.148203867730638,
+    "pred_foreground_cases": 100.0
+  },
+  "best_component": {
+    "threshold": 0.8,
+    "min_component_voxels": 20.0,
+    "mean_foreground_dice": 0.0009002030179213055,
+    "mean_macro_foreground_dice": 0.0006311482628673298,
+    "mean_precision": 0.0007338962228704833,
+    "mean_recall": 0.0034097222222222224,
+    "mean_pred_target_volume_ratio": 12.785273278091017,
+    "pred_foreground_cases": 100.0
+  },
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "roi": [
+    32,
+    64,
+    64
+  ]
+}
+
+Clinical validation: NO

@@ -1,0 +1,57 @@
+{
+    "part": 85,
+    "title": "Final Segmentation Audit",
+    "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part84_final_reproducible_training\\checkpoints\\part84_best_model.pth",
+    "validation_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part15_extended_controlled_training\\part15_validation_cohort.csv",
+    "validation_cases": 50,
+    "crop_size": [
+        32,
+        64,
+        64
+    ],
+    "num_classes": 6,
+    "device": "cuda:0",
+    "seed": 42,
+    "global_foreground_dice": 0.011216001766221048,
+    "mean_case_foreground_dice": 0.19338770867633567,
+    "median_case_foreground_dice": 0.20368913345460754,
+    "macro_foreground_dice": 0.19338770867633573,
+    "classwise": {
+        "Spinal Canal Stenosis": {
+            "dice": 0.003129762204414057,
+            "precision": 0.0015725983560268557,
+            "recall": 0.31888667992047715,
+            "mean_case_dice": 0.0033553342326493635
+        },
+        "Left Neural Foraminal Narrowing": {
+            "dice": 0.0009033423667570009,
+            "precision": 0.006944444444444444,
+            "recall": 0.0004830917874396135,
+            "mean_case_dice": 0.20014234875444842
+        },
+        "Right Neural Foraminal Narrowing": {
+            "dice": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "mean_case_dice": 0.68
+        },
+        "Left Subarticular Stenosis": {
+            "dice": 0.012821838486195843,
+            "precision": 0.0066226934066814435,
+            "recall": 0.20048504446240906,
+            "mean_case_dice": 0.009354345117675722
+        },
+        "Right Subarticular Stenosis": {
+            "dice": 0.03922506577373834,
+            "precision": 0.02282215418870025,
+            "recall": 0.13945578231292516,
+            "mean_case_dice": 0.07408651527690496
+        }
+    },
+    "part84_reference": {
+        "global_foreground_dice": 0.004313,
+        "mean_case_foreground_dice": 0.006432,
+        "global_difference": 0.006903001766221048,
+        "mean_case_difference": 0.18695570867633568
+    }
+}

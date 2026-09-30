@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "part": "119.2",
+  "purpose": "Exact Part98 training dataset and crop instrumentation audit",
+  "read_only": true,
+  "training_performed": false,
+  "backward_performed": false,
+  "optimizer_step_performed": false,
+  "checkpoint_modified": false,
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "part98_path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\src\\segmentation_rsna_part98_strong_full_cohort_training.py",
+  "train_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\part98_train_cohort.csv",
+  "part104_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+  "part104_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "canonical_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+  "canonical_sha_match": true,
+  "python": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\venv\\Scripts\\python.exe",
+  "python_version": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 2050",
+  "source_dataset_resolution": {
+    "selected": {
+      "name": "StrongSegmentationDataset",
+      "score": 60,
+      "has_getitem": true,
+      "has_len": true,
+      "source_lines": [
+        508,
+        590
+      ],
+      "text": "class StrongSegmentationDataset(Dataset):\n\n    def __init__(\n        self,\n        cohort_path: Path,\n        training: bool,\n    ):\n        self.cohort_path = Path(cohort_path)\n        self.training = training\n\n        self.df = pd.read_csv(self.cohort_path)\n\n        if len(self.df) == 0:\n            raise RuntimeError(\n                f\"Cohort is empty: {self.cohort_path}\"\n            )\n\n    def __len__(self):\n        return len(self.df)\n\n    def _load_case(self, row):\n\n        loaded = part11.load_tensor_case(\n            row,\n            part9,\n        )\n\n        if not isinstance(loaded, (tuple, list)):\n            raise RuntimeError(\n                \"Part11 load_tensor_case() did not return a tuple/list.\"\n            )\n\n        if len(loaded) < 2:\n            raise RuntimeError(\n                \"Part11 load_tensor_case() returned fewer than 2 values.\"\n            )\n\n        image = loaded[0]\n        mask = loaded[1]\n\n        image = normalize_image_tensor(image)\n        mask = normalize_mask_tensor(mask)\n\n        return image, mask\n\n    def __getitem__(self, index):\n\n        row = self.df.iloc[index]\n\n        image, mask = self._load_case(row)\n\n        image = normalize_mri(image)\n\n        image = resize_3d(\n            image,\n            FULL_SHAPE,\n        )\n\n        mask = resize_mask_3d(\n            mask,\n            FULL_SHAPE,\n        )\n\n        center = compute_foreground_center(mask)\n\n        image, mask = crop_3d(\n            image,\n            mask,\n            CROP_SHAPE,\n            center,\n        )\n\n        if self.training:\n            image, mask = augment_pair(\n                image,\n                mask,\n            )\n\n        image = image.unsqueeze(0)\n\n        mask = mask.unsqueeze(0)\n\n        return image.float(), mask.long()"
+    },
+    "candidates": [
+      {
+        "name": "StrongSegmentationDataset",
+        "score": 60,
+        "has_getitem": true,
+        "has_len": true,
+        "source_lines": [
+          508,
+          590
+        ]
+      }
+    ]
+  },
+  "import_info": {
+    "attempted": true,
+    "completed": true,
+    "module": "part98_exact_audit_import",
+    "error": null
+  },
+  "dataset_instantiation": {
+    "completed": true,
+    "dataset_class": "StrongSegmentationDataset",
+    "constructor": {
+      "completed": true,
+      "args": [
+        "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\part98_train_cohort.csv",
+        true
+      ],
+      "kwargs": [],
+      "contract": "Part98 exact: StrongSegmentationDataset(cohort_path, training)"
+    },
+    "constructor_failures_before_success": [],
+    "dataset_length": 500
+  },
+  "requested_cases": 250,
+  "completed_cases": 250,
+  "failed_cases": 0,
+  "full_shape": [
+    64,
+    96,
+    96
+  ],
+  "crop_shape": [
+    32,
+    64,
+    64
+  ],
+  "min_foreground_voxels": 20,
+  "crop_fg_fraction": {
+    "mean": 0.00148211669921875,
+    "median": 0.00128173828125,
+    "p25": 0.0006866455078125,
+    "p75": 0.001827239990234375,
+    "p90": 0.003066253662109375,
+    "p95": 0.0035194396972656242,
+    "min": 9.1552734375e-05,
+    "max": 0.00562286376953125
+  },
+  "crop_fg_voxels": {
+    "mean": 194.264,
+    "median": 168.0,
+    "p25": 90.0,
+    "p75": 239.5,
+    "p90": 401.9,
+    "p95": 461.2999999999999,
+    "min": 12.0,
+    "max": 737.0
+  },
+  "fraction_crops_fg_ge_0": 1.0,
+  "fraction_crops_fg_ge_20": 0.992,
+  "fraction_crops_fg_ge_50": 0.912,
+  "fraction_crops_fg_ge_100": 0.728,
+  "fraction_crops_fg_ge_500": 0.036,
+  "class_1_crop_presence_fraction": 0.276,
+  "class_2_crop_presence_fraction": 0.34,
+  "class_3_crop_presence_fraction": 0.352,
+  "class_4_crop_presence_fraction": 0.34,
+  "class_5_crop_presence_fraction": 0.34,
+  "crop_any_foreground_fraction": 1.0,
+  "crop_ge20_foreground_fraction": 0.992,
+  "crop_class_distribution": {
+    "0": {
+      "total_voxels": 32719434,
+      "mean_voxels_per_crop": 130877.736,
+      "median_voxels_per_crop": 130904.0,
+      "cases_with_class": 250,
+      "case_presence_fraction": 1.0
+    },
+    "1": {
+      "total_voxels": 13420,
+      "mean_voxels_per_crop": 53.68,
+      "median_voxels_per_crop": 0.0,
+      "cases_with_class": 69,
+      "case_presence_fraction": 0.276
+    },
+    "2": {
+      "total_voxels": 11560,
+      "mean_voxels_per_crop": 46.24,
+      "median_voxels_per_crop": 0.0,
+      "cases_with_class": 85,
+      "case_presence_fraction": 0.34
+    },
+    "3": {
+      "total_voxels": 12911,
+      "mean_voxels_per_crop": 51.644,
+      "median_voxels_per_crop": 0.0,
+      "cases_with_class": 88,
+      "case_presence_fraction": 0.352
+    },
+    "4": {
+      "total_voxels": 5383,
+      "mean_voxels_per_crop": 21.532,
+      "median_voxels_per_crop": 0.0,
+      "cases_with_class": 85,
+      "case_presence_fraction": 0.34
+    },
+    "5": {
+      "total_voxels": 5292,
+      "mean_voxels_per_crop": 21.168,
+      "median_voxels_per_crop": 0.0,
+      "cases_with_class": 85,
+      "case_presence_fraction": 0.34
+    }
+  },
+  "source_stage_counts": {
+    "dataset_already_returns_crop": 250
+  },
+  "primary_diagnosis": "FOREGROUND_CROP_COVERAGE_MEASURED",
+  "recommendation": "Use the measured crop distribution as the baseline for a controlled loss/crop ablation. Do not change architecture, cohort, or multiple training variables simultaneously."
+}

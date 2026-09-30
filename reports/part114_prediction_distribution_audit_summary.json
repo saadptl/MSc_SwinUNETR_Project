@@ -1,0 +1,97 @@
+{
+  "part": 114,
+  "status": "PASS \u2014 PREDICTION_DISTRIBUTION_AUDIT_COMPLETED",
+  "cohort_rows_in_part113": 100,
+  "usable_prediction_cases": 100,
+  "audit_failures": [],
+  "expected_shape": [
+    64,
+    96,
+    96
+  ],
+  "canonical_target_cohort": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part99_clinical_oriented_finetuning\\part99_validation_cohort.csv",
+  "canonical_target_cohort_rows": 100,
+  "aggregate_predicted_class_voxels": [
+    58975553,
+    423,
+    6023,
+    0,
+    401,
+    0
+  ],
+  "aggregate_target_class_voxels": [
+    58955374,
+    5310,
+    7053,
+    7463,
+    3679,
+    3521
+  ],
+  "aggregate_foreground_ratio": 0.25334862724774165,
+  "dominant_predicted_foreground_class": 2,
+  "dominant_predicted_foreground_fraction": 0.8796553234993427,
+  "oversegmentation_status": "NOT_SEVERE_BY_VOLUME_RATIO",
+  "class_dominance_status": "STRONG_FOREGROUND_CLASS_DOMINANCE",
+  "primary_diagnosis": "PREDICTION_CLASS_COLLAPSE",
+  "mean_defined_class_dice": 0.001160370136914572,
+  "median_case_foreground_ratio": 0.09802416052185067,
+  "cases_foreground_ratio_ge_5": 0,
+  "cases_foreground_ratio_ge_20": 0,
+  "foreground_volume_pearson_correlation": -0.008661714870810957,
+  "per_class_dice_summary": {
+    "1": {
+      "mean": 0.006483619380962886,
+      "median": 0.0,
+      "p25": 0.0,
+      "p75": 0.0,
+      "max": 0.15537190082387814,
+      "cases_with_defined_dice": 29,
+      "cases_with_positive_dice": 2
+    },
+    "2": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p25": 0.0,
+      "p75": 0.0,
+      "max": 0.0,
+      "cases_with_defined_dice": 90,
+      "cases_with_positive_dice": 0
+    },
+    "3": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p25": 0.0,
+      "p75": 0.0,
+      "max": 0.0,
+      "cases_with_defined_dice": 39,
+      "cases_with_positive_dice": 0
+    },
+    "4": {
+      "mean": 0.0017965537440880039,
+      "median": 0.0,
+      "p25": 0.0,
+      "p75": 0.0,
+      "max": 0.044715447153562696,
+      "cases_with_defined_dice": 51,
+      "cases_with_positive_dice": 3
+    },
+    "5": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p25": 0.0,
+      "p75": 0.0,
+      "max": 0.0,
+      "cases_with_defined_dice": 32,
+      "cases_with_positive_dice": 0
+    }
+  },
+  "outputs": {
+    "class_distribution_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part114_prediction_distribution_spatial_quality_audit\\part114_class_distribution_summary.csv",
+    "case_audit_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part114_prediction_distribution_spatial_quality_audit\\part114_case_spatial_quality_audit.csv",
+    "extreme_cases_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part114_prediction_distribution_spatial_quality_audit\\part114_extreme_oversegmentation_cases.csv",
+    "voxel_confusion_csv": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part114_prediction_distribution_spatial_quality_audit\\part114_voxel_confusion_summary.csv",
+    "summary_json": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part114_prediction_distribution_audit_summary.json",
+    "report_txt": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part114_prediction_distribution_audit_report.txt"
+  },
+  "scientific_note": "Target masks are the existing project pseudo-masks/development labels. Metrics are not clinical expert-ground-truth performance."
+}

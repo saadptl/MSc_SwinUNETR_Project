@@ -1,0 +1,144 @@
+{
+  "part": 103,
+  "project_root": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project",
+  "status": "PASS \u2014 PART98_CHECKPOINT_AVAILABLE_AND_LINEAGE_VERIFIED",
+  "part98": {
+    "history_exists": true,
+    "history_rows": 12,
+    "best_exists": true,
+    "best_sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+    "selected_best_epoch": 10,
+    "selection_reason": "Highest recorded validation Dice-like metric (0.217250)."
+  },
+  "part99": {
+    "best_exists": true,
+    "final_exists": true,
+    "best_sha256": "eddcacaadc7aae1f0017aaa5d1d14305ce7f45060cc5d22b17bd65fe16dc3ca1",
+    "final_sha256": "9cdc178818b4aa2e611f2feb930d14835885ff83a42d7c529399154056c9a412",
+    "architecture_compatibility_with_part98": {
+      "reference_exists": true,
+      "compatible": true,
+      "same_keys": true,
+      "same_shapes": true,
+      "candidate_key_count": 159,
+      "reference_key_count": 159
+    }
+  },
+  "cohorts": {
+    "train_exists": true,
+    "val_exists": true,
+    "train_rows": 500,
+    "val_rows": 100,
+    "overlap": 0
+  },
+  "candidates": [
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_12.pth",
+      "name": "part98_epoch_12.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "719448003451bcb4021ffbe5f0521652fa71262e6a5cb273ba844124e78676b5",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_11.pth",
+      "name": "part98_epoch_11.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "3904b4bd87434781eaa8a6cd7e1b615f83b175a39b1b116ea64b2683e160e663",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_best_model.pth",
+      "name": "part98_best_model.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_10.pth",
+      "name": "part98_epoch_10.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_09.pth",
+      "name": "part98_epoch_09.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "3c2657e9c37154c6560aaa02dd394dbe1d87d0d3bb5dce066fddc56f5594aa6e",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_08.pth",
+      "name": "part98_epoch_08.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "07171dfabdb230c7eb5798744920ed5c1165d688440f773fd5d0801fcf673b3e",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_07.pth",
+      "name": "part98_epoch_07.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "f72bb71f6bf0cf1729accfa7be1042acda7e143c64bee11876406352ccd7f7e2",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_06.pth",
+      "name": "part98_epoch_06.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "aa2c24c596a9f6c66054075a1b1f02f12303809658f69784fe94080962d5c3b4",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_05.pth",
+      "name": "part98_epoch_05.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "ecc8c00e95af1a8089fe4859d3620c621540394e57b3e113d0f5849a8e071f09",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_04.pth",
+      "name": "part98_epoch_04.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "af519fadb58dcdc0ceacf1bbc224f01419b7d07dfe7ce855e81d0019cc8f3c9a",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_03.pth",
+      "name": "part98_epoch_03.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "f7074d6a53c25a12631d01b7daff46b6273421e9d1f0a9f65f5160f9b99c4d32",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_02.pth",
+      "name": "part98_epoch_02.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "99586d993eefcd22161f8b26811cf2f93ad45721ebd03a9ac6a55b864cf70f17",
+      "key_count": 159
+    },
+    {
+      "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part98_strong_full_cohort_training\\checkpoints\\part98_epoch_01.pth",
+      "name": "part98_epoch_01.pth",
+      "readable": true,
+      "size_mb": 54.039,
+      "sha256": "24d7c5358e5bc9b2faabd0925a6620c3bb9128ea66928b6cb8fd5f8872225bc2",
+      "key_count": 159
+    }
+  ],
+  "recovery": {
+    "performed": false,
+    "reason": "Canonical Part98 best checkpoint already exists."
+  }
+}

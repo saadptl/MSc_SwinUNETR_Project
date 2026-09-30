@@ -1,0 +1,38 @@
+PART 107.1 — CORRECTED MODEL ARCHITECTURE & CHECKPOINT COMPATIBILITY
+========================================================================================
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Python: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\venv\Scripts\python.exe
+PyTorch: 2.11.0+cu128
+CUDA: True
+Checkpoint SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+Checkpoint keys: 159
+Checkpoint tensor elements: 5,019,308
+Factory module: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\src\model.py
+Factory: create_model
+Factory call: factory()
+Model class: src.model.SwinClassifier
+Model parameters: 27,521,661
+Model state keys: 173
+
+COMPATIBILITY
+----------------------------------------------------------------------------------------
+Common keys: 0
+Shape-compatible keys: 0
+Shape mismatches: 0
+Missing keys: 173
+Unexpected keys: 159
+Normalized shape matches: 0
+Strict load: NOT_ATTEMPTED
+
+DIAGNOSIS
+----------------------------------------------------------------------------------------
+- The checkpoint and current factory have different state-dict key sets.
+- The mismatch is NOT explained by a simple module/model prefix.
+- Checkpoint tensor-element count differs from current model parameter count.
+- The checkpoint is substantially smaller than the current factory model.
+
+FINAL STATUS
+----------------------------------------------------------------------------------------
+REVIEW_REQUIRED — FACTORY_CHECKPOINT_ARCHITECTURE_MISMATCH
+
+No training was performed and the final checkpoint was not modified.

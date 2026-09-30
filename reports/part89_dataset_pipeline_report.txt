@@ -1,0 +1,45 @@
+==============================================================================
+PART 89 — RSNA CLASSIFICATION DATASET PIPELINE
+==============================================================================
+
+Training studies: 1580
+Validation studies: 395
+Study overlap: 0
+
+DATASET CONFIGURATION
+------------------------------------------------------------------------------
+Batch size: 2
+Workers: 0
+Target depth: 32
+Target height: 224
+Target width: 224
+Number of classification targets: 25
+
+LABEL ENCODING
+------------------------------------------------------------------------------
+0 = Normal/Mild
+1 = Moderate
+2 = Severe
+Missing labels are represented by label_mask = 0.
+
+BATCH VALIDATION
+------------------------------------------------------------------------------
+Batches tested: 6
+Batches passed: 6
+Batches failed: 0
+
+STUDY LEAKAGE
+------------------------------------------------------------------------------
+PASS — no study overlap.
+
+LABEL COVERAGE
+------------------------------------------------------------------------------
+train: labeled=39035, missing=465
+validation: labeled=9768, missing=107
+
+FINAL STATUS
+------------------------------------------------------------------------------
+PASS — Classification Dataset and DataLoader pipeline validated.
+
+No classifier training was performed.
+Segmentation models/checkpoints were not modified.

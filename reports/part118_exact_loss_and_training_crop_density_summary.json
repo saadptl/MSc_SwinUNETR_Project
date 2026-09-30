@@ -1,0 +1,108 @@
+{
+  "part": 118,
+  "read_only": true,
+  "training_performed": false,
+  "backward_performed": false,
+  "optimizer_step_performed": false,
+  "checkpoint_modified": false,
+  "canonical_checkpoint": {
+    "exists": true,
+    "path": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part104_final_checkpoint_selection\\checkpoints\\final_segmentation_model.pth",
+    "sha256": "fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431",
+    "size_mb": 54.039,
+    "load_pass": true,
+    "type": "dict",
+    "keys": [
+      "epoch",
+      "model_state_dict",
+      "optimizer_state_dict",
+      "scaler_state_dict",
+      "metrics",
+      "seed",
+      "feature_size",
+      "num_classes",
+      "full_shape",
+      "crop_shape",
+      "learning_rate",
+      "weight_decay",
+      "class_weights"
+    ]
+  },
+  "part98_assignments": {
+    "EPOCHS": 12,
+    "BATCH_SIZE": 1,
+    "GRADIENT_ACCUMULATION": 4,
+    "LEARNING_RATE": 5e-05,
+    "WEIGHT_DECAY": 1e-05,
+    "FULL_SHAPE": [
+      64,
+      96,
+      96
+    ],
+    "CROP_SHAPE": [
+      32,
+      64,
+      64
+    ],
+    "AUGMENT_PROB": 0.75,
+    "MIN_FOREGROUND_VOXELS": 20
+  },
+  "class_weights": {
+    "found": true,
+    "values": [
+      0.015069,
+      0.722595,
+      0.935995,
+      1.017003,
+      1.178304,
+      1.146102
+    ],
+    "source_line": 610,
+    "expression": "torch.tensor([0.015069, 0.722595, 0.935995, 1.017003, 1.178304, 1.146102], dtype=torch.float32)"
+  },
+  "combined_loss_source": {
+    "found": true,
+    "name": "CombinedSegmentationLoss",
+    "start_line": 623,
+    "end_line": 683,
+    "source": "class CombinedSegmentationLoss(nn.Module):\n\n    def __init__(self):\n        super().__init__()\n\n        self.ce_weights = CLASS_WEIGHTS / CLASS_WEIGHTS.mean()\n\n    def forward(\n        self,\n        logits: torch.Tensor,\n        target: torch.Tensor,\n    ):\n\n        target = target.squeeze(1).long()\n\n        ce = F.cross_entropy(\n            logits,\n            target,\n            weight=self.ce_weights.to(logits.device),\n        )\n\n        probabilities = torch.softmax(\n            logits,\n            dim=1,\n        )\n\n        one_hot = F.one_hot(\n            target,\n            num_classes=NUM_CLASSES,\n        )\n\n        one_hot = one_hot.permute(\n            0,\n            4,\n            1,\n            2,\n            3,\n        ).float()\n\n        intersection = (\n            probabilities * one_hot\n        ).sum(dim=(0, 2, 3, 4))\n\n        denominator = (\n            probabilities.sum(dim=(0, 2, 3, 4))\n            + one_hot.sum(dim=(0, 2, 3, 4))\n            + 1e-6\n        )\n\n        dice = (\n            2.0 * intersection + 1e-6\n        ) / denominator\n\n        # Ignore background when calculating the primary Dice loss.\n        foreground_dice = dice[1:]\n\n        dice_loss = 1.0 - foreground_dice.mean()\n\n        total = dice_loss + ce\n\n        return total"
+  },
+  "crop_audit": {
+    "attempted": true,
+    "completed": false,
+    "cases": 0,
+    "crops": 0,
+    "failures": [
+      "Dataset instantiation failed: TypeError('Dataset() takes no arguments') | TypeError('Dataset() takes no arguments') | TypeError('Dataset() takes no arguments')"
+    ],
+    "method": "actual Part98 dataset class: Dataset"
+  },
+  "diagnosis": {
+    "diagnosis": "LOSS_WEIGHTING_AND_CROP_DISTRIBUTION_REQUIRE_CONTROLLED_RETRAINING",
+    "risk_level": "MODERATE",
+    "findings": [
+      "Resolved Part98 CLASS_WEIGHTS exactly as [0.015069, 0.722595, 0.935995, 1.017003, 1.178304, 1.146102]; mean-normalized weights are [0.01802846940460229, 0.8645087165318596, 1.1198193125197904, 1.2167368418533908, 1.4097164784206315, 1.3711901812697256].",
+      "Background receives a lower-than-average CE weight relative to foreground classes. In a 0.045820% foreground target regime, this can reduce the CE penalty for false-positive foreground voxels.",
+      "Part98 explicitly excludes background from the primary Dice loss. Thus the Dice term is intentionally focused on foreground classes.",
+      "Part98 combines the foreground Dice loss and weighted CE with equal top-level coefficient 1:1; there is no explicit Dice/Focal/Tversky 0.45/0.30/0.25 mixture in Part98.",
+      "Part114's 67.462x foreground over-segmentation means the next intervention must NOT simply increase foreground weights.",
+      "Part115's 0.513583 mean foreground probability indicates the model is near the foreground/background decision boundary over much of the volume.",
+      "Part116's 0.045820% target foreground fraction establishes the extreme class-imbalance context."
+    ],
+    "recommended_ablation_order": [
+      "A. Lock Part104 as baseline.",
+      "B. Keep architecture and cohort unchanged.",
+      "C. First control the training-crop distribution and measure crop foreground density.",
+      "D. Then test a conservative loss variant with calibrated background/foreground CE weighting.",
+      "E. Do not introduce Focal/Tversky unless a separate controlled experiment is justified.",
+      "F. Compare validation foreground volume ratio, per-class Dice, precision-like false-positive burden, and probability calibration\u2014not Dice alone."
+    ]
+  },
+  "locked_prior_findings": {
+    "part114_foreground_ratio": 67.462,
+    "part115_mean_fg_probability": 0.513583,
+    "part115_mean_bg_probability": 0.486417,
+    "part116_validation_fg_fraction_percent": 0.04582,
+    "part117_diagnosis": "TRAINING_STRATEGY_AND_SPARSE_FOREGROUND_INTERACTION"
+  }
+}

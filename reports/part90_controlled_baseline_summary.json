@@ -1,0 +1,49 @@
+{
+    "part": 90,
+    "title": "Controlled 3D CNN Classification Baseline",
+    "seed": 42,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 2050",
+    "dataset": {
+        "training_studies": 1580,
+        "validation_studies": 395,
+        "study_overlap": 0
+    },
+    "model": {
+        "name": "Lightweight3DCNN",
+        "parameters": 77907,
+        "targets": 25,
+        "classes": 3
+    },
+    "input": {
+        "channels": 1,
+        "depth": 32,
+        "height": 224,
+        "width": 224
+    },
+    "training": {
+        "epochs": 5,
+        "batch_size": 1,
+        "gradient_accumulation": 4,
+        "learning_rate": 0.0001,
+        "weight_decay": 1e-05,
+        "mixed_precision": true
+    },
+    "best_result": {
+        "epoch": 5,
+        "validation_loss": 0.5875559566896174,
+        "validation_accuracy": 0.7753890253890254,
+        "macro_target_accuracy": 0.7765378084734641,
+        "valid_labels": 9768
+    },
+    "outputs": {
+        "history": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part90_controlled_baseline\\part90_training_history.csv",
+        "validation_results": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part90_controlled_baseline\\part90_validation_results.csv",
+        "best_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part90_controlled_baseline\\checkpoints\\part90_best_model.pth",
+        "final_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part90_controlled_baseline\\checkpoints\\part90_final_model.pth",
+        "report": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part90_controlled_baseline_report.txt",
+        "summary": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part90_controlled_baseline_summary.json"
+    },
+    "segmentation_modified": false,
+    "overall_status": "PASS"
+}

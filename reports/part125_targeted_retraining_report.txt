@@ -1,0 +1,69 @@
+PART 125 — TARGETED SEGMENTATION RETRAINING REPORT
+
+Status:
+    COMPLETED
+
+Purpose:
+    Repair Part104 foreground over-segmentation using a controlled
+    mixed-crop retraining strategy.
+
+Part104 SHA256:
+    fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+Expected Part104 SHA256:
+    fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+Part104 protected:
+    YES
+
+Architecture:
+    Swin-UNETR
+    in_channels = 1
+    out_channels = 6
+    feature_size = 12
+    spatial_dims = 3
+
+Data:
+    training cases = 500
+    validation cases = 100
+    full shape = (64, 96, 96)
+    crop shape = (32, 64, 64)
+
+Sampling:
+    foreground-centred probability = 0.5
+    random crop probability = 0.5
+
+Loss:
+    unweighted cross-entropy + foreground soft Dice
+
+Optimization:
+    epochs = 12
+    batch size = 1
+    gradient accumulation = 4
+    learning rate = 5e-05
+    weight decay = 1e-05
+
+Validation:
+    full-volume validation = YES
+    sliding-window ROI = (32, 64, 64)
+    overlap = 0.5
+    mode = gaussian
+    sigma_scale = 0.125
+
+Best epoch:
+    4
+
+Best full-volume foreground Dice:
+    0.668000
+
+Best checkpoint:
+    C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part125_targeted_retraining\checkpoints\best_part125_model.pth
+
+Final checkpoint:
+    C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part125_targeted_retraining\checkpoints\final_part125_model.pth
+
+Training time:
+    85.26 minutes
+
+Important:
+    This is development/pseudo-mask evaluation, not clinical validation.

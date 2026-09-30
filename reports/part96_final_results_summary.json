@@ -1,0 +1,146 @@
+{
+  "part": "Part 96",
+  "title": "Final Model Evaluation and Project Results Consolidation",
+  "timestamp": "2026-09-08T20:09:52.933891",
+  "system": {
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 2050",
+    "pytorch": "2.11.0+cu128"
+  },
+  "final_models": {
+    "segmentation": {
+      "part": "Part84",
+      "architecture": "Swin-UNETR",
+      "parameters": 4078116,
+      "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part84_final_reproducible_training\\checkpoints\\part84_best_model.pth",
+      "checkpoint_exists": true,
+      "sha256": "b06dee9381cb210913053b4f4bbecc89ed520ae4b02b89f0e802b121c69113b8"
+    },
+    "classification": {
+      "part": "Part92",
+      "architecture": "Part92CNN",
+      "parameters": 20083,
+      "checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part92_class_imbalance_aware_training\\checkpoints\\part92_best_model.pth",
+      "checkpoint_exists": true,
+      "sha256": "3e05b6f14b85c2bcf5c08479d749e35255828e0853108fb3dfcd09a27b1c119b"
+    }
+  },
+  "segmentation": {
+    "validation_studies": 50,
+    "successful_cases": 50,
+    "failed_cases": 0,
+    "global_foreground_dice": 0.19338770867633567,
+    "mean_case_foreground_dice": 0.193388,
+    "median_case_foreground_dice": 0.203689,
+    "macro_foreground_dice": 0.193388,
+    "c1_dice": 0.003355334232649354,
+    "c2_dice": 0.20014234875444842,
+    "c3_dice": 0.68,
+    "c4_dice": 0.009354345117675704,
+    "c5_dice": 0.07408651527690496,
+    "c1_precision": 0.0017362364497463861,
+    "c2_precision": 0.0033333333333333322,
+    "c3_precision": 0.0,
+    "c4_precision": 0.005245711180102963,
+    "c5_precision": 0.009868015705174487,
+    "c1_recall": 0.1105968358816434,
+    "c2_recall": 7.2727272727272e-05,
+    "c3_recall": 0.0,
+    "c4_recall": 0.07483678131640971,
+    "c5_recall": 0.053879510935575
+  },
+  "classification": {
+    "validation_studies": 395,
+    "part90_accuracy": 0.775389,
+    "part90_majority_baseline": 0.775389,
+    "part90_balanced_accuracy": 0.333333,
+    "part90_macro_f1": 0.873486,
+    "part90_moderate_recall": 0.0,
+    "part90_severe_recall": 0.0,
+    "part92_accuracy": 0.716626,
+    "part92_majority_baseline": 0.775389,
+    "part92_balanced_accuracy": 0.43853,
+    "part92_macro_f1": 0.442275,
+    "part92_moderate_recall": 0.360377,
+    "part92_severe_recall": 0.115894,
+    "accuracy_change_part92_vs_part90": -0.05876300000000001,
+    "balanced_accuracy_change": 0.10519699999999998,
+    "severe_recall_change": 0.115894,
+    "moderate_recall_change": 0.360377
+  },
+  "integrated_inference": {
+    "validation_studies": 395,
+    "successful_studies": 395,
+    "failed_studies": 0,
+    "success_rate": 1.0,
+    "mean_segmentation_foreground_fraction": 0.07123610527371216,
+    "mean_segmentation_foreground_voxels": 42016.76455696202,
+    "mean_classification_confidence": 0.48033611374263524,
+    "mean_severe_probability": 0.2406342511735385
+  },
+  "explainability": {
+    "validation_studies": 395,
+    "successful_studies": 395,
+    "failed_studies": 0,
+    "success_rate": 1.0,
+    "visualizations": 10,
+    "mean_foreground_fraction": 0.069968,
+    "mean_classifier_confidence": 0.480336,
+    "mean_severe_probability": 0.240634
+  },
+  "historical_non_reproducible_result": {
+    "part": "Part71",
+    "reported_foreground_dice": 0.044026,
+    "final_status": "NON-REPRODUCIBLE",
+    "reason": "Parts79\u201383 could not reconstruct the historical value from the saved class-balanced checkpoint.",
+    "not_used_as_final_metric": true
+  },
+  "reproducibility": [
+    {
+      "component": "Part84 final segmentation checkpoint",
+      "status": "REPRODUCIBLE",
+      "evidence": "Frozen checkpoint exists and Part85 independently reloaded it."
+    },
+    {
+      "component": "Part85 final segmentation audit",
+      "status": "REPRODUCIBLE",
+      "evidence": "50 validation studies evaluated with frozen Part84 checkpoint."
+    },
+    {
+      "component": "Part90 baseline classification",
+      "status": "REPRODUCIBLE",
+      "evidence": "Part93 strict-loaded and evaluated Part90 checkpoint."
+    },
+    {
+      "component": "Part92 imbalance-aware classification",
+      "status": "REPRODUCIBLE",
+      "evidence": "Part93 strict-loaded and evaluated Part92 checkpoint."
+    },
+    {
+      "component": "Part94 integrated inference",
+      "status": "VALIDATED",
+      "evidence": "395/395 validation studies processed successfully."
+    },
+    {
+      "component": "Part95 explainability",
+      "status": "VALIDATED",
+      "evidence": "395/395 validation studies processed and 10 visualizations generated."
+    },
+    {
+      "component": "Historical Part71 Dice = 0.044026",
+      "status": "NON-REPRODUCIBLE",
+      "evidence": "Parts79\u201383 could not reconstruct the historical value from the saved checkpoint."
+    }
+  ],
+  "limitations": [
+    "The final Swin-UNETR segmentation result is weak when judged by global foreground Dice.",
+    "Mean-case Dice is substantially higher than global Dice because it averages case-level/class-level behavior and should not be used alone to claim strong segmentation.",
+    "Part90 classification accuracy exactly matches the majority-class baseline and therefore should not be presented as strong predictive performance.",
+    "Part92 improves minority-class signal but Severe recall remains limited.",
+    "Part92 uses a different lightweight architecture from the actual Part90 architecture, so its improvement cannot be attributed solely to class weighting.",
+    "Parts94\u201395 are sequential inference pipelines. The classifier does not consume Swin-UNETR feature maps or segmentation masks as learned inputs.",
+    "Part95 provides spatial/output-level explainability rather than Grad-CAM, SHAP, or feature-level attribution.",
+    "The historical Part71 foreground Dice of 0.044026 is not reproducible and is excluded from final performance claims."
+  ],
+  "final_status": "PASS \u2014 FINAL REPRODUCIBLE RESULTS CONSOLIDATED"
+}

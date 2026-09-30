@@ -1,0 +1,37 @@
+PART 120 — CONTROLLED BACKGROUND-CALIBRATED LOSS RETRAINING
+
+Part104 SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+Canonical SHA match: True
+Part104 validation Dice baseline: 0.2172496851095929
+Part114 foreground ratio baseline: 67.462x
+
+ONLY EXPERIMENTAL CHANGE:
+background raw CE weight: 0.015069 -> 0.100000
+
+Best epoch: 12
+Best validation Dice: 0.622795595
+Best validation foreground ratio: 0.481429x
+Mean foreground probability: 0.317361
+Mean background probability: 0.682651
+Mean FG-BG margin: -0.365283
+Mean entropy: 1.086182
+
+Classwise Dice:
+class 1: 0.792736381
+class 2: 0.530247767
+class 3: 0.620000000
+class 4: 0.490993827
+class 5: 0.680000000
+
+Diagnosis: FOREGROUND_OVERSEGMENTATION_REDUCED_VS_PART104
+Part104 overwritten: NO
+Clinical claim: NO — targets are development/pseudo-mask labels.
+
+Outputs:
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part120_controlled_background_calibrated_loss_retraining\checkpoints\best_part120_model.pth
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part120_controlled_background_calibrated_loss_retraining\checkpoints\final_part120_model.pth
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part120_controlled_background_calibrated_loss_retraining\part120_training_history.csv
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part120_controlled_background_calibrated_loss_retraining\part120_test_metrics.json
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part120_controlled_background_calibrated_loss_retraining\part120_baseline_vs_experiment.json
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part120_controlled_background_calibrated_loss_report.txt
+C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\reports\part120_controlled_background_calibrated_loss_summary.json

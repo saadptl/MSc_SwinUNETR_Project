@@ -1,0 +1,50 @@
+{
+    "part": 88,
+    "title": "RSNA MRI Loader and Preprocessing Validation",
+    "seed": 42,
+    "dataset": {
+        "training_studies": 1580,
+        "validation_studies": 395
+    },
+    "sample": {
+        "training_samples": 20,
+        "validation_samples": 20,
+        "total_samples": 40
+    },
+    "preprocessing": {
+        "normalization": "1st-99th percentile clipping",
+        "normalization_range": [
+            0.0,
+            1.0
+        ],
+        "target_tensor_shape": [
+            1,
+            32,
+            224,
+            224
+        ]
+    },
+    "checks": {
+        "study_leakage": true,
+        "sample_loading": true,
+        "tensor_shape": true,
+        "numeric_tensor_values": true,
+        "normalization_range": true,
+        "known_labels": true,
+        "expected_series_types": true
+    },
+    "study_overlap_count": 0,
+    "passed_samples": 40,
+    "failed_samples": 0,
+    "series_distribution": {
+        "Sagittal T2/STIR": 40
+    },
+    "outputs": {
+        "sample_results": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part88_mri_loader_validation\\part88_sample_loading_results.csv",
+        "report": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part88_mri_loader_validation_report.txt",
+        "summary_json": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\reports\\part88_mri_loader_validation_summary.json"
+    },
+    "training_performed": false,
+    "segmentation_modified": false,
+    "overall_status": "PASS"
+}

@@ -1,0 +1,72 @@
+PART 126 — FOREGROUND-CALIBRATED SEGMENTATION
+FINE-TUNING REPORT
+
+Status:
+    COMPLETED
+
+Purpose:
+    Controlled fine-tuning from the protected Part104 checkpoint
+    using foreground-aware sampling and false-positive-aware
+    Tversky loss.
+
+Part104 SHA256:
+    fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+Expected Part104 SHA256:
+    fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+Part104 protected:
+    YES
+
+Architecture:
+    Swin-UNETR
+    in_channels = 1
+    out_channels = 6
+    feature_size = 12
+    spatial_dims = 3
+    parameters = 4,078,116
+
+Data:
+    training cases = 500
+    validation cases = 100
+    full shape = (64, 96, 96)
+    crop shape = (32, 64, 64)
+
+Sampling:
+    foreground-centred probability =
+        0.75
+
+    random crop probability =
+        0.25
+
+Loss:
+    cross-entropy weight = 1.0
+    Tversky weight = 1.0
+    Tversky alpha = 0.7
+    Tversky beta = 0.3
+
+Validation:
+    full-volume sliding-window inference
+    ROI = (32, 64, 64)
+    overlap = 0.5
+    mode = gaussian
+    sigma_scale = 0.125
+
+Best epoch:
+    1
+
+Best validation foreground Dice:
+    0.000000
+
+Best checkpoint:
+    C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part126_foreground_calibrated_finetuning\checkpoints\best_part126_model.pth
+
+Final checkpoint:
+    C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part126_foreground_calibrated_finetuning\checkpoints\final_part126_model.pth
+
+Clinical validation:
+    NO
+
+Important:
+    Development pseudo-mask labels were used.
+    These results must not be interpreted as clinical validation.

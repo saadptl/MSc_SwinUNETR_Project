@@ -1,0 +1,29 @@
+PART 114 — PREDICTION DISTRIBUTION + SPATIAL QUALITY AUDIT
+
+Status: PASS — PREDICTION_DISTRIBUTION_AUDIT_COMPLETED
+Usable cases: 100
+Primary diagnosis: PREDICTION_CLASS_COLLAPSE
+Mean defined class Dice: 0.001160
+Aggregate foreground ratio: 0.253x
+Median case foreground ratio: 0.098x
+Cases >= 5x: 0
+Cases >= 20x: 0
+Foreground volume correlation: -0.008662
+Dominant predicted foreground class: 2
+Dominant foreground share: 0.879655
+
+Per-class Dice summary:
+  Class 1: mean=0.006484, median=0.000000, p25=0.000000, p75=0.000000
+  Class 2: mean=0.000000, median=0.000000, p25=0.000000, p75=0.000000
+  Class 3: mean=0.000000, median=0.000000, p25=0.000000, p75=0.000000
+  Class 4: mean=0.001797, median=0.000000, p25=0.000000, p75=0.000000
+  Class 5: mean=0.000000, median=0.000000, p25=0.000000, p75=0.000000
+
+Scientific limitation:
+The targets are project pseudo-masks/development labels.
+These results must not be reported as clinical expert-ground-truth accuracy.
+
+Class CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part114_prediction_distribution_spatial_quality_audit\part114_class_distribution_summary.csv
+Case audit CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part114_prediction_distribution_spatial_quality_audit\part114_case_spatial_quality_audit.csv
+Extreme cases CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part114_prediction_distribution_spatial_quality_audit\part114_extreme_oversegmentation_cases.csv
+Voxel confusion CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part114_prediction_distribution_spatial_quality_audit\part114_voxel_confusion_summary.csv

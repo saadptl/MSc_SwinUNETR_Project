@@ -1,0 +1,56 @@
+===========================================================================
+PART 85 — FINAL SEGMENTATION AUDIT REPORT
+===========================================================================
+
+Checkpoint: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part84_final_reproducible_training\checkpoints\part84_best_model.pth
+Validation cohort: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part15_extended_controlled_training\part15_validation_cohort.csv
+Validation cases: 50
+Crop size: (32, 64, 64)
+Device: cuda:0
+
+OVERALL METRICS
+---------------------------------------------------------------------------
+Global foreground Dice : 0.011216
+Mean-case foreground Dice : 0.193388
+Median-case foreground Dice : 0.203689
+Macro foreground Dice : 0.193388
+
+CLASSWISE METRICS
+---------------------------------------------------------------------------
+1. Spinal Canal Stenosis
+   Dice      : 0.003130
+   Precision : 0.001573
+   Recall    : 0.318887
+2. Left Neural Foraminal Narrowing
+   Dice      : 0.000903
+   Precision : 0.006944
+   Recall    : 0.000483
+3. Right Neural Foraminal Narrowing
+   Dice      : 0.000000
+   Precision : 0.000000
+   Recall    : 0.000000
+4. Left Subarticular Stenosis
+   Dice      : 0.012822
+   Precision : 0.006623
+   Recall    : 0.200485
+5. Right Subarticular Stenosis
+   Dice      : 0.039225
+   Precision : 0.022822
+   Recall    : 0.139456
+
+PART 84 REFERENCE
+---------------------------------------------------------------------------
+Part84 global Dice : 0.004313
+Part85 global Dice : 0.011216
+Difference : +0.006903
+
+QUALITATIVE OUTPUTS
+---------------------------------------------------------------------------
+Visualization directory: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part85_final_segmentation_audit\visualizations
+Case metrics CSV: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part85_final_segmentation_audit\part85_case_metrics.csv
+
+FINAL INTERPRETATION
+---------------------------------------------------------------------------
+Part 85 is a frozen audit of the Part 84 reproducible segmentation checkpoint.
+No model training or parameter updates were performed during this audit.
+The Part 85 global Dice is consistent with the verified Part 84 reference.

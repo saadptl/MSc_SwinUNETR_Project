@@ -1,0 +1,34 @@
+{
+  "part": "Part95",
+  "status": "PASS \u2014 EXPLAINABLE INFERENCE VALIDATED",
+  "device": "cuda:0",
+  "purpose": "Generate spatial and probabilistic explanations for the integrated inference pipeline.",
+  "validation": {
+    "total_studies": 395,
+    "successful_studies": 395,
+    "failed_studies": 0,
+    "success_rate": 1.0
+  },
+  "segmentation": {
+    "source_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\segmentation\\rsna_part84_final_reproducible_training\\checkpoints\\part84_best_model.pth",
+    "architecture": "SwinUNETR",
+    "mean_foreground_voxels": 41268.784810126584,
+    "mean_foreground_fraction": 0.0699679646981584
+  },
+  "classification": {
+    "source_checkpoint": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\classification\\rsna_part92_class_imbalance_aware_training\\checkpoints\\part92_best_model.pth",
+    "architecture": "Part90CNN",
+    "mean_confidence": 0.48033611374263524,
+    "mean_severe_probability": 0.2406342511735385,
+    "predicted_distribution": {
+      "Normal/Mild": 7708,
+      "Moderate": 1895,
+      "Severe": 272
+    }
+  },
+  "visualizations": {
+    "generated": 10,
+    "directory": "C:\\Saad\\Msc Major Project Swin Unetr Framework\\MSc_SwinUNETR_Project\\outputs\\integrated\\part95_explainable_inference\\visualizations"
+  },
+  "methodological_note": "Part95 provides spatial evidence through the Swin-UNETR predicted segmentation mask and probabilistic evidence through the separately trained classification model. It should not be described as Grad-CAM, SHAP, or another post-hoc feature-attribution method."
+}

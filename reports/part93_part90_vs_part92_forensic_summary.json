@@ -1,0 +1,134 @@
+{
+  "part": "Part93",
+  "status": "PASS",
+  "purpose": "Forensic comparison of Part90 baseline and Part92 class-imbalance-aware checkpoint.",
+  "device": "cuda:0",
+  "validation_samples": 395,
+  "validation_batches": 395,
+  "part90_model_class": "Lightweight3DCNN",
+  "part92_model_class": "Part90CNN",
+  "part90_parameters": 77907,
+  "part92_parameters": 20083,
+  "architecture_difference": true,
+  "part90_metrics": {
+    "valid_labels": 9768,
+    "accuracy": 0.7753890253890254,
+    "majority_class": 0,
+    "majority_baseline": 0.7753890253890254,
+    "accuracy_gain_over_majority": 0.0,
+    "balanced_accuracy": 0.3333333333333333,
+    "macro_precision": 0.7753890253890254,
+    "macro_recall": 0.3333333333333333,
+    "macro_f1": 0.8734863337561989,
+    "class_precision": [
+      0.7753890253890254,
+      null,
+      null
+    ],
+    "class_recall": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "class_f1": [
+      0.8734863337561989,
+      null,
+      null
+    ],
+    "confusion_matrix": [
+      [
+        7574,
+        0,
+        0
+      ],
+      [
+        1590,
+        0,
+        0
+      ],
+      [
+        604,
+        0,
+        0
+      ]
+    ],
+    "predicted_counts": [
+      9768,
+      0,
+      0
+    ],
+    "predicted_fraction": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "true_counts": [
+      7574,
+      1590,
+      604
+    ],
+    "model_name": "Part90"
+  },
+  "part92_metrics": {
+    "valid_labels": 9768,
+    "accuracy": 0.7166257166257166,
+    "majority_class": 0,
+    "majority_baseline": 0.7753890253890254,
+    "accuracy_gain_over_majority": -0.05876330876330882,
+    "balanced_accuracy": 0.4385300400563854,
+    "macro_precision": 0.46618518677008297,
+    "macro_recall": 0.4385300400563854,
+    "macro_f1": 0.4422750203872177,
+    "class_precision": [
+      0.8361173221096936,
+      0.3022151898734177,
+      0.26022304832713755
+    ],
+    "class_recall": [
+      0.8393187219434909,
+      0.360377358490566,
+      0.11589403973509933
+    ],
+    "class_f1": [
+      0.8377149634315081,
+      0.3287435456110155,
+      0.16036655211912945
+    ],
+    "confusion_matrix": [
+      [
+        6357,
+        1110,
+        107
+      ],
+      [
+        925,
+        573,
+        92
+      ],
+      [
+        321,
+        213,
+        70
+      ]
+    ],
+    "predicted_counts": [
+      7603,
+      1896,
+      269
+    ],
+    "predicted_fraction": [
+      0.7783579033579033,
+      0.1941031941031941,
+      0.027538902538902538
+    ],
+    "true_counts": [
+      7574,
+      1590,
+      604
+    ],
+    "model_name": "Part92"
+  },
+  "diagnosis": "PART92_SHOWS_NONTRIVIAL_MINOR_CLASS_SIGNAL",
+  "severity_note": "Severe recall improved relative to Part90.",
+  "distribution_note": "Part92 prediction distribution is not overwhelmingly concentrated on Normal/Mild."
+}

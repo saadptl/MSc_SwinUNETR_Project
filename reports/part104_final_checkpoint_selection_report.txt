@@ -1,0 +1,92 @@
+========================================================================================
+PART 104 — FINAL SEGMENTATION CHECKPOINT SELECTION
+========================================================================================
+
+Project root: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project
+Status: PASS — FINAL_SEGMENTATION_CHECKPOINT_SELECTED
+
+SELECTED CHECKPOINT
+  Label: Part98 best
+  Source: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part98_strong_full_cohort_training\checkpoints\part98_best_model.pth
+  Published: C:\Saad\Msc Major Project Swin Unetr Framework\MSc_SwinUNETR_Project\outputs\segmentation\rsna_part104_final_checkpoint_selection\checkpoints\final_segmentation_model.pth
+  Rationale: Part98 recorded best validation metric exceeds Part99's recorded best validation metric; Part98 is retained as the stronger recorded segmentation checkpoint.
+
+PART98
+  Best epoch: 10
+  Best validation metric: 0.2172496851095929
+  SHA256: fa2ab2eaace098bc7c488332ea1dd7eeb2dee85e3bcfe26956c7785c598fc431
+
+PART99
+  Best epoch: 2
+  Best validation metric: 0.0310755273661614
+  Best SHA256: eddcacaadc7aae1f0017aaa5d1d14305ce7f45060cc5d22b17bd65fe16dc3ca1
+  Final SHA256: 9cdc178818b4aa2e611f2feb930d14835885ff83a42d7c529399154056c9a412
+
+COMPARISON
+{
+  "best_metric_delta": -0.1861741577434315,
+  "best_metric_relative_percent": -85.69593905257669,
+  "latest_metric_delta": -0.19542546185769966
+}
+
+VALIDATION CASE METRICS
+{
+  "exists": true,
+  "rows": 100,
+  "columns": [
+    "validation_index",
+    "global_dice",
+    "precision",
+    "recall",
+    "pred_fg",
+    "target_fg",
+    "study_id"
+  ],
+  "numeric_summary": {
+    "validation_index": {
+      "count": 100,
+      "mean": 49.5,
+      "min": 0.0,
+      "max": 99.0
+    },
+    "global_dice": {
+      "count": 100,
+      "mean": 0.03107552736616139,
+      "min": 0.0,
+      "max": 0.379746835440853
+    },
+    "precision": {
+      "count": 100,
+      "mean": 0.026254511699251006,
+      "min": 0.0,
+      "max": 0.32289628179723195
+    },
+    "recall": {
+      "count": 100,
+      "mean": 0.05737372091853091,
+      "min": 0.0,
+      "max": 0.65306122444537
+    },
+    "pred_fg": {
+      "count": 100,
+      "mean": 186.38,
+      "min": 1.0,
+      "max": 1674.0
+    },
+    "target_fg": {
+      "count": 100,
+      "mean": 198.04,
+      "min": 24.0,
+      "max": 1088.0
+    },
+    "study_id": {
+      "count": 100,
+      "mean": 2139612544.88,
+      "min": 153831832.0,
+      "max": 4278146423.0
+    }
+  }
+}
+
+IMPORTANT INTERPRETATION
+These checkpoint-selection results are model-development metrics and must not be presented as clinical diagnostic accuracy or manual-ground-truth segmentation performance unless independently validated against appropriate expert annotations.
