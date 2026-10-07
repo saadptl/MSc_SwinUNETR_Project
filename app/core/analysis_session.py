@@ -79,6 +79,8 @@ class AnalysisSession:
     measurements: List[Dict[str, Any]] = field(default_factory=list)
     level_morphometrics: Dict[str, Any] = field(default_factory=dict)
     detected_lesion_metrics: Dict[str, Any] = field(default_factory=dict)
+    multi_level_scorecard: List[Dict[str, Any]] = field(default_factory=list)
+    segmentation_summary: Dict[str, Any] = field(default_factory=dict)
 
     # ------------------------------------------------------------------
     # Convenience properties

@@ -18,6 +18,8 @@ sys.path.insert(0, str(APP_DIR))
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.append(str(PROJECT_ROOT / "src"))
 
 try:
     from app.config import APP_NAME, APP_VERSION
@@ -79,14 +81,49 @@ def load_css():
         background-color: #F4F6FB !important;
     }
 
-    /* Target Streamlit's generated class names for text */
-    .st-emotion-cache-* { color: #0F1B3D !important; }
+    /* Target Streamlit's generated class names for text, excluding buttons */
+    .st-emotion-cache-*:not(button):not([data-testid*="stBaseButton"]) { color: #0F1B3D !important; }
 
-    /* Force all paragraph and header tags to be visible dark */
-    .stApp p:not([style*="color"]),
-    .stApp span:not([style*="color"]),
-    .stApp div:not([style*="color"]):not([class*="sidebar"]) {
+    /* Force all paragraph and header tags to be visible dark, excluding buttons */
+    .stApp p:not([style*="color"]):not(button p):not([data-testid*="stBaseButton"] p),
+    .stApp span:not([style*="color"]):not(button span):not([data-testid*="stBaseButton"] span),
+    .stApp div:not([style*="color"]):not([class*="sidebar"]):not(button div):not([data-testid*="stBaseButton"] div) {
         color: #0F1B3D;
+    }
+
+    /* Universal Button Visibility Fix */
+    [data-testid="stBaseButton-secondary"],
+    button[kind="secondary"] {
+        background: #FFFFFF !important;
+        background-color: #FFFFFF !important;
+        color: #0F1B3D !important;
+        -webkit-text-fill-color: #0F1B3D !important;
+        border: 1.5px solid #94A3B8 !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stBaseButton-secondary"] p,
+    [data-testid="stBaseButton-secondary"] span,
+    button[kind="secondary"] p {
+        color: #0F1B3D !important;
+        -webkit-text-fill-color: #0F1B3D !important;
+        font-weight: 700 !important;
+    }
+
+    [data-testid="stBaseButton-primary"],
+    button[kind="primary"] {
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+        background-color: #2563EB !important;
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        border: 1.5px solid #1D4ED8 !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stBaseButton-primary"] p,
+    [data-testid="stBaseButton-primary"] span,
+    button[kind="primary"] p {
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        font-weight: 800 !important;
     }
 
     /* Info, warning, error text */

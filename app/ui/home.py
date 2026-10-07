@@ -232,7 +232,7 @@ def _module_cards():
             <div class="feature-title">3D Swin-UNETR Localization</div>
             <div class="feature-description">
                 Disease and lumbar-level prediction from 3D MRI volumes. Multi-planar 
-                localization visualization with axial, coronal and sagittal views.
+                localization visualization with sagittal and axial views.
             </div>
         </div>
         """, unsafe_allow_html=True)

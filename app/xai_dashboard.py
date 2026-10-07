@@ -251,6 +251,9 @@ def generate_gradcam(
 
     model.eval()
 
+    device = next(model.parameters()).device
+    tensor = tensor.to(device)
+
     # Remove old gradient references.
     model.zero_grad(set_to_none=True)
 

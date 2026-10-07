@@ -445,31 +445,82 @@ hr {
     -webkit-text-fill-color: #1D4ED8 !important;
 }
 
-.stButton > button[kind="primary"] {
+/* ── Main Container Button System (High-Contrast Light PACS Theme) ── */
+[data-testid="stMain"] [data-testid="stBaseButton-primary"],
+.main [data-testid="stBaseButton-primary"],
+[data-testid="stMain"] .stButton > button[kind="primary"],
+.main .stButton > button[kind="primary"],
+button[data-testid="stBaseButton-primary"] {
     background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+    background-color: #2563EB !important;
     color: #FFFFFF !important;
     -webkit-text-fill-color: #FFFFFF !important;
-    border: none !important;
+    border: 1.5px solid #1D4ED8 !important;
     border-radius: 8px !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     font-size: 0.90rem !important;
     box-shadow: 0 4px 12px rgba(37,99,235,0.35) !important;
 }
 
-.stButton > button[kind="primary"] p,
-.stButton > button[kind="primary"] span {
+[data-testid="stMain"] [data-testid="stBaseButton-primary"] p,
+[data-testid="stMain"] [data-testid="stBaseButton-primary"] span,
+[data-testid="stMain"] [data-testid="stBaseButton-primary"] div,
+[data-testid="stMain"] .stButton > button[kind="primary"] p,
+.main .stButton > button[kind="primary"] p,
+button[data-testid="stBaseButton-primary"] p {
     color: #FFFFFF !important;
     -webkit-text-fill-color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-testid="stMain"] [data-testid="stBaseButton-primary"]:hover,
+button[data-testid="stBaseButton-primary"]:hover {
+    background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%) !important;
+    background-color: #1D4ED8 !important;
+    border-color: #1E40AF !important;
+}
+
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"],
+.main [data-testid="stBaseButton-secondary"],
+[data-testid="stMain"] .stButton > button:not([kind="primary"]):not([data-testid="stBaseButton-primary"]),
+.main .stButton > button:not([kind="primary"]):not([data-testid="stBaseButton-primary"]),
+button[data-testid="stBaseButton-secondary"] {
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    color: #0F1B3D !important;
+    -webkit-text-fill-color: #0F1B3D !important;
+    border: 1.5px solid #94A3B8 !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 0.90rem !important;
+    box-shadow: 0 1px 4px rgba(15,27,61,0.08) !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"] p,
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"] span,
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"] div,
+[data-testid="stMain"] .stButton > button:not([kind="primary"]) p,
+.main .stButton > button:not([kind="primary"]) p,
+button[data-testid="stBaseButton-secondary"] p {
+    color: #0F1B3D !important;
+    -webkit-text-fill-color: #0F1B3D !important;
     font-weight: 700 !important;
 }
 
-.stButton > button[kind="secondary"] {
-    background: #FFFFFF !important;
-    color: #0F1B3D !important;
-    -webkit-text-fill-color: #0F1B3D !important;
-    border: 1.5px solid #CBD5E1 !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"]:hover,
+button[data-testid="stBaseButton-secondary"]:hover {
+    background: #F1F5F9 !important;
+    background-color: #F1F5F9 !important;
+    border-color: #2563EB !important;
+    color: #2563EB !important;
+    -webkit-text-fill-color: #2563EB !important;
+}
+
+[data-testid="stMain"] [data-testid="stBaseButton-secondary"]:hover p,
+button[data-testid="stBaseButton-secondary"]:hover p {
+    color: #2563EB !important;
+    -webkit-text-fill-color: #2563EB !important;
 }
 
 /* ── Download Buttons (Universal high contrast & legible font) ── */

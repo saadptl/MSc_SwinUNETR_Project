@@ -400,11 +400,167 @@ def _build_pdf(s):
                 traceback.print_exc()
 
 
-    # ── 3B. Clinical Spine Morphometrics & Caliper Measurements ───────────
+    # ── 3B. Lumbar Multi-Level Pathology Scorecard Matrix (5 Conditions × 5 Levels)
+    scorecard_data = getattr(s, "multi_level_scorecard", []) or []
+    if not scorecard_data and "multi_level_scorecard" in st.session_state:
+        scorecard_data = st.session_state["multi_level_scorecard"]
+
+    if not scorecard_data and isinstance(seg_res, dict) and "probabilities" in seg_res:
+        try:
+            p_arr = np.asarray(seg_res["probabilities"])
+            p_lvls = seg_res.get("levels", {})
+            img_shape = seg_res.get("image", np.zeros((64, 128, 128))).shape
+            sc_temp = []
+            for cid in range(1, 6):
+                c_s = seg_ui.SHORT_NAMES[cid]
+                c_f = seg_ui.CLASS_NAMES[cid]
+                p_v = p_arr[cid] if p_arr.ndim == 4 else p_arr
+                r = {"Pathology Condition": f"{c_s} ({c_f})"}
+                for ln, ld in p_lvls.items():
+                    lz = int(round(ld["z"]))
+                    zm = max(0, lz - 3)
+                    zx = min(img_shape[0], lz + 4)
+                    sub = p_v[zm:zx, :, :]
+                    mp = float(np.max(sub)) if sub.size > 0 else 0.0
+                    r[ln] = f"🔴 {mp*100:.1f}%" if mp >= 0.50 else (f"🟡 {mp*100:.1f}%" if mp >= 0.30 else f"🟢 {mp*100:.1f}%")
+                sc_temp.append(r)
+            scorecard_data = sc_temp
+            if s is not None:
+                s.multi_level_scorecard = scorecard_data
+            st.session_state["multi_level_scorecard"] = scorecard_data
+        except Exception as exc:
+            print(f"[PDF Report] Scorecard auto-compute error: {exc}")
+
+    if scorecard_data:
+        story.append(Paragraph("3B. Lumbar Multi-Level Pathology Matrix (5 Conditions × L1–S1)", h2_style))
+        sc_hdr_style = ParagraphStyle('SCHdr', fontName='Helvetica-Bold', fontSize=7.2, leading=9.0, textColor=colors.white, alignment=1)
+        sc_cond_style = ParagraphStyle('SCCond', fontName='Helvetica-Bold', fontSize=7.0, leading=8.5, textColor=colors.HexColor('#0F1B3D'))
+        sc_val_style = ParagraphStyle('SCVal', fontName='Helvetica', fontSize=7.0, leading=8.5, alignment=1)
+
+        def format_sc_cell(val_str):
+            clean_str = str(val_str).replace("🔴", "").replace("🟡", "").replace("🟢", "").replace("■", "").strip()
+            try:
+                num = float(clean_str.replace("%", "").strip())
+                if num >= 50.0:
+                    return Paragraph(f"<font color='#DC2626'><b>{num:.1f}%</b></font>", sc_val_style)
+                elif num >= 30.0:
+                    return Paragraph(f"<font color='#D97706'><b>{num:.1f}%</b></font>", sc_val_style)
+                else:
+                    return Paragraph(f"<font color='#16A34A'><b>{num:.1f}%</b></font>", sc_val_style)
+            except Exception:
+                return Paragraph(clean_str, sc_val_style)
+
+        sc_headers = [
+            Paragraph("<b>Pathology Condition</b>", ParagraphStyle('SCHdrL', fontName='Helvetica-Bold', fontSize=7.2, leading=9.0, textColor=colors.white, alignment=0)),
+            Paragraph("<b>L1/L2</b>", sc_hdr_style),
+            Paragraph("<b>L2/L3</b>", sc_hdr_style),
+            Paragraph("<b>L3/L4</b>", sc_hdr_style),
+            Paragraph("<b>L4/L5</b>", sc_hdr_style),
+            Paragraph("<b>L5/S1</b>", sc_hdr_style),
+        ]
+        sc_rows = [sc_headers]
+        for row in scorecard_data:
+            sc_rows.append([
+                Paragraph(row.get("Pathology Condition", ""), sc_cond_style),
+                format_sc_cell(row.get("L1/L2", "N/A")),
+                format_sc_cell(row.get("L2/L3", "N/A")),
+                format_sc_cell(row.get("L3/L4", "N/A")),
+                format_sc_cell(row.get("L4/L5", "N/A")),
+                format_sc_cell(row.get("L5/S1", "N/A")),
+            ])
+        sc_tbl = Table(sc_rows, colWidths=[2.2 * inch, 0.96 * inch, 0.96 * inch, 0.96 * inch, 0.96 * inch, 0.96 * inch])
+        sc_tbl.setStyle(TableStyle([
+            ("BACKGROUND",   (0, 0), (-1, 0),  colors.HexColor("#0F1B3D")),
+            ("GRID",         (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
+            ("ALIGN",        (1, 0), (-1, -1), "CENTER"),
+            ("VALIGN",       (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING",  (0, 0), (-1, -1), 4),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+            ("TOPPADDING",   (0, 0), (-1, -1), 3),
+            ("BOTTOMPADDING",(0, 0), (-1, -1), 3),
+            ("ROWBACKGROUNDS",(0, 1), (-1, -1), [colors.HexColor("#FFFFFF"), colors.HexColor("#F8FAFC")]),
+        ]))
+        story.extend([sc_tbl, Spacer(1, 8)])
+
+    # ── 4. Clinical Spine Morphometrics & Caliper Measurements ───────────
     meas_list = getattr(s, "measurements", []) or []
     vol_dict = getattr(s, "detected_lesion_metrics", {}) or {}
-    if meas_list or vol_dict:
+    morph_dict = getattr(s, "level_morphometrics", {}) or {}
+    if not morph_dict and "level_morphometrics" in st.session_state:
+        morph_dict = st.session_state["level_morphometrics"]
+
+    if not morph_dict and isinstance(seg_res, dict) and "probabilities" in seg_res:
+        try:
+            p_arr = np.asarray(seg_res["probabilities"])
+            p_lvls = seg_res.get("levels", {})
+            img_shape = seg_res.get("image", np.zeros((64, 128, 128))).shape
+            mm_sc = seg_res.get("mm_scales", (1.0, 1.0, 1.0))
+            morph_dict = seg_ui._compute_multi_level_morphometrics(p_arr, p_lvls, img_shape, mm_sc)
+            if s is not None:
+                s.level_morphometrics = morph_dict
+            st.session_state["level_morphometrics"] = morph_dict
+        except Exception as exc:
+            print(f"[PDF Report] Morphometrics auto-compute error: {exc}")
+
+    if morph_dict or meas_list or vol_dict:
         story.append(Paragraph("4. Clinical Spine Morphometrics & Caliper Measurements", h2_style))
+
+        # 4A. Comprehensive Automated Level Morphometrics
+        if morph_dict:
+            m_hdr_style = ParagraphStyle('MHdr', fontName='Helvetica-Bold', fontSize=6.5, leading=8.0, textColor=colors.white, alignment=1)
+            m_cell_style = ParagraphStyle('MCell', fontName='Helvetica', fontSize=6.0, leading=7.5, textColor=colors.HexColor('#1E293B'))
+            m_lvl_style = ParagraphStyle('MLvl', fontName='Helvetica-Bold', fontSize=6.5, leading=8.0, textColor=colors.HexColor('#0F1B3D'), alignment=1)
+            m_num_style = ParagraphStyle('MNum', fontName='Helvetica-Bold', fontSize=6.2, leading=7.8, textColor=colors.HexColor('#0284C7'), alignment=1)
+
+            m_headers = [
+                Paragraph("<b>Level</b>", m_hdr_style),
+                Paragraph("<b>Canal AP</b>", m_hdr_style),
+                Paragraph("<b>Canal Diagnosis (Schizas)</b>", m_hdr_style),
+                Paragraph("<b>Foraminal Ht</b>", m_hdr_style),
+                Paragraph("<b>Foraminal Diagnosis (Lee)</b>", m_hdr_style),
+                Paragraph("<b>Disc Ht</b>", m_hdr_style),
+                Paragraph("<b>Disc Diagnosis (Frobin)</b>", m_hdr_style),
+            ]
+            morph_rows_pdf = [m_headers]
+            for lvl in ["L1/L2", "L2/L3", "L3/L4", "L4/L5", "L5/S1"]:
+                if lvl in morph_dict:
+                    md = morph_dict[lvl]
+                    c_diag = md.get("canal_diagnosis", "")
+                    c_diag_short = c_diag.replace("Canal Caliber", "Caliber").replace("Central Canal Stenosis", "Central Stenosis")
+                    c_color = "#DC2626" if "Absolute" in c_diag else ("#D97706" if "Relative" in c_diag else "#16A34A")
+
+                    f_diag = md.get("foraminal_diagnosis", "")
+                    f_diag_short = f_diag.replace("Foraminal Caliber", "Caliber").replace("Foraminal Stenosis", "Stenosis").replace("Foraminal Narrowing", "Narrowing")
+                    f_color = "#DC2626" if "Severe" in f_diag else ("#D97706" if "Narrowing" in f_diag else "#16A34A")
+
+                    d_diag = md.get("disc_diagnosis", "")
+                    d_diag_short = d_diag.replace("Disc Space Loss", "Space Loss").replace("Disc Collapse", "Collapse").replace("Disc Space", "Space")
+                    d_color = "#DC2626" if "Collapse" in d_diag else ("#D97706" if "Loss" in d_diag else "#16A34A")
+
+                    morph_rows_pdf.append([
+                        Paragraph(f"<b>{lvl}</b>", m_lvl_style),
+                        Paragraph(f"{md.get('canal_ap_mm', 0.0):.1f} mm", m_num_style),
+                        Paragraph(f"<font color='{c_color}'><b>{c_diag_short}</b></font>", m_cell_style),
+                        Paragraph(f"{md.get('foraminal_height_mm', 0.0):.1f} mm", m_num_style),
+                        Paragraph(f"<font color='{f_color}'><b>{f_diag_short}</b></font>", m_cell_style),
+                        Paragraph(f"{md.get('disc_height_mm', 0.0):.1f} mm", m_num_style),
+                        Paragraph(f"<font color='{d_color}'><b>{d_diag_short}</b></font>", m_cell_style),
+                    ])
+            if len(morph_rows_pdf) > 1:
+                morph_tbl = Table(morph_rows_pdf, colWidths=[0.65 * inch, 0.75 * inch, 1.70 * inch, 0.75 * inch, 1.50 * inch, 0.65 * inch, 1.50 * inch])
+                morph_tbl.setStyle(TableStyle([
+                    ("BACKGROUND",   (0, 0), (-1, 0),  colors.HexColor("#1E293B")),
+                    ("GRID",         (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
+                    ("VALIGN",       (0, 0), (-1, -1), "MIDDLE"),
+                    ("LEFTPADDING",  (0, 0), (-1, -1), 3),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 3),
+                    ("TOPPADDING",   (0, 0), (-1, -1), 3),
+                    ("BOTTOMPADDING",(0, 0), (-1, -1), 3),
+                    ("ROWBACKGROUNDS",(0, 1), (-1, -1), [colors.HexColor("#FFFFFF"), colors.HexColor("#F8FAFC")]),
+                ]))
+                story.extend([morph_tbl, Spacer(1, 6)])
+
+        # 4B. 3D Volumetric Burden
         if vol_dict and vol_dict.get("voxels", 0) > 0:
             vol_data = [
                 ["Automated 3D Morphometric Metric", "Value", "Clinical Significance", "Status"],
@@ -427,6 +583,7 @@ def _build_pdf(s):
             ]))
             story.extend([v_tbl, Spacer(1, 6)])
 
+        # 4C. Active Measurements Log
         if meas_list:
             m_rows = [["Measurement Type", "Level", "Plane / Slice", "Measured (mm)", "Clinical Finding"]]
             for m in meas_list:
@@ -490,7 +647,7 @@ def _build_pdf(s):
     story.append(Spacer(1, 5))
 
     # Embed Grad-CAM panel image if available in session
-    if s.has_xai and s.xai_paths:
+    if getattr(s, "has_xai", False) and getattr(s, "xai_paths", None):
         panel = s.xai_paths.get("panel")
         if panel and Path(panel).exists():
             try:
@@ -510,8 +667,8 @@ def _build_pdf(s):
 
     # ── 7. MRI Acquisition & Tri-Slice Input Tensor Construction ─────────────
     story.append(Paragraph("7. MRI Acquisition & Tri-Slice Input Tensor Construction", h2_style))
-    meta = s.series_metadata if isinstance(s.series_metadata, dict) else {}
-    files = s.selected_files or []
+    meta = getattr(s, "series_metadata", {}) if isinstance(getattr(s, "series_metadata", None), dict) else {}
+    files = getattr(s, "selected_files", []) or []
     mdata = [
         ["Total DICOM Slices in Series", str(meta.get("number_of_slices", "N/A")), "Target Modality", "Lumbar Spine MRI (Axial / Sagittal T2)"],
         ["Channel 0 (Previous Slice)",   filename(files[0]) if len(files) > 0 else "N/A", "Input Channels", "3 Adjacent Slices (Tri-Planar Input)"],
@@ -680,6 +837,7 @@ def render_report():
         bench = _load_benchmark_data()
 
         meas_list = getattr(s, 'measurements', []) or []
+        vol_dict  = getattr(s, 'detected_lesion_metrics', {}) or {}
         meas_items_html = ""
         if meas_list:
             meas_items_html = "<div style='background:#F1F5F9; border-radius:6px; padding:6px 10px; margin-top:6px;'>"
@@ -687,82 +845,157 @@ def render_report():
                 meas_items_html += f"<div style='font-size:0.77rem; color:#1E293B; margin:2px 0;'>• <strong>{m.get('tool','Measurement')}</strong> ({m.get('level','L4/L5')}): <span style='font-weight:700; color:#0284C7;'>{m.get('measured_mm', 0.0):.1f} mm</span> — {m.get('clinical_impression','Normal')}</div>"
             meas_items_html += "</div>"
         else:
-            meas_items_html = "<div style='font-size:0.75rem; color:#64748B;'>No manual caliper measurements logged yet. Use the caliper tool on 3D Segmentation to record clinical distances.</div>"
+            meas_items_html = "<div style='font-size:0.75rem; color:#64748B; margin-top:4px;'>No manual caliper measurements logged yet. Use the caliper tool on 3D Segmentation to record custom clinical distances.</div>"
 
-        preview_html = textwrap.dedent(f"""
-        <div style="background:#FFFFFF; border-radius:14px; border:1px solid #E2E8F0; padding:1.6rem; font-size:0.85rem; color:#1E293B; line-height:1.7; box-shadow:0 2px 10px rgba(15,27,61,0.05);">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0F1B3D; padding-bottom:0.6rem; margin-bottom:1rem;">
-        <div>
-        <h3 style="font-size:1.15rem; font-weight:800; color:#0F1B3D; margin:0;">🩻 Lumbar Spine AI — Dual-Task Diagnostic Report</h3>
-        <span style="font-size:0.75rem; color:#64748B;">Swin Transformer Classification & 3D Swin-UNETR Anatomical Localization</span>
-        </div>
-        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; font-size:0.72rem; padding:4px 10px; border-radius:6px; border:1px solid #BFDBFE;">
-        {'LEVEL CONFIRMED' if is_lvl_verified else 'LEVEL UNVERIFIED'}
-        </span>
-        </div>
+        # Multi-level pathology scorecard & morphometrics retrieval / auto-computation
+        scorecard_data = getattr(s, "multi_level_scorecard", []) or []
+        if not scorecard_data and "multi_level_scorecard" in st.session_state:
+            scorecard_data = st.session_state["multi_level_scorecard"]
 
-        <div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-        1. DIAGNOSTIC SUMMARY
-        </div>
-        <table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.82rem;">
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="width:35%; font-weight:600; padding:6px 8px; background:#F8FAFC;">Predicted Severity</td><td style="font-weight:800; color:#1D4ED8; padding:6px 8px;">{safe(s.predicted_class)} ({pct(s.confidence):.2f}% Confidence)</td></tr>
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">Dual-Task Backbone</td><td style="padding:6px 8px;">Swin Transformer (Severity) + 3D Swin-UNETR (Localization)</td></tr>
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">Study / Series ID</td><td style="padding:6px 8px;">{safe(s.study_id, 'Upload')} / {safe(s.series_id, 'Upload')}</td></tr>
-        <tr><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">DICOM Slice Normalization</td><td style="padding:6px 8px;">{meta.get('number_of_slices', 'N/A')} Slices (Tri-Slice Channel Input)</td></tr>
-        </table>
+        morph_dict = getattr(s, "level_morphometrics", {}) or {}
+        if not morph_dict and "level_morphometrics" in st.session_state:
+            morph_dict = st.session_state["level_morphometrics"]
 
-        <div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-        2. SEVERITY CLASS PROBABILITIES
-        </div>
-        <div style="display:flex; gap:8px; margin-bottom:1rem;">
-        <div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;">
-        <div style="font-size:0.72rem; color:#64748B; font-weight:600;">NORMAL / MILD</div>
-        <div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get('Normal/Mild',0)):.1f}%</div>
-        </div>
-        <div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;">
-        <div style="font-size:0.72rem; color:#64748B; font-weight:600;">MODERATE</div>
-        <div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get('Moderate',0)):.1f}%</div>
-        </div>
-        <div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;">
-        <div style="font-size:0.72rem; color:#64748B; font-weight:600;">SEVERE</div>
-        <div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get('Severe',0)):.1f}%</div>
-        </div>
-        </div>
+        seg_res_curr = getattr(s, "segmentation_result", None) or st.session_state.get("segmentation_result")
+        if (not scorecard_data or not morph_dict) and isinstance(seg_res_curr, dict) and "probabilities" in seg_res_curr:
+            try:
+                p_arr = np.asarray(seg_res_curr["probabilities"])
+                p_lvls = seg_res_curr.get("levels", {})
+                img_shape = seg_res_curr.get("image", np.zeros((64, 128, 128))).shape
+                mm_sc = seg_res_curr.get("mm_scales", (1.0, 1.0, 1.0))
+                if not scorecard_data:
+                    sc_temp = []
+                    for cid in range(1, 6):
+                        c_s = seg_ui.SHORT_NAMES[cid]
+                        c_f = seg_ui.CLASS_NAMES[cid]
+                        p_v = p_arr[cid] if p_arr.ndim == 4 else p_arr
+                        r = {"Pathology Condition": f"{c_s} ({c_f})"}
+                        for ln, ld in p_lvls.items():
+                            lz = int(round(ld["z"]))
+                            zm = max(0, lz - 3)
+                            zx = min(img_shape[0], lz + 4)
+                            sub = p_v[zm:zx, :, :]
+                            mp = float(np.max(sub)) if sub.size > 0 else 0.0
+                            r[ln] = f"🔴 {mp*100:.1f}%" if mp >= 0.50 else (f"🟡 {mp*100:.1f}%" if mp >= 0.30 else f"🟢 {mp*100:.1f}%")
+                        sc_temp.append(r)
+                    scorecard_data = sc_temp
+                    if s is not None:
+                        s.multi_level_scorecard = scorecard_data
+                    st.session_state["multi_level_scorecard"] = scorecard_data
+                if not morph_dict:
+                    morph_dict = seg_ui._compute_multi_level_morphometrics(p_arr, p_lvls, img_shape, mm_sc)
+                    if s is not None:
+                        s.level_morphometrics = morph_dict
+                    st.session_state["level_morphometrics"] = morph_dict
+            except Exception as exc:
+                print(f"[Report Preview] Auto-computation error: {exc}")
 
-        <div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-        3. 3D SWIN-UNETR DISEASE LOCALIZATION COVERAGE
-        </div>
-        <ul style="margin:0 0 1rem 1.2rem; padding:0; font-size:0.82rem; color:#1E293B;">
-        <li><strong>Spinal Canal Stenosis (SCS):</strong> 86.7% benchmark accuracy on untouched test cohort</li>
-        <li><strong>Left Neural Foraminal Narrowing (LFNN):</strong> 92.5% benchmark accuracy</li>
-        <li><strong>Right Neural Foraminal Narrowing (RFNN):</strong> 20.0% benchmark accuracy</li>
-        <li><strong>Subarticular Stenosis (LSS & RSS):</strong> 54.1% (Left) / 52.6% (Right) detection rates</li>
-        <li><strong>Target Anatomical Levels:</strong> L1/L2, L2/L3, L3/L4, L4/L5, L5/S1</li>
-        </ul>
+        # Render Scorecard HTML
+        if scorecard_data:
+            sc_rows_html = ""
+            for r in scorecard_data:
+                sc_rows_html += (
+                    f'<tr style="border-bottom:1px solid #E2E8F0;">'
+                    f'<td style="font-weight:600; padding:6px 8px; background:#F8FAFC; color:#0F1B3D;">{r.get("Pathology Condition","")}</td>'
+                    f'<td style="text-align:center; padding:6px 4px;">{r.get("L1/L2","N/A")}</td>'
+                    f'<td style="text-align:center; padding:6px 4px;">{r.get("L2/L3","N/A")}</td>'
+                    f'<td style="text-align:center; padding:6px 4px;">{r.get("L3/L4","N/A")}</td>'
+                    f'<td style="text-align:center; padding:6px 4px;">{r.get("L4/L5","N/A")}</td>'
+                    f'<td style="text-align:center; padding:6px 4px;">{r.get("L5/S1","N/A")}</td>'
+                    f'</tr>'
+                )
+            scorecard_html = (
+                f'<table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.75rem; border:1px solid #CBD5E1; border-radius:6px; overflow:hidden;">'
+                f'<thead><tr style="background:#0F1B3D; color:#FFFFFF;">'
+                f'<th style="padding:6px 8px; text-align:left;">Pathology Condition</th>'
+                f'<th style="padding:6px 4px; text-align:center;">L1/L2</th>'
+                f'<th style="padding:6px 4px; text-align:center;">L2/L3</th>'
+                f'<th style="padding:6px 4px; text-align:center;">L3/L4</th>'
+                f'<th style="padding:6px 4px; text-align:center;">L4/L5</th>'
+                f'<th style="padding:6px 4px; text-align:center;">L5/S1</th>'
+                f'</tr></thead><tbody>{sc_rows_html}</tbody></table>'
+            )
+        else:
+            scorecard_html = (
+                '<ul style="margin:0 0 1rem 1.2rem; padding:0; font-size:0.82rem; color:#1E293B;">'
+                '<li><strong>Spinal Canal Stenosis (SCS):</strong> 86.7% benchmark accuracy on untouched test cohort</li>'
+                '<li><strong>Left Neural Foraminal Narrowing (LFNN):</strong> 92.5% benchmark accuracy</li>'
+                '<li><strong>Right Neural Foraminal Narrowing (RFNN):</strong> 20.0% benchmark accuracy</li>'
+                '<li><strong>Subarticular Stenosis (LSS & RSS):</strong> 54.1% (Left) / 52.6% (Right) detection rates</li>'
+                '<li><strong>Target Anatomical Levels:</strong> L1/L2, L2/L3, L3/L4, L4/L5, L5/S1</li>'
+                '</ul>'
+            )
 
-        <div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-        4. CLINICAL SPINE MEASUREMENTS & MORPHOMETRICS
-        </div>
-        <div style="font-size:0.82rem; color:#1E293B; margin-bottom:1rem;">
-        Recorded Caliper Measurements: <strong>{len(meas_list)}</strong><br/>
-        3D Volumetric Burden: <strong>{getattr(s, 'detected_lesion_metrics', {}).get('volume_cm3', 0.0):.2f} cm³</strong>
-        {meas_items_html}
-        </div>
+        # Render Morphometrics HTML
+        if morph_dict:
+            morph_rows_html = ""
+            for lvl in ["L1/L2", "L2/L3", "L3/L4", "L4/L5", "L5/S1"]:
+                if lvl in morph_dict:
+                    md = morph_dict[lvl]
+                    c_badge = f'<span style="color:#DC2626; font-weight:700;">{md.get("canal_diagnosis","")}</span>' if "Absolute" in md.get("canal_diagnosis","") else (f'<span style="color:#D97706; font-weight:600;">{md.get("canal_diagnosis","")}</span>' if "Relative" in md.get("canal_diagnosis","") else f'<span style="color:#16A34A; font-weight:600;">{md.get("canal_diagnosis","")}</span>')
+                    f_badge = f'<span style="color:#DC2626; font-weight:700;">{md.get("foraminal_diagnosis","")}</span>' if "Severe" in md.get("foraminal_diagnosis","") else (f'<span style="color:#D97706; font-weight:600;">{md.get("foraminal_diagnosis","")}</span>' if "Narrowing" in md.get("foraminal_diagnosis","") else f'<span style="color:#16A34A; font-weight:600;">{md.get("foraminal_diagnosis","")}</span>')
+                    d_badge = f'<span style="color:#DC2626; font-weight:700;">{md.get("disc_diagnosis","")}</span>' if "Collapse" in md.get("disc_diagnosis","") else (f'<span style="color:#D97706; font-weight:600;">{md.get("disc_diagnosis","")}</span>' if "Loss" in md.get("disc_diagnosis","") else f'<span style="color:#16A34A; font-weight:600;">{md.get("disc_diagnosis","")}</span>')
+                    morph_rows_html += (
+                        f'<tr style="border-bottom:1px solid #E2E8F0;">'
+                        f'<td style="font-weight:700; padding:4px 6px; background:#F8FAFC;">{lvl}</td>'
+                        f'<td style="padding:4px 6px; font-weight:700;">{md.get("canal_ap_mm", 0.0):.1f} mm</td>'
+                        f'<td style="padding:4px 6px;">{c_badge}</td>'
+                        f'<td style="padding:4px 6px; font-weight:700;">{md.get("foraminal_height_mm", 0.0):.1f} mm</td>'
+                        f'<td style="padding:4px 6px;">{f_badge}</td>'
+                        f'<td style="padding:4px 6px; font-weight:700;">{md.get("disc_height_mm", 0.0):.1f} mm</td>'
+                        f'<td style="padding:4px 6px;">{d_badge}</td>'
+                        f'</tr>'
+                    )
+            morph_table_html = (
+                f'<table style="width:100%; border-collapse:collapse; margin-bottom:0.8rem; font-size:0.71rem; border:1px solid #CBD5E1; border-radius:6px; overflow:hidden;">'
+                f'<thead><tr style="background:#1E293B; color:#FFFFFF;">'
+                f'<th style="padding:5px 6px; text-align:left;">Level</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Canal AP</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Canal (Schizas)</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Foraminal Ht</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Foraminal (Lee)</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Disc Ht</th>'
+                f'<th style="padding:5px 6px; text-align:left;">Disc (Frobin)</th>'
+                f'</tr></thead><tbody>{morph_rows_html}</tbody></table>'
+            )
+        else:
+            morph_table_html = ""
 
-        <div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-        5. EXPLAINABLE AI & CLINICAL SAFETY
-        </div>
-        <div style="font-size:0.82rem; color:#475569; margin-bottom:0.8rem;">
-        Grad-CAM attention saliency: <strong>{'Generated' if s.has_xai else 'Pending'}</strong><br/>
-        Transitional Vertebrae (LSTV) Safety Check: <strong>{'Verified via Whole-Spine Scout' if is_lvl_verified else 'Pending whole-spine C2 scout verification'}</strong>
-        </div>
-
-        <div style="padding:0.6rem 0.9rem; background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; font-size:0.75rem; color:#92400E;">
-        ⚠️ <strong>Academic Evaluation Prototype:</strong> For research presentation and viva demonstration only. Not cleared for primary clinical diagnosis.
-        </div>
-        </div>
-        """)
-        st.markdown(preview_html, unsafe_allow_html=True)
+        preview_html = (
+            f'<div style="background:#FFFFFF; border-radius:14px; border:1px solid #E2E8F0; padding:1.6rem; font-size:0.85rem; color:#1E293B; line-height:1.7; box-shadow:0 2px 10px rgba(15,27,61,0.05);">'
+            f'<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0F1B3D; padding-bottom:0.6rem; margin-bottom:1rem;">'
+            f'<div>'
+            f'<h3 style="font-size:1.15rem; font-weight:800; color:#0F1B3D; margin:0;">🩻 Lumbar Spine AI — Dual-Task Diagnostic Report</h3>'
+            f'<span style="font-size:0.75rem; color:#64748B;">Swin Transformer Classification & 3D Swin-UNETR Anatomical Localization</span>'
+            f'</div>'
+            f'<span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; font-size:0.72rem; padding:4px 10px; border-radius:6px; border:1px solid #BFDBFE;">'
+            f'{"LEVEL CONFIRMED" if is_lvl_verified else "LEVEL UNVERIFIED"}'
+            f'</span>'
+            f'</div>'
+            f'<div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">1. DIAGNOSTIC SUMMARY</div>'
+            f'<table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.82rem;">'
+            f'<tr style="border-bottom:1px solid #E2E8F0;"><td style="width:35%; font-weight:600; padding:6px 8px; background:#F8FAFC;">Predicted Severity</td><td style="font-weight:800; color:#1D4ED8; padding:6px 8px;">{safe(s.predicted_class)} ({pct(s.confidence):.2f}% Confidence)</td></tr>'
+            f'<tr style="border-bottom:1px solid #E2E8F0;"><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">Dual-Task Backbone</td><td style="padding:6px 8px;">Swin Transformer (Severity) + 3D Swin-UNETR (Localization)</td></tr>'
+            f'<tr style="border-bottom:1px solid #E2E8F0;"><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">Study / Series ID</td><td style="padding:6px 8px;">{safe(s.study_id, "Upload")} / {safe(s.series_id, "Upload")}</td></tr>'
+            f'<tr><td style="font-weight:600; padding:6px 8px; background:#F8FAFC;">DICOM Slice Normalization</td><td style="padding:6px 8px;">{meta.get("number_of_slices", "N/A")} Slices (Tri-Slice Channel Input)</td></tr>'
+            f'</table>'
+            f'<div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">2. SEVERITY CLASS PROBABILITIES</div>'
+            f'<div style="display:flex; gap:8px; margin-bottom:1rem;">'
+            f'<div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;"><div style="font-size:0.72rem; color:#64748B; font-weight:600;">NORMAL / MILD</div><div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get("Normal/Mild",0)):.1f}%</div></div>'
+            f'<div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;"><div style="font-size:0.72rem; color:#64748B; font-weight:600;">MODERATE</div><div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get("Moderate",0)):.1f}%</div></div>'
+            f'<div style="flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:8px; text-align:center;"><div style="font-size:0.72rem; color:#64748B; font-weight:600;">SEVERE</div><div style="font-size:1.1rem; font-weight:800; color:#0F1B3D;">{pct(probs.get("Severe",0)):.1f}%</div></div>'
+            f'</div>'
+            f'<div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">3. 3D SWIN-UNETR MULTI-LEVEL PATHOLOGY SCORECARD</div>'
+            f'{scorecard_html}'
+            f'<div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">4. CLINICAL SPINE MORPHOMETRICS & CALIPER MEASUREMENTS</div>'
+            f'{morph_table_html}'
+            f'<div style="font-size:0.82rem; color:#1E293B; margin-bottom:1rem;"><strong>3D Volumetric Burden:</strong> {vol_dict.get("volume_cm3", 0.0):.2f} cm³ &nbsp;|&nbsp; <strong>Recorded Caliper Log:</strong> {len(meas_list)} entries{meas_items_html}</div>'
+            f'<div style="font-weight:700; font-size:0.8rem; color:#0F1B3D; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">5. EXPLAINABLE AI & CLINICAL SAFETY</div>'
+            f'<div style="font-size:0.82rem; color:#475569; margin-bottom:0.8rem;">Grad-CAM attention saliency: <strong>{"Generated" if s.has_xai else "Pending"}</strong><br/>Transitional Vertebrae (LSTV) Safety Check: <strong>{"Verified via Whole-Spine Scout" if is_lvl_verified else "Pending whole-spine C2 scout verification"}</strong></div>'
+            f'<div style="padding:0.6rem 0.9rem; background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; font-size:0.75rem; color:#92400E;">⚠️ <strong>Academic Evaluation Prototype:</strong> For research presentation and viva demonstration only. Not cleared for primary clinical diagnosis.</div>'
+            f'</div>'
+        )
+        st.html(preview_html)
 
         latest_figs = list(REPORT_DIR.glob("seg_snapshot_*.png"))
         if latest_figs:
